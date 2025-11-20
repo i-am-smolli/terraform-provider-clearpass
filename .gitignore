@@ -1,0 +1,4 @@
+.DS_Store
+.vscode/
+terraform-provider-clearpass
+test/*
