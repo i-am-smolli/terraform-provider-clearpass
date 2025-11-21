@@ -25,12 +25,16 @@ type enforcementProfileResource struct {
 }
 
 type enforcementProfileModel struct {
-	ID          types.Int64  `tfsdk:"id"`
-	Name        types.String `tfsdk:"name"`
-	Description types.String `tfsdk:"description"`
-	Type        types.String `tfsdk:"type"`
-	Action      types.String `tfsdk:"action"`
-	Attributes  types.List   `tfsdk:"attributes"` // List of profileAttributeModel
+	ID                     types.Int64  `tfsdk:"id"`
+	Name                   types.String `tfsdk:"name"`
+	Description            types.String `tfsdk:"description"`
+	Type                   types.String `tfsdk:"type"`
+	Action                 types.String `tfsdk:"action"`
+	DeviceGroupList        types.List   `tfsdk:"device_group_list"` // List of strings
+	AgentTemplate          types.String `tfsdk:"agent_template"`
+	PostAuthTemplate       types.String `tfsdk:"post_auth_template"`
+	RadiusDynAuthzTemplate types.String `tfsdk:"radius_dyn_authz_template"`
+	Attributes             types.List   `tfsdk:"attributes"` // List of profileAttributeModel
 }
 
 type profileAttributeModel struct {
@@ -72,6 +76,23 @@ func (r *enforcementProfileResource) Schema(ctx context.Context, req resource.Sc
 			},
 			"action": schema.StringAttribute{
 				Description: "Action (Accept, Reject, Drop). Mostly used for RADIUS.",
+				Optional:    true,
+			},
+			"device_group_list": schema.ListAttribute{
+				Description: "Device Group List.",
+				Optional:    true,
+				ElementType: types.StringType,
+			},
+			"agent_template": schema.StringAttribute{
+				Description: "Agent Enforcement Profile Template (Agent, AgentScript).",
+				Optional:    true,
+			},
+			"post_auth_template": schema.StringAttribute{
+				Description: "Post Authentication Enforcement Profile Template (EntityUpdate, SessionRestriction, SessionNotify).",
+				Optional:    true,
+			},
+			"radius_dyn_authz_template": schema.StringAttribute{
+				Description: "RADIUS Dynamic Authorization Template.",
 				Optional:    true,
 			},
 			"attributes": schema.ListNestedAttribute{
@@ -128,6 +149,20 @@ func (r *enforcementProfileResource) Create(ctx context.Context, req resource.Cr
 	if !plan.Action.IsNull() {
 		apiPayload.Action = plan.Action.ValueString()
 	}
+	if !plan.AgentTemplate.IsNull() {
+		apiPayload.AgentTemplate = plan.AgentTemplate.ValueString()
+	}
+	if !plan.PostAuthTemplate.IsNull() {
+		apiPayload.PostAuthTemplate = plan.PostAuthTemplate.ValueString()
+	}
+	if !plan.RadiusDynAuthzTemplate.IsNull() {
+		apiPayload.RadiusDynAuthzTemplate = plan.RadiusDynAuthzTemplate.ValueString()
+	}
+	if !plan.DeviceGroupList.IsNull() {
+		var deviceGroups []string
+		resp.Diagnostics.Append(plan.DeviceGroupList.ElementsAs(ctx, &deviceGroups, false)...)
+		apiPayload.DeviceGroupList = deviceGroups
+	}
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -144,6 +179,29 @@ func (r *enforcementProfileResource) Create(ctx context.Context, req resource.Cr
 	plan.Description = types.StringValue(created.Description)
 	plan.Type = types.StringValue(created.Type)
 	plan.Action = types.StringValue(created.Action)
+	if created.AgentTemplate != "" {
+		plan.AgentTemplate = types.StringValue(created.AgentTemplate)
+	} else {
+		plan.AgentTemplate = types.StringNull()
+	}
+	if created.PostAuthTemplate != "" {
+		plan.PostAuthTemplate = types.StringValue(created.PostAuthTemplate)
+	} else {
+		plan.PostAuthTemplate = types.StringNull()
+	}
+	if created.RadiusDynAuthzTemplate != "" {
+		plan.RadiusDynAuthzTemplate = types.StringValue(created.RadiusDynAuthzTemplate)
+	} else {
+		plan.RadiusDynAuthzTemplate = types.StringNull()
+	}
+
+	if created.DeviceGroupList != nil {
+		deviceGroupsList, diags := types.ListValueFrom(ctx, types.StringType, created.DeviceGroupList)
+		resp.Diagnostics.Append(diags...)
+		plan.DeviceGroupList = deviceGroupsList
+	} else {
+		plan.DeviceGroupList = types.ListNull(types.StringType)
+	}
 
 	var diags diag.Diagnostics
 	plan.Attributes, diags = flattenProfileAttributes(ctx, created.Attributes)
@@ -173,6 +231,29 @@ func (r *enforcementProfileResource) Read(ctx context.Context, req resource.Read
 	state.Description = types.StringValue(profile.Description)
 	state.Type = types.StringValue(profile.Type)
 	state.Action = types.StringValue(profile.Action)
+	if profile.AgentTemplate != "" {
+		state.AgentTemplate = types.StringValue(profile.AgentTemplate)
+	} else {
+		state.AgentTemplate = types.StringNull()
+	}
+	if profile.PostAuthTemplate != "" {
+		state.PostAuthTemplate = types.StringValue(profile.PostAuthTemplate)
+	} else {
+		state.PostAuthTemplate = types.StringNull()
+	}
+	if profile.RadiusDynAuthzTemplate != "" {
+		state.RadiusDynAuthzTemplate = types.StringValue(profile.RadiusDynAuthzTemplate)
+	} else {
+		state.RadiusDynAuthzTemplate = types.StringNull()
+	}
+
+	if profile.DeviceGroupList != nil {
+		deviceGroupsList, diags := types.ListValueFrom(ctx, types.StringType, profile.DeviceGroupList)
+		resp.Diagnostics.Append(diags...)
+		state.DeviceGroupList = deviceGroupsList
+	} else {
+		state.DeviceGroupList = types.ListNull(types.StringType)
+	}
 
 	var diags diag.Diagnostics
 	state.Attributes, diags = flattenProfileAttributes(ctx, profile.Attributes)
@@ -202,6 +283,20 @@ func (r *enforcementProfileResource) Update(ctx context.Context, req resource.Up
 	}
 	if !plan.Action.IsUnknown() {
 		apiPayload.Action = plan.Action.ValueString()
+	}
+	if !plan.AgentTemplate.IsUnknown() {
+		apiPayload.AgentTemplate = plan.AgentTemplate.ValueString()
+	}
+	if !plan.PostAuthTemplate.IsUnknown() {
+		apiPayload.PostAuthTemplate = plan.PostAuthTemplate.ValueString()
+	}
+	if !plan.RadiusDynAuthzTemplate.IsUnknown() {
+		apiPayload.RadiusDynAuthzTemplate = plan.RadiusDynAuthzTemplate.ValueString()
+	}
+	if !plan.DeviceGroupList.IsNull() && !plan.DeviceGroupList.IsUnknown() {
+		var deviceGroups []string
+		resp.Diagnostics.Append(plan.DeviceGroupList.ElementsAs(ctx, &deviceGroups, false)...)
+		apiPayload.DeviceGroupList = deviceGroups
 	}
 
 	if resp.Diagnostics.HasError() {

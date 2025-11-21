@@ -25,9 +25,11 @@ Manages a ClearPass Service.
 
 - `auth_methods` (List of String) List of Authentication Methods.
 - `auth_sources` (List of String) List of Authentication Sources.
+- `default_posture_token` (String) Default Posture Token.
 - `description` (String) Description of the Service.
 - `enabled` (Boolean) Is Service enabled? Defaults to false.
 - `match_type` (String) Rules match type ('MATCHES_ALL' or 'MATCHES_ANY'). Defaults to 'MATCHES_ALL'.
+- `posture_policies` (List of String) List of Posture Policies.
 - `role_mapping_policy` (String) Name of the Role Mapping Policy.
 - `service_rule` (Attributes List) List of matching rules for this service. (see [below for nested schema](#nestedatt--service_rule))
 - `strip_username` (Boolean) Strip Username

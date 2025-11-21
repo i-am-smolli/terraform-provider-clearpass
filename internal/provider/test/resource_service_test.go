@@ -23,7 +23,13 @@ func TestAccServiceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("clearpass_service.test_service", "match_type", "MATCHES_ANY"),
 					resource.TestCheckResourceAttr("clearpass_service.test_service", "auth_methods.0", "[EAP PEAP]"),
 					resource.TestCheckResourceAttr("clearpass_service.test_service", "auth_methods.1", "[EAP FAST]"),
+					resource.TestCheckResourceAttr("clearpass_service.test_service", "auth_methods.1", "[EAP FAST]"),
+					resource.TestCheckResourceAttr("clearpass_service.test_service", "auth_methods.1", "[EAP FAST]"),
 					resource.TestCheckResourceAttr("clearpass_service.test_service", "auth_sources.0", "[Local User Repository]"),
+					resource.TestCheckResourceAttr("clearpass_service.test_service", "monitor_mode", "true"),
+					resource.TestCheckResourceAttr("clearpass_service.test_service", "posture_enabled", "false"),
+					resource.TestCheckResourceAttr("clearpass_service.test_service", "audit_enabled", "false"),
+					resource.TestCheckResourceAttr("clearpass_service.test_service", "profiler_enabled", "false"),
 				),
 			},
 			// Update and Read
@@ -93,6 +99,11 @@ resource "clearpass_service" "test_service" {
   
   auth_methods       = ["[EAP PEAP]", "[EAP FAST]"]
   auth_sources       = ["[Local User Repository]"]
+  
+  monitor_mode       = true
+  posture_enabled    = false
+  audit_enabled      = false
+  profiler_enabled   = false
 
   enforcement_policy = clearpass_enforcement_policy.pol1.name
 

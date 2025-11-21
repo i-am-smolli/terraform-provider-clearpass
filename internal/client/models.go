@@ -164,29 +164,47 @@ type RulesConditionSettingsResult struct {
 }
 
 type EnforcementProfileCreate struct {
-	Name        string              `json:"name"`
-	Description string              `json:"description,omitempty"`
-	Type        string              `json:"type"`             // RADIUS, TACACS, Agent, etc.
-	Action      string              `json:"action,omitempty"` // Accept, Reject, Drop
-	Attributes  []*ProfileAttribute `json:"attributes,omitempty"`
-	// We can add DUR/TACACS specific structs here later as needed
+	Name                   string              `json:"name"`
+	Description            string              `json:"description,omitempty"`
+	Type                   string              `json:"type"`             // RADIUS, TACACS, Agent, etc.
+	Action                 string              `json:"action,omitempty"` // Accept, Reject, Drop
+	DeviceGroupList        []string            `json:"device_group_list,omitempty"`
+	AgentTemplate          string              `json:"agent_template,omitempty"`
+	PostAuthTemplate       string              `json:"post_auth_template,omitempty"`
+	RadiusDynAuthzTemplate string              `json:"radius_dyn_authz_template,omitempty"`
+	Attributes             []*ProfileAttribute `json:"attributes,omitempty"`
+	// Complex nested structures - storing as JSON for now
+	TacacsServiceParams interface{} `json:"tacacs_service_params,omitempty"`
+	DurConfig           interface{} `json:"dur_config,omitempty"`
 }
 
 type EnforcementProfileUpdate struct {
-	Name        string              `json:"name,omitempty"`
-	Description string              `json:"description,omitempty"`
-	Type        string              `json:"type,omitempty"`
-	Action      string              `json:"action,omitempty"`
-	Attributes  []*ProfileAttribute `json:"attributes,omitempty"`
+	Name                   string              `json:"name,omitempty"`
+	Description            string              `json:"description,omitempty"`
+	Type                   string              `json:"type,omitempty"`
+	Action                 string              `json:"action,omitempty"`
+	DeviceGroupList        []string            `json:"device_group_list,omitempty"`
+	AgentTemplate          string              `json:"agent_template,omitempty"`
+	PostAuthTemplate       string              `json:"post_auth_template,omitempty"`
+	RadiusDynAuthzTemplate string              `json:"radius_dyn_authz_template,omitempty"`
+	Attributes             []*ProfileAttribute `json:"attributes,omitempty"`
+	TacacsServiceParams    interface{}         `json:"tacacs_service_params,omitempty"`
+	DurConfig              interface{}         `json:"dur_config,omitempty"`
 }
 
 type EnforcementProfileResult struct {
-	ID          int                 `json:"id"`
-	Name        string              `json:"name"`
-	Description string              `json:"description"`
-	Type        string              `json:"type"`
-	Action      string              `json:"action"`
-	Attributes  []*ProfileAttribute `json:"attributes"`
+	ID                     int                 `json:"id"`
+	Name                   string              `json:"name"`
+	Description            string              `json:"description"`
+	Type                   string              `json:"type"`
+	Action                 string              `json:"action"`
+	DeviceGroupList        []string            `json:"device_group_list"`
+	AgentTemplate          string              `json:"agent_template"`
+	PostAuthTemplate       string              `json:"post_auth_template"`
+	RadiusDynAuthzTemplate string              `json:"radius_dyn_authz_template"`
+	Attributes             []*ProfileAttribute `json:"attributes"`
+	TacacsServiceParams    interface{}         `json:"tacacs_service_params"`
+	DurConfig              interface{}         `json:"dur_config"`
 }
 
 // ProfileAttribute is the generic key-value pair used for RADIUS, etc.
@@ -265,48 +283,120 @@ type EnforcementPolicyConditionResult struct {
 // --- Service Models ---
 
 type ServiceCreate struct {
-	Name              string         `json:"name"`
-	Type              string         `json:"type,omitempty"` // Often auto-set by template, but can be sent
-	Template          string         `json:"template"`
-	Description       string         `json:"description,omitempty"`
-	Enabled           *bool          `json:"enabled,omitempty"`
-	AuthMethods       []string       `json:"auth_methods,omitempty"`
-	AuthSources       []string       `json:"auth_sources,omitempty"`
-	RoleMappingPolicy string         `json:"role_mapping_policy,omitempty"`
-	EnfPolicy         string         `json:"enf_policy,omitempty"` // This is "Enforcement Policy"
-	StripUsername     *bool          `json:"strip_username,omitempty"`
-	RulesMatchType    string         `json:"rules_match_type,omitempty"` // MATCHES_ANY oder MATCHES_ALL
-	RulesConditions   []*ServiceRule `json:"rules_conditions,omitempty"`
+	Name                           string         `json:"name"`
+	Type                           string         `json:"type,omitempty"` // Often auto-set by template, but can be sent
+	Template                       string         `json:"template"`
+	Description                    string         `json:"description,omitempty"`
+	Enabled                        *bool          `json:"enabled,omitempty"`
+	AuthMethods                    []string       `json:"auth_methods,omitempty"`
+	AuthSources                    []string       `json:"auth_sources,omitempty"`
+	RoleMappingPolicy              string         `json:"role_mapping_policy,omitempty"`
+	EnfPolicy                      string         `json:"enf_policy,omitempty"` // This is "Enforcement Policy"
+	StripUsername                  *bool          `json:"strip_username,omitempty"`
+	RulesMatchType                 string         `json:"rules_match_type,omitempty"` // MATCHES_ANY oder MATCHES_ALL
+	RulesConditions                []*ServiceRule `json:"rules_conditions,omitempty"`
+	DefaultPostureToken            string         `json:"default_posture_token,omitempty"`
+	PosturePolicies                []string       `json:"posture_policies,omitempty"`
+	MonitorMode                    *bool          `json:"monitor_mode,omitempty"`
+	StripUsernameCSV               string         `json:"strip_username_csv,omitempty"`
+	ServiceCertCN                  string         `json:"service_cert_cn,omitempty"`
+	UseCachedPolicyResults         *bool          `json:"use_cached_policy_results,omitempty"`
+	AuthzSources                   []string       `json:"authz_sources,omitempty"`
+	PostureEnabled                 *bool          `json:"posture_enabled,omitempty"`
+	RemediateEndHosts              *bool          `json:"remediate_end_hosts,omitempty"`
+	RemediationURL                 string         `json:"remediation_url,omitempty"`
+	AuditEnabled                   *bool          `json:"audit_enabled,omitempty"`
+	AuditServer                    string         `json:"audit_server,omitempty"`
+	AuditTriggerCondition          string         `json:"audit_trigger_condition,omitempty"`
+	AuditMacAuthClientType         string         `json:"audit_mac_auth_client_type,omitempty"`
+	ActionAfterAudit               string         `json:"action_after_audit,omitempty"`
+	AuditCoaAction                 string         `json:"audit_coa_acton,omitempty"` // Note: API typo 'acton'
+	ProfilerEnabled                *bool          `json:"profiler_enabled,omitempty"`
+	ProfilerEndpointClassification []string       `json:"profiler_endpoint_classification,omitempty"`
+	ProfilerCoaAction              string         `json:"profiler_coa_action,omitempty"`
+	AcctProxyEnabled               *bool          `json:"acct_proxy_enabled,omitempty"`
+	AcctProxyTargets               []string       `json:"acct_proxy_targets,omitempty"`
+	RadiusProxyScheme              string         `json:"radius_proxy_scheme,omitempty"`
+	RadiusProxyTargets             []string       `json:"radius_proxy_targets,omitempty"`
+	RadiusProxyEnableForAcct       *bool          `json:"radius_proxy_enable_for_acct,omitempty"`
 }
 
 type ServiceUpdate struct {
-	Name              string         `json:"name,omitempty"`
-	Template          string         `json:"template,omitempty"`
-	Description       string         `json:"description,omitempty"`
-	Enabled           *bool          `json:"enabled,omitempty"`
-	AuthMethods       []string       `json:"auth_methods,omitempty"`
-	AuthSources       []string       `json:"auth_sources,omitempty"`
-	RoleMappingPolicy string         `json:"role_mapping_policy,omitempty"`
-	EnfPolicy         string         `json:"enf_policy,omitempty"`
-	StripUsername     *bool          `json:"strip_username,omitempty"`
-	RulesMatchType    string         `json:"rules_match_type,omitempty"`
-	RulesConditions   []*ServiceRule `json:"rules_conditions,omitempty"`
+	Name                           string         `json:"name,omitempty"`
+	Template                       string         `json:"template,omitempty"`
+	Description                    string         `json:"description,omitempty"`
+	Enabled                        *bool          `json:"enabled,omitempty"`
+	AuthMethods                    []string       `json:"auth_methods,omitempty"`
+	AuthSources                    []string       `json:"auth_sources,omitempty"`
+	RoleMappingPolicy              string         `json:"role_mapping_policy,omitempty"`
+	EnfPolicy                      string         `json:"enf_policy,omitempty"`
+	StripUsername                  *bool          `json:"strip_username,omitempty"`
+	RulesMatchType                 string         `json:"rules_match_type,omitempty"`
+	RulesConditions                []*ServiceRule `json:"rules_conditions,omitempty"`
+	DefaultPostureToken            string         `json:"default_posture_token,omitempty"`
+	PosturePolicies                []string       `json:"posture_policies,omitempty"`
+	MonitorMode                    *bool          `json:"monitor_mode,omitempty"`
+	StripUsernameCSV               string         `json:"strip_username_csv,omitempty"`
+	ServiceCertCN                  string         `json:"service_cert_cn,omitempty"`
+	UseCachedPolicyResults         *bool          `json:"use_cached_policy_results,omitempty"`
+	AuthzSources                   []string       `json:"authz_sources,omitempty"`
+	PostureEnabled                 *bool          `json:"posture_enabled,omitempty"`
+	RemediateEndHosts              *bool          `json:"remediate_end_hosts,omitempty"`
+	RemediationURL                 string         `json:"remediation_url,omitempty"`
+	AuditEnabled                   *bool          `json:"audit_enabled,omitempty"`
+	AuditServer                    string         `json:"audit_server,omitempty"`
+	AuditTriggerCondition          string         `json:"audit_trigger_condition,omitempty"`
+	AuditMacAuthClientType         string         `json:"audit_mac_auth_client_type,omitempty"`
+	ActionAfterAudit               string         `json:"action_after_audit,omitempty"`
+	AuditCoaAction                 string         `json:"audit_coa_acton,omitempty"` // Note: API typo 'acton'
+	ProfilerEnabled                *bool          `json:"profiler_enabled,omitempty"`
+	ProfilerEndpointClassification []string       `json:"profiler_endpoint_classification,omitempty"`
+	ProfilerCoaAction              string         `json:"profiler_coa_action,omitempty"`
+	AcctProxyEnabled               *bool          `json:"acct_proxy_enabled,omitempty"`
+	AcctProxyTargets               []string       `json:"acct_proxy_targets,omitempty"`
+	RadiusProxyScheme              string         `json:"radius_proxy_scheme,omitempty"`
+	RadiusProxyTargets             []string       `json:"radius_proxy_targets,omitempty"`
+	RadiusProxyEnableForAcct       *bool          `json:"radius_proxy_enable_for_acct,omitempty"`
 }
 
 type ServiceResult struct {
-	ID                int            `json:"id"`
-	Name              string         `json:"name"`
-	Type              string         `json:"type"`
-	Template          string         `json:"template"`
-	Description       string         `json:"description"`
-	Enabled           bool           `json:"enabled"`
-	AuthMethods       []string       `json:"auth_methods"`
-	AuthSources       []string       `json:"auth_sources"`
-	RoleMappingPolicy string         `json:"role_mapping_policy"`
-	EnfPolicy         string         `json:"enf_policy"`
-	StripUsername     bool           `json:"strip_username"`
-	RulesMatchType    string         `json:"rules_match_type"`
-	RulesConditions   []*ServiceRule `json:"rules_conditions"`
+	ID                             int            `json:"id"`
+	Name                           string         `json:"name"`
+	Type                           string         `json:"type"`
+	Template                       string         `json:"template"`
+	Description                    string         `json:"description"`
+	Enabled                        bool           `json:"enabled"`
+	AuthMethods                    []string       `json:"auth_methods"`
+	AuthSources                    []string       `json:"auth_sources"`
+	RoleMappingPolicy              string         `json:"role_mapping_policy"`
+	EnfPolicy                      string         `json:"enf_policy"`
+	StripUsername                  bool           `json:"strip_username"`
+	RulesMatchType                 string         `json:"rules_match_type"`
+	RulesConditions                []*ServiceRule `json:"rules_conditions"`
+	DefaultPostureToken            string         `json:"default_posture_token"`
+	PosturePolicies                []string       `json:"posture_policies"`
+	MonitorMode                    bool           `json:"monitor_mode"`
+	StripUsernameCSV               string         `json:"strip_username_csv"`
+	ServiceCertCN                  string         `json:"service_cert_cn"`
+	UseCachedPolicyResults         bool           `json:"use_cached_policy_results"`
+	AuthzSources                   []string       `json:"authz_sources"`
+	PostureEnabled                 bool           `json:"posture_enabled"`
+	RemediateEndHosts              bool           `json:"remediate_end_hosts"`
+	RemediationURL                 string         `json:"remediation_url"`
+	AuditEnabled                   bool           `json:"audit_enabled"`
+	AuditServer                    string         `json:"audit_server"`
+	AuditTriggerCondition          string         `json:"audit_trigger_condition"`
+	AuditMacAuthClientType         string         `json:"audit_mac_auth_client_type"`
+	ActionAfterAudit               string         `json:"action_after_audit"`
+	AuditCoaAction                 string         `json:"audit_coa_acton"` // Note: API typo 'acton'
+	ProfilerEnabled                bool           `json:"profiler_enabled"`
+	ProfilerEndpointClassification []string       `json:"profiler_endpoint_classification"`
+	ProfilerCoaAction              string         `json:"profiler_coa_action"`
+	AcctProxyEnabled               bool           `json:"acct_proxy_enabled"`
+	AcctProxyTargets               []string       `json:"acct_proxy_targets"`
+	RadiusProxyScheme              string         `json:"radius_proxy_scheme"`
+	RadiusProxyTargets             []string       `json:"radius_proxy_targets"`
+	RadiusProxyEnableForAcct       bool           `json:"radius_proxy_enable_for_acct"`
 }
 
 type ServiceRule struct {
