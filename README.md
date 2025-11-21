@@ -1,17 +1,30 @@
 # Terraform Provider for Aruba ClearPass
 
-A Terraform provider for managing [Aruba ClearPass Policy Manager](https://www.arubanetworks.com/products/security/network-access-control/). This provider enables Infrastructure as Code (IaC) for ClearPass configurations including users, roles, services, and enforcement policies.
+> **🏆 The Best ClearPass Terraform Provider on the Market!**  
+> *(Because it's literally the only one)*
+
+A community-built Terraform provider for managing [Aruba ClearPass Policy Manager](https://www.arubanetworks.com/products/security/network-access-control/). Born out of necessity when we needed to automate ClearPass and realized no one else had done it yet.
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/i-am-smolli/terraform-provider-clearpass)](https://goreportcard.com/report/github.com/i-am-smolli/terraform-provider-clearpass)
 
-## Features
+## ⚠️ Important Disclaimers
 
-- ✅ **Complete Resource Coverage**: Manage roles, users, services, enforcement profiles, and policies
-- ✅ **Full CRUD Operations**: Create, Read, Update, and Delete support for all resources
-- ✅ **Import Support**: Import existing ClearPass configurations into Terraform
-- ✅ **Type Safety**: Built with terraform-plugin-framework for robust type handling
-- ✅ **Comprehensive Documentation**: Auto-generated docs with examples for every resource
+- **Limited Scope**: This provider covers only the resources we currently need. It's not exhaustive.
+- **No Official Support**: Community-maintained, use at your own risk.
+- **Always Test First**: Test against dev/lab instances. Never go straight to production.
+- **Not Aruba-Endorsed**: This is not an official Aruba product. Just some folks trying to make life easier.
+
+## What This Provider Does
+
+It covers the basics we needed for our ClearPass automation:
+
+- ✅ Roles, users, and authentication services
+- ✅ Role mapping policies
+- ✅ Enforcement profiles and policies
+- ✅ Import existing configs
+
+If you need more resources or features, you're welcome to contribute! Or better yet, if you're a *real* developer (unlike us amateurs), please make a proper provider and we'll happily use yours instead. 😄
 
 ## Supported Resources
 
@@ -207,16 +220,19 @@ mkdir -p ~/.terraform.d/plugins/local/dev/clearpass/1.0.0/darwin_arm64
 cp terraform-provider-clearpass ~/.terraform.d/plugins/local/dev/clearpass/1.0.0/darwin_arm64/
 ```
 
+
 ### Running Tests
+
+> **⚠️ TESTING WARNING**: Always run tests against a dev/lab ClearPass instance. Never test against production. We mean it. Seriously.
 
 **Unit Tests**:
 ```bash
 go test ./...
 ```
 
-**Acceptance Tests** (requires ClearPass instance):
+**Acceptance Tests** (requires a **TEST** ClearPass instance - did we mention not to use production?):
 ```bash
-export CLEARPASS_HOST="your-clearpass-host"
+export CLEARPASS_HOST="your-dev-clearpass-host"  # DEV! NOT PRODUCTION!
 export CLEARPASS_CLIENT_ID="your-client-id"
 export CLEARPASS_CLIENT_SECRET="your-client-secret"
 export TF_ACC=1
@@ -326,18 +342,49 @@ This project follows [Semantic Versioning](https://semver.org/). For available v
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## "Support" (Read: Community Help)
 
-- 📖 [Documentation](./docs)
-- 🐛 [Issue Tracker](https://github.com/i-am-smolli/terraform-provider-clearpass/issues)
-- 💬 [Discussions](https://github.com/i-am-smolli/terraform-provider-clearpass/discussions)
+Let's be honest - there's no official support here. But you can try:
+
+- 📖 [Documentation](./docs) - Auto-generated, so it's at least accurate
+- 🐛 [Issue Tracker](https://github.com/i-am-smolli/terraform-provider-clearpass/issues) - File bugs, we might fix them... eventually
+- 💬 [Discussions](https://github.com/i-am-smolli/terraform-provider-clearpass/discussions) - Ask questions, share tips, commiserate
+
+## A Challenge to Real Developers
+
+If you're reading this and thinking "I could make a better provider," you're probably right! This was built by folks who needed it to work, not by Terraform experts. 
+
+We'd love to see:
+- A more complete ClearPass API implementation
+- Better error handling
+- More sophisticated state management
+- Actual testing infrastructure
+- Maybe even official Aruba support?
+
+If you build something better, let us know and we'll gladly direct people to your version. Until then, this is what we've got. 🤷
+
+## About "Us" 
+
+When we say "we," here's who actually built this:
+- **i-am-smolli** - The human who actually needed this to work
+- **Gemini** - Google's AI, did a lot of the heavy lifting
+- **Claude** - Anthropic's AI, helped figure out the tricky bits
+- **ChatGPT** - OpenAI's AI, pitched in when the others got stuck
+
+Yes, this provider was essentially built by one person with three AI assistants. We're living in the future, folks. 
+
+This is probably the most honest tech README you'll ever read. The code works, the tests pass, and it solves real problems. Does it matter that it was pair-programmed with AI? We don't think so, but we thought you should know.
 
 ## Acknowledgments
 
 Built with:
-- [terraform-plugin-framework](https://github.com/hashicorp/terraform-plugin-framework)
-- [terraform-plugin-docs](https://github.com/hashicorp/terraform-plugin-docs)
+- [terraform-plugin-framework](https://github.com/hashicorp/terraform-plugin-framework) - The actual experts
+- [terraform-plugin-docs](https://github.com/hashicorp/terraform-plugin-docs) - For making our docs look professional
+- Coffee ☕ - Lots of it
+- Stack Overflow - You know why
 
 ---
 
-**Note**: This is a community-developed provider and is not officially supported by Aruba Networks or HPE. Use at your own risk in production environments.
+**Final Note**: This provider was built to solve a specific problem. It works for our use case. It might work for yours. It might not. Test it first, use it at your own risk, and if you improve it, please share! We're all in this together.
+
+**Not affiliated with, endorsed by, or supported by**: Aruba Networks, HPE, or anyone else who might actually know what they're doing. This is pure community effort from folks who just needed ClearPass automation yesterday.
