@@ -8,15 +8,14 @@ import (
 
 	"terraform-provider-clearpass/internal/client" // Unser SDK (Box 3)
 
-
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 // Ensure provider-defined types implement framework interfaces
@@ -30,7 +29,7 @@ type localUserResource struct {
 // localUserResourceModel defines the HCL data model for the resource.
 // This is our "translator" struct between HCL and the Go client.
 type localUserResourceModel struct {
-	ID       types.Int64 `tfsdk:"id"` // We will use the 'user_id' string as the TF ID
+	ID       types.Int64  `tfsdk:"id"` // We will use the 'user_id' string as the TF ID
 	UserID   types.String `tfsdk:"user_id"`
 	Username types.String `tfsdk:"username"`
 	Password types.String `tfsdk:"password"`
@@ -57,11 +56,11 @@ func (r *localUserResource) Schema(ctx context.Context, req resource.SchemaReque
 			// We use 'user_id' as the main ID for this resource.
 			// "id" is a special Terraform attribute.
 			"id": schema.Int64Attribute{
-			    Description: "The numeric ID of the local user. This is used as the Terraform ID.",
-			    Computed:    true,
-			    PlanModifiers: []planmodifier.Int64{
-			        int64planmodifier.UseStateForUnknown(),
-			    },
+				Description: "The numeric ID of the local user. This is used as the Terraform ID.",
+				Computed:    true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.UseStateForUnknown(),
+				},
 			},
 			"user_id": schema.StringAttribute{
 				Description: "The unique user ID (e.g., 'tf-test-user').",
@@ -85,11 +84,11 @@ func (r *localUserResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional:    true,
 				Computed:    true,
 				Default:     booldefault.StaticBool(true), // <-- FIXED LINE
-				PlanModifiers: []planmodifier.Bool{ 
+				PlanModifiers: []planmodifier.Bool{
 					boolplanmodifier.UseStateForUnknown(),
 				},
 			},
-		},	
+		},
 	}
 }
 
@@ -129,7 +128,7 @@ func (r *localUserResource) Create(ctx context.Context, req resource.CreateReque
 		Password: plan.Password.ValueString(),
 		RoleName: plan.RoleName.ValueString(),
 	}
-	
+
 	// Handle optional 'enabled' field
 	if !plan.Enabled.IsNull() {
 		enabledVal := plan.Enabled.ValueBool()
@@ -247,7 +246,7 @@ func (r *localUserResource) Update(ctx context.Context, req resource.UpdateReque
 	plan.Username = types.StringValue(updatedUser.Username)
 	plan.RoleName = types.StringValue(updatedUser.RoleName)
 	plan.Enabled = types.BoolValue(updatedUser.Enabled)
-	
+
 	// Save updated data to Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
@@ -261,7 +260,7 @@ func (r *localUserResource) Delete(ctx context.Context, req resource.DeleteReque
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	
+
 	numericID := state.ID.ValueInt64() // Holt die numerische ID aus dem State
 
 	// === API CALL ===
@@ -273,7 +272,7 @@ func (r *localUserResource) Delete(ctx context.Context, req resource.DeleteReque
 }
 
 // ImportState is used to retrieve data from the API and populate the state.
-func (r *enforcementProfileResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {	// We expect the ID to be the numeric ID of the user.
+func (r *localUserResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) { // We expect the ID to be the numeric ID of the user.
 	numericID, err := strconv.ParseInt(req.ID, 10, 64)
 	if err != nil {
 		resp.Diagnostics.AddError(

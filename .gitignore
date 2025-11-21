@@ -2,3 +2,5 @@
 .vscode/
 terraform-provider-clearpass
 test/*
+.env
+.agent

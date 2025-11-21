@@ -8,14 +8,14 @@ import (
 	"terraform-provider-clearpass/internal/client"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 )
 
 var _ resource.Resource = &enforcementProfileResource{}
@@ -61,9 +61,9 @@ func (r *enforcementProfileResource) Schema(ctx context.Context, req resource.Sc
 				Required:    true,
 			},
 			"description": schema.StringAttribute{
-				Description: "Description of the profile.",
-				Optional:    true,
-				Computed:    true,
+				Description:   "Description of the profile.",
+				Optional:      true,
+				Computed:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"type": schema.StringAttribute{
@@ -144,7 +144,7 @@ func (r *enforcementProfileResource) Create(ctx context.Context, req resource.Cr
 	plan.Description = types.StringValue(created.Description)
 	plan.Type = types.StringValue(created.Type)
 	plan.Action = types.StringValue(created.Action)
-	
+
 	var diags diag.Diagnostics
 	plan.Attributes, diags = flattenProfileAttributes(ctx, created.Attributes)
 	resp.Diagnostics.Append(diags...)
@@ -173,7 +173,7 @@ func (r *enforcementProfileResource) Read(ctx context.Context, req resource.Read
 	state.Description = types.StringValue(profile.Description)
 	state.Type = types.StringValue(profile.Type)
 	state.Action = types.StringValue(profile.Action)
-	
+
 	var diags diag.Diagnostics
 	state.Attributes, diags = flattenProfileAttributes(ctx, profile.Attributes)
 	resp.Diagnostics.Append(diags...)
@@ -191,10 +191,18 @@ func (r *enforcementProfileResource) Update(ctx context.Context, req resource.Up
 	apiPayload := &client.EnforcementProfileUpdate{
 		Attributes: expandProfileAttributes(ctx, plan.Attributes, &resp.Diagnostics),
 	}
-	if !plan.Name.IsUnknown() { apiPayload.Name = plan.Name.ValueString() }
-	if !plan.Description.IsUnknown() { apiPayload.Description = plan.Description.ValueString() }
-	if !plan.Type.IsUnknown() { apiPayload.Type = plan.Type.ValueString() }
-	if !plan.Action.IsUnknown() { apiPayload.Action = plan.Action.ValueString() }
+	if !plan.Name.IsUnknown() {
+		apiPayload.Name = plan.Name.ValueString()
+	}
+	if !plan.Description.IsUnknown() {
+		apiPayload.Description = plan.Description.ValueString()
+	}
+	if !plan.Type.IsUnknown() {
+		apiPayload.Type = plan.Type.ValueString()
+	}
+	if !plan.Action.IsUnknown() {
+		apiPayload.Action = plan.Action.ValueString()
+	}
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -210,7 +218,7 @@ func (r *enforcementProfileResource) Update(ctx context.Context, req resource.Up
 	plan.Description = types.StringValue(updated.Description)
 	plan.Type = types.StringValue(updated.Type)
 	plan.Action = types.StringValue(updated.Action)
-	
+
 	var diags diag.Diagnostics
 	plan.Attributes, diags = flattenProfileAttributes(ctx, updated.Attributes)
 	resp.Diagnostics.Append(diags...)
@@ -276,7 +284,7 @@ func (m profileAttributeModel) attrTypes() map[string]attr.Type {
 }
 
 // ImportState is used to retrieve data from the API and populate the state.
-func (r *localUserResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *enforcementProfileResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// We expect the ID to be the numeric ID of the user.
 	numericID, err := strconv.ParseInt(req.ID, 10, 64)
 	if err != nil {

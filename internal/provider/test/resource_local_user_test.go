@@ -1,5 +1,5 @@
 // internal/provider/resource_local_user_test.go
-package provider
+package provider_test
 
 import (
 	"testing"
@@ -28,7 +28,7 @@ resource "clearpass_local_user" "test" {
 					resource.TestCheckResourceAttr("clearpass_local_user.test", "user_id", "tf-acc-test-user"),
 					resource.TestCheckResourceAttr("clearpass_local_user.test", "role_name", "[Employee]"),
 					resource.TestCheckResourceAttr("clearpass_local_user.test", "enabled", "true"),
-                    // Check that an ID was generated (it shouldn't be empty)
+					// Check that an ID was generated (it shouldn't be empty)
 					resource.TestCheckResourceAttrSet("clearpass_local_user.test", "id"),
 				),
 			},
@@ -52,8 +52,8 @@ resource "clearpass_local_user" "test" {
 				ResourceName:      "clearpass_local_user.test",
 				ImportState:       true,
 				ImportStateVerify: true,
-                // Password is sensitive/write-only, so we ignore it during import check
-				ImportStateVerifyIgnore: []string{"password"}, 
+				// Password is sensitive/write-only, so we ignore it during import check
+				ImportStateVerifyIgnore: []string{"password"},
 			},
 		},
 	})

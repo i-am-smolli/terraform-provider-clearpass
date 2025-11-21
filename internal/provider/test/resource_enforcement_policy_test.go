@@ -1,5 +1,5 @@
 // internal/provider/resource_enforcement_policy_test.go
-package provider
+package provider_test
 
 import (
 	"testing"
@@ -31,14 +31,14 @@ func TestAccEnforcementPolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr("clearpass_enforcement_policy.test_policy", "name", policyName),
 					resource.TestCheckResourceAttr("clearpass_enforcement_policy.test_policy", "description", "Initial Policy"),
 					resource.TestCheckResourceAttr("clearpass_enforcement_policy.test_policy", "default_enforcement_profile", "[Deny Access Profile]"),
-					
+
 					// Check Nested Rules
 					resource.TestCheckResourceAttr("clearpass_enforcement_policy.test_policy", "rules.#", "1"),
 					// Check that the rule references our created profile
 					resource.TestCheckResourceAttr("clearpass_enforcement_policy.test_policy", "rules.0.enforcement_profile_names.0", profileName),
 					// Check the condition value
 					resource.TestCheckResourceAttr("clearpass_enforcement_policy.test_policy", "rules.0.condition.0.value", "Corporate-A"),
-					
+
 					resource.TestCheckResourceAttrSet("clearpass_enforcement_policy.test_policy", "id"),
 				),
 			},

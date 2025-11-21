@@ -1,20 +1,20 @@
 // internal/provider/resource_role_test.go
-package provider
+package provider_test
 
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // TestAccRoleResource tests the full CRUD and Import cycle for clearpass_role
 func TestAccRoleResource(t *testing.T) {
 	// Generate a unique name for the role to prevent conflicts
 	uniqueName := acctest.RandomWithPrefix("tf-acc-role")
-    
+
 	// ClearPass often requires system roles to be bracketed, but API handles user-defined roles as strings.
-	roleName := uniqueName 
+	roleName := uniqueName
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

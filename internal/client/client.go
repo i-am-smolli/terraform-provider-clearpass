@@ -270,7 +270,13 @@ func (c *apiClient) do(req *http.Request, v interface{}) error {
 	if err != nil {
 		return fmt.Errorf("failed to execute request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		cerr := resp.Body.Close()
+		if cerr != nil {
+			// Optionally log or handle the error, but do not shadow the main error
+			fmt.Printf("warning: error closing response body: %v\n", cerr)
+		}
+	}()
 
 	// Wir lesen den GANZEN Body in den Speicher, um ihn im Fehlerfall auszugeben
 	bodyBytes, err := io.ReadAll(resp.Body)
@@ -585,7 +591,3 @@ func (c *apiClient) DeleteService(ctx context.Context, id int) error {
 	}
 	return c.do(req, nil)
 }
-
-
-
-

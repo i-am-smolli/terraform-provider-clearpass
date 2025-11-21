@@ -1,15 +1,16 @@
 // internal/provider/resource_role_mapping_test.go
-package provider
+package provider_test
 
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
+
 func TestAccRoleMappingResource(t *testing.T) {
 
-	uniqueName := acctest.RandomWithPrefix("tf-acc-role-map") 
+	uniqueName := acctest.RandomWithPrefix("tf-acc-role-map")
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

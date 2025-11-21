@@ -1,21 +1,21 @@
 // internal/provider/resource_enforcement_profile_test.go
-package provider
+package provider_test
 
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccEnforcementProfileResource(t *testing.T) {
-	// Generate a unique name 
+	// Generate a unique name
 	uniqueName := acctest.RandomWithPrefix("tf-acc-enforce")
-    
+
 	// Configuration 1: Initial Creation (VLAN ID 100)
 	config1 := testAccProviderConfig() + testAccEnforcementProfileConfig(uniqueName, "Initial Profile", "100")
-    
-    // Configuration 2: Update (VLAN ID 150 and description changed)
+
+	// Configuration 2: Update (VLAN ID 150 and description changed)
 	config2 := testAccProviderConfig() + testAccEnforcementProfileConfig(uniqueName, "Updated Profile", "150")
 
 	resource.Test(t, resource.TestCase{
@@ -42,7 +42,7 @@ func TestAccEnforcementProfileResource(t *testing.T) {
 					// Check nested attribute update (VLAN ID changed to 150)
 					resource.TestCheckResourceAttr("clearpass_enforcement_profile.test_profile", "attributes.1.value", "150"),
 					// Ensure the first attribute (Filter-Id) remains unchanged
-					resource.TestCheckResourceAttr("clearpass_enforcement_profile.test_profile", "attributes.0.value", "Employee-Access"), 
+					resource.TestCheckResourceAttr("clearpass_enforcement_profile.test_profile", "attributes.0.value", "Employee-Access"),
 				),
 			},
 			// 3. Import State - Test 'terraform import' functionality
