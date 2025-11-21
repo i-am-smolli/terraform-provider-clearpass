@@ -29,12 +29,16 @@ type localUserResource struct {
 // localUserResourceModel defines the HCL data model for the resource.
 // This is our "translator" struct between HCL and the Go client.
 type localUserResourceModel struct {
-	ID       types.Int64  `tfsdk:"id"` // We will use the 'user_id' string as the TF ID
-	UserID   types.String `tfsdk:"user_id"`
-	Username types.String `tfsdk:"username"`
-	Password types.String `tfsdk:"password"`
-	RoleName types.String `tfsdk:"role_name"`
-	Enabled  types.Bool   `tfsdk:"enabled"`
+	ID                 types.Int64  `tfsdk:"id"` // We will use the 'user_id' string as the TF ID
+	UserID             types.String `tfsdk:"user_id"`
+	Username           types.String `tfsdk:"username"`
+	Password           types.String `tfsdk:"password"`
+	RoleName           types.String `tfsdk:"role_name"`
+	Enabled            types.Bool   `tfsdk:"enabled"`
+	PasswordHash       types.String `tfsdk:"password_hash"`
+	PasswordNTLMHash   types.String `tfsdk:"password_ntlm_hash"`
+	ChangePwdNextLogin types.Bool   `tfsdk:"change_pwd_next_login"`
+	Attributes         types.Map    `tfsdk:"attributes"`
 }
 
 // NewLocalUserResource is a factory function for the localUserResource.
@@ -83,10 +87,31 @@ func (r *localUserResource) Schema(ctx context.Context, req resource.SchemaReque
 				Description: "Whether the user account is enabled. Defaults to 'true' if not specified.",
 				Optional:    true,
 				Computed:    true,
-				Default:     booldefault.StaticBool(true), // <-- FIXED LINE
+				Default:     booldefault.StaticBool(true),
 				PlanModifiers: []planmodifier.Bool{
 					boolplanmodifier.UseStateForUnknown(),
 				},
+			},
+			"password_hash": schema.StringAttribute{
+				Description: "The password hash of the local user.",
+				Optional:    true,
+				Sensitive:   true,
+			},
+			"password_ntlm_hash": schema.StringAttribute{
+				Description: "The NTLM password hash of the local user.",
+				Optional:    true,
+				Sensitive:   true,
+			},
+			"change_pwd_next_login": schema.BoolAttribute{
+				Description: "Flag indicating if the password change is required in next login.",
+				Optional:    true,
+				Computed:    true,
+				Default:     booldefault.StaticBool(false),
+			},
+			"attributes": schema.MapAttribute{
+				Description: "Additional attributes (key/value pairs) may be stored with the local user account.",
+				Optional:    true,
+				ElementType: types.StringType,
 			},
 		},
 	}
@@ -129,6 +154,26 @@ func (r *localUserResource) Create(ctx context.Context, req resource.CreateReque
 		RoleName: plan.RoleName.ValueString(),
 	}
 
+	if !plan.PasswordHash.IsNull() {
+		apiPayload.PasswordHash = plan.PasswordHash.ValueString()
+	}
+	if !plan.PasswordNTLMHash.IsNull() {
+		apiPayload.PasswordNTLMHash = plan.PasswordNTLMHash.ValueString()
+	}
+	if !plan.ChangePwdNextLogin.IsNull() {
+		val := plan.ChangePwdNextLogin.ValueBool()
+		apiPayload.ChangePwdNextLogin = &val
+	}
+	if !plan.Attributes.IsNull() {
+		attrs := make(map[string]string)
+		diag := plan.Attributes.ElementsAs(ctx, &attrs, false)
+		resp.Diagnostics.Append(diag...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		apiPayload.Attributes = attrs
+	}
+
 	// Handle optional 'enabled' field
 	if !plan.Enabled.IsNull() {
 		enabledVal := plan.Enabled.ValueBool()
@@ -151,7 +196,23 @@ func (r *localUserResource) Create(ctx context.Context, req resource.CreateReque
 	plan.Username = types.StringValue(createdUser.Username)
 	plan.RoleName = types.StringValue(createdUser.RoleName)
 	plan.Enabled = types.BoolValue(createdUser.Enabled)
+	plan.ChangePwdNextLogin = types.BoolValue(createdUser.ChangePwdNextLogin)
+
+	if len(createdUser.Attributes) > 0 {
+		attrs, diag := types.MapValueFrom(ctx, types.StringType, createdUser.Attributes)
+		resp.Diagnostics.Append(diag...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		plan.Attributes = attrs
+	} else {
+		plan.Attributes = types.MapNull(types.StringType)
+	}
 	// We do NOT save the password back from the API (it's write-only)
+	// We also don't get hashes back in the result usually, but if we did we would map them.
+	// For now, we keep the plan values for hashes if they were set, to avoid drift if API doesn't return them.
+	// In a real scenario, we might need to handle this differently if the API returns hashes.
+	// For now, we just rely on state preservation for unknown values if they are not in the response.
 
 	// Save data to Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
@@ -193,6 +254,18 @@ func (r *localUserResource) Read(ctx context.Context, req resource.ReadRequest, 
 	state.Username = types.StringValue(user.Username)
 	state.RoleName = types.StringValue(user.RoleName)
 	state.Enabled = types.BoolValue(user.Enabled)
+	state.ChangePwdNextLogin = types.BoolValue(user.ChangePwdNextLogin)
+
+	if len(user.Attributes) > 0 {
+		attrs, diag := types.MapValueFrom(ctx, types.StringType, user.Attributes)
+		resp.Diagnostics.Append(diag...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		state.Attributes = attrs
+	} else {
+		state.Attributes = types.MapNull(types.StringType)
+	}
 	// We don't read the password, as it's write-only
 
 	// Save refreshed data to Terraform state
@@ -224,6 +297,25 @@ func (r *localUserResource) Update(ctx context.Context, req resource.UpdateReque
 	if !plan.RoleName.IsUnknown() {
 		apiPayload.RoleName = plan.RoleName.ValueString()
 	}
+	if !plan.PasswordHash.IsUnknown() {
+		apiPayload.PasswordHash = plan.PasswordHash.ValueString()
+	}
+	if !plan.PasswordNTLMHash.IsUnknown() {
+		apiPayload.PasswordNTLMHash = plan.PasswordNTLMHash.ValueString()
+	}
+	if !plan.ChangePwdNextLogin.IsUnknown() {
+		val := plan.ChangePwdNextLogin.ValueBool()
+		apiPayload.ChangePwdNextLogin = &val
+	}
+	if !plan.Attributes.IsUnknown() {
+		attrs := make(map[string]string)
+		diag := plan.Attributes.ElementsAs(ctx, &attrs, false)
+		resp.Diagnostics.Append(diag...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		apiPayload.Attributes = attrs
+	}
 	if !plan.Enabled.IsUnknown() {
 		enabledVal := plan.Enabled.ValueBool()
 		apiPayload.Enabled = &enabledVal
@@ -246,6 +338,18 @@ func (r *localUserResource) Update(ctx context.Context, req resource.UpdateReque
 	plan.Username = types.StringValue(updatedUser.Username)
 	plan.RoleName = types.StringValue(updatedUser.RoleName)
 	plan.Enabled = types.BoolValue(updatedUser.Enabled)
+	plan.ChangePwdNextLogin = types.BoolValue(updatedUser.ChangePwdNextLogin)
+
+	if len(updatedUser.Attributes) > 0 {
+		attrs, diag := types.MapValueFrom(ctx, types.StringType, updatedUser.Attributes)
+		resp.Diagnostics.Append(diag...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		plan.Attributes = attrs
+	} else {
+		plan.Attributes = types.MapNull(types.StringType)
+	}
 
 	// Save updated data to Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
