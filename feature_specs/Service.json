@@ -1,0 +1,2358 @@
+{
+    "apiVersion": "1",
+    "swaggerVersion": "1.2",
+    "basePath": "https:\/\/10.1.9.123\/api",
+    "resourcePath": "\/config\/service",
+    "apis": [
+        {
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get a list of Services",
+                    "notes": "Get a list of Services. \u003Cdiv\u003E\n  \u003Ca id=\u0022A6920670942bd5\u0022 href=\u0022#\u0022 onclick=\u0022$(\u0027#P6920670942bd5\u0027).slideDown();$(\u0027#A6920670942bd5\u0027).slideUp();return false;\u0022\u003EMore about JSON filter expressions\u003C\/a\u003E\n  \u003Cdiv id=\u0022P6920670942bd5\u0022 style=\u0022display: none;\u0022\u003E\n\u003Cp\u003E\n  A filter is specified as a JSON object, where the properties of the object\n  specify the type of query to be performed.\n\u003C\/p\u003E\n\u003Ctable\u003E\n  \u003Cthead\u003E\n    \u003Ctr\u003E\n      \u003Cth\u003EDescription\u003C\/th\u003E\n      \u003Cth\u003EJSON Filter Syntax\u003C\/th\u003E\n    \u003C\/tr\u003E\n  \u003C\/thead\u003E\n  \u003Ctbody\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ENo filter, matches everything\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$eq\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$in\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$nin\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField contains a substring \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$contains\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$ne\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-sensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-insensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022, \u0022$options\u0022:\u0022i\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField exists (does not contain a null value)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:true}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is NULL\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:false}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with AND\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with OR\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$or\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EInverting a filter expression\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$not\u0022:{ \u003Ci\u003Efilter\u003C\/i\u003E }}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is greater than or equal to 2 and less than 5\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2, \u0022$lt\u0022:5}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2}}, {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:5}} ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n  \u003C\/tbody\u003E\n\u003C\/table\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E",
+                    "nickname": "GET_for_Service",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "name": "filter",
+                            "paramType": "query",
+                            "type": "string",
+                            "description": "JSON filter expression specifying the items to return",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "{}"
+                        },
+                        {
+                            "name": "sort",
+                            "paramType": "query",
+                            "type": "string",
+                            "description": "Sort ordering for returned items (default +id)",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "+id"
+                        },
+                        {
+                            "name": "offset",
+                            "paramType": "query",
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Zero based offset to start from",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "0",
+                            "minimum": "0"
+                        },
+                        {
+                            "name": "limit",
+                            "paramType": "query",
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Maximum number of items to return (1 \u2013 1000)",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "25",
+                            "minimum": "1",
+                            "maximum": "1000"
+                        },
+                        {
+                            "name": "calculate_count",
+                            "paramType": "query",
+                            "type": "boolean",
+                            "description": "Whether to calculate the total item count",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "false"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "POST",
+                    "summary": "Create a new Service",
+                    "notes": "Create a new Service",
+                    "nickname": "POST_for_Service",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "ServiceCreate"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "201",
+                            "message": "Created"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/config\/service"
+        },
+        {
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get a Service",
+                    "notes": "Get a Service",
+                    "nickname": "GET_for_Service",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_id",
+                            "description": "Numeric ID of the service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                },
+                {
+                    "method": "PATCH",
+                    "summary": "Update some fields of a Service",
+                    "notes": "Update some fields of a Service",
+                    "nickname": "PATCH_for_Service",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_id",
+                            "description": "Numeric ID of the service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "ServiceUpdate"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "PUT",
+                    "summary": "Replace a Service",
+                    "notes": "Replace a Service",
+                    "nickname": "PUT_for_Service",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_id",
+                            "description": "Numeric ID of the service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "ServiceReplace"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "DELETE",
+                    "summary": "Delete a Service",
+                    "notes": "Delete a Service",
+                    "nickname": "DELETE_for_Service",
+                    "type": "void",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_id",
+                            "description": "Numeric ID of the service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/config\/service\/{services_id}"
+        },
+        {
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get a Service by name",
+                    "notes": "Get a Service by name",
+                    "nickname": "GET_for_Service_by_name",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_name",
+                            "description": "Name of the Service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                },
+                {
+                    "method": "PATCH",
+                    "summary": "Update some fields of a Service by name",
+                    "notes": "Update some fields of a Service by name",
+                    "nickname": "PATCH_for_Service_by_name",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_name",
+                            "description": "Name of the Service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "ServiceUpdate"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "PUT",
+                    "summary": "Replace a Service by name",
+                    "notes": "Replace a Service by name",
+                    "nickname": "PUT_for_Service_by_name",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_name",
+                            "description": "Name of the Service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "ServiceReplace"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "DELETE",
+                    "summary": "Delete a Service by name",
+                    "notes": "Delete a Service by name",
+                    "nickname": "DELETE_for_Service_by_name",
+                    "type": "void",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_name",
+                            "description": "Name of the Service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/config\/service\/name\/{services_name}"
+        },
+        {
+            "operations": [
+                {
+                    "method": "PATCH",
+                    "summary": "Enable a Service",
+                    "notes": "Enable a Service",
+                    "nickname": "Enable_a_Service",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_id",
+                            "description": "Numeric ID of the service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/config\/service\/{services_id}\/enable"
+        },
+        {
+            "operations": [
+                {
+                    "method": "PATCH",
+                    "summary": "Enable a Service by name",
+                    "notes": "Enable a Service by name",
+                    "nickname": "Enable_a_Service_by_name",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_name",
+                            "description": "Name of the Service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/config\/service\/name\/{services_name}\/enable"
+        },
+        {
+            "operations": [
+                {
+                    "method": "PATCH",
+                    "summary": "Disable a Service",
+                    "notes": "Disable a Service",
+                    "nickname": "Disable_a_Service",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_id",
+                            "description": "Numeric ID of the service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/config\/service\/{services_id}\/disable"
+        },
+        {
+            "operations": [
+                {
+                    "method": "PATCH",
+                    "summary": "Disable a Service by name",
+                    "notes": "Disable a Service by name",
+                    "nickname": "Disable_a_Service__by_name",
+                    "type": "ServiceResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "services_name",
+                            "description": "Name of the Service",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/config\/service\/name\/{services_name}\/disable"
+        },
+        {
+            "operations": [
+                {
+                    "method": "PATCH",
+                    "summary": "Reorder Services",
+                    "notes": "Reorder Services",
+                    "nickname": "Reorder_Services",
+                    "type": "ServiceReorder",
+                    "parameters": [
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "ServiceReorder"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/config\/service\/reorder"
+        }
+    ],
+    "produces": [
+        "application\/vnd.configuration.v1+json",
+        "application\/hal+json",
+        "application\/json"
+    ],
+    "models": {
+        "Service": {
+            "id": "Service",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Unique ID of the Service"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Service"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Type of the Service"
+                },
+                "template": {
+                    "type": "string",
+                    "description": "Template of the Service",
+                    "enum": [
+                        "Aruba 802.1X Wireless",
+                        "802.1X Wireless",
+                        "802.1X Wired",
+                        "MAC Authentication",
+                        "Web-based Authentication",
+                        "Web-based Health Check Only",
+                        "Web-based Open Network Access",
+                        "802.1X Wireless - Identity Only",
+                        "802.1X Wired - Identity Only",
+                        "RADIUS Enforcement ( Generic )",
+                        "RADIUS Proxy",
+                        "RADIUS Authorization",
+                        "TACACS+ Enforcement",
+                        "Aruba Application Authentication",
+                        "Aruba Application Authorization",
+                        "Cisco Web Authentication Proxy",
+                        "Event-based Enforcement",
+                        "ClearPass OnConnect Enforcement"
+                    ]
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Is Service enabled?"
+                },
+                "order_no": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Order number of the Service"
+                },
+                "hit_count": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Service Hit Count"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the Service"
+                },
+                "monitor_mode": {
+                    "type": "boolean",
+                    "description": "Enable to monitor network access without enforcement"
+                },
+                "rules_match_type": {
+                    "type": "string",
+                    "description": "Matches ANY\/ALL of the rule conditions",
+                    "enum": [
+                        "MATCHES_ANY",
+                        "MATCHES_ALL"
+                    ]
+                },
+                "rules_conditions": {
+                    "description": "List of service rules conditions",
+                    "type": "array",
+                    "items": {
+                        "$ref": "ServiceRules"
+                    }
+                },
+                "auth_methods": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Authentication Method Names"
+                },
+                "auth_sources": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Authentication Source Names"
+                },
+                "strip_username": {
+                    "type": "boolean",
+                    "description": "Enable to specify a comma-separated list of rules to strip username prefixes or suffixes"
+                },
+                "strip_username_csv": {
+                    "type": "string",
+                    "description": "Strip Username Rule"
+                },
+                "service_cert_cn": {
+                    "type": "string",
+                    "description": "Subject DN of Service Certificate"
+                },
+                "service_cert_expiry_date": {
+                    "type": "string",
+                    "description": "Expiry Date of Service Certificate (Date Format - MMM dd, yyyy HH:mm:ss Z)"
+                },
+                "role_mapping_policy": {
+                    "type": "string",
+                    "description": "Role Mapping Policy Name"
+                },
+                "enf_policy": {
+                    "type": "string",
+                    "description": "Enforcement Policy Name"
+                },
+                "use_cached_policy_results": {
+                    "type": "boolean",
+                    "description": "Enable to use cached Roles and Posture attributes from previous sessions"
+                },
+                "authz_sources": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Additional authorization sources from which to fetch role-mapping attributes"
+                },
+                "posture_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Posture Compliance"
+                },
+                "posture_policies": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Posture Policy Names"
+                },
+                "default_posture_token": {
+                    "type": "string",
+                    "description": "Default Posture Token",
+                    "enum": [
+                        "HEALTHY",
+                        "CHECKUP",
+                        "TRANSITION",
+                        "QUARANTINE",
+                        "INFECTED",
+                        "UNKNOWN"
+                    ]
+                },
+                "remediate_end_hosts": {
+                    "type": "boolean",
+                    "description": "Enable auto-remediation of non-compliant end-hosts"
+                },
+                "remediation_url": {
+                    "type": "string",
+                    "description": "Remediation URL"
+                },
+                "audit_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Audit End-hosts"
+                },
+                "audit_server": {
+                    "type": "string",
+                    "description": "Audit Server Name"
+                },
+                "audit_trigger_condition": {
+                    "type": "string",
+                    "description": "Audit Trigger Conditions",
+                    "enum": [
+                        "ALWAYS",
+                        "NO_POSTURE",
+                        "MAC_AUTH"
+                    ]
+                },
+                "audit_mac_auth_client_type": {
+                    "type": "string",
+                    "description": "Client Type For MAC authentication request Audit Trigger Condition",
+                    "enum": [
+                        "KNOWN",
+                        "UNKNOWN",
+                        "BOTH"
+                    ]
+                },
+                "action_after_audit": {
+                    "type": "string",
+                    "description": "Action after audit",
+                    "enum": [
+                        "NONE",
+                        "SNMP",
+                        "RADIUS"
+                    ]
+                },
+                "audit_coa_acton": {
+                    "type": "string",
+                    "description": "RADIUS CoA Action to be triggered after audit"
+                },
+                "profiler_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Profile Endpoints"
+                },
+                "profiler_endpoint_classification": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Endpoint classification(s) after which an action must be triggered"
+                },
+                "profiler_coa_action": {
+                    "type": "string",
+                    "description": "RADIUS CoA Action to be triggered by Profiler "
+                },
+                "acct_proxy_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Accounting Proxy Targets"
+                },
+                "acct_proxy_targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List Accounting Proxy Target names"
+                },
+                "acct_proxy_attrs_to_delete": {
+                    "description": "RADIUS attributes to be deleted for Accounting proxy",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToDelete"
+                    }
+                },
+                "acct_proxy_attrs_to_add": {
+                    "description": "RADIUS attributes to be added for Accounting proxy",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToAdd"
+                    }
+                },
+                "radius_proxy_scheme": {
+                    "type": "string",
+                    "description": "Proxying Scheme for RADIUS Proxy Service Type",
+                    "enum": [
+                        "Load Balance",
+                        "Failover"
+                    ]
+                },
+                "radius_proxy_targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Proxy Targets for RADIUS Proxy Service Type"
+                },
+                "radius_proxy_attrs_to_delete": {
+                    "description": "RADIUS attributes to be removed from remote server (proxy target) reply",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToDelete"
+                    }
+                },
+                "radius_proxy_enable_for_acct": {
+                    "type": "boolean",
+                    "description": "Enable proxy for accounting requests (Applicable only for RADIUS Proxy Service Type) "
+                }
+            },
+            "required": []
+        },
+        "ServiceList": {
+            "id": "ServiceList",
+            "properties": {
+                "_embedded": {
+                    "$ref": "ServiceItems",
+                    "description": "Object containing result"
+                },
+                "_links": {
+                    "$ref": "HalLinks",
+                    "description": "Object containing metadata"
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Total number of items matching the filter; returned if calculate_count is true"
+                }
+            },
+            "required": [
+                "_embedded",
+                "_links"
+            ]
+        },
+        "ServiceItems": {
+            "id": "ServiceItems",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "ServiceResult"
+                    },
+                    "description": "List of items matching the filter"
+                }
+            },
+            "required": [
+                "items"
+            ]
+        },
+        "HalLinks": {
+            "id": "HalLinks",
+            "properties": {
+                "self": {
+                    "type": "string",
+                    "description": "URL of result"
+                },
+                "first": {
+                    "type": "string",
+                    "description": "URL of first page of results"
+                },
+                "last": {
+                    "type": "string",
+                    "description": "URL of last page of results"
+                },
+                "prev": {
+                    "type": "string",
+                    "description": "URL of previous page of results"
+                },
+                "next": {
+                    "type": "string",
+                    "description": "URL of next page of results"
+                }
+            },
+            "required": [
+                "self",
+                "first"
+            ]
+        },
+        "ServiceRules": {
+            "id": "ServiceRules",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Type"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name"
+                },
+                "operator": {
+                    "type": "string",
+                    "description": "Operator"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "Value"
+                }
+            },
+            "required": [
+                "type",
+                "name",
+                "operator"
+            ]
+        },
+        "AttributesToAdd": {
+            "id": "AttributesToAdd",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Type"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "Value"
+                }
+            },
+            "required": [
+                "type",
+                "name",
+                "value"
+            ]
+        },
+        "AttributesToDelete": {
+            "id": "AttributesToDelete",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Type"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name"
+                }
+            },
+            "required": [
+                "type",
+                "name"
+            ]
+        },
+        "ServiceOrders": {
+            "id": "ServiceOrders",
+            "properties": {
+                "service_name": {
+                    "type": "string",
+                    "description": "Name of the Service"
+                },
+                "order_no": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Order number of the Service"
+                }
+            },
+            "required": [
+                "service_name",
+                "order_no"
+            ]
+        },
+        "ServiceReorder": {
+            "id": "ServiceReorder",
+            "properties": {
+                "service_orders": {
+                    "description": "List of Service Orders to be updated",
+                    "type": "array",
+                    "items": {
+                        "$ref": "ServiceOrders"
+                    }
+                }
+            },
+            "required": [
+                "service_orders"
+            ]
+        },
+        "ServiceResult": {
+            "id": "ServiceResult",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Unique ID of the Service"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Service"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Type of the Service"
+                },
+                "template": {
+                    "type": "string",
+                    "description": "Template of the Service",
+                    "enum": [
+                        "Aruba 802.1X Wireless",
+                        "802.1X Wireless",
+                        "802.1X Wired",
+                        "MAC Authentication",
+                        "Web-based Authentication",
+                        "Web-based Health Check Only",
+                        "Web-based Open Network Access",
+                        "802.1X Wireless - Identity Only",
+                        "802.1X Wired - Identity Only",
+                        "RADIUS Enforcement ( Generic )",
+                        "RADIUS Proxy",
+                        "RADIUS Authorization",
+                        "TACACS+ Enforcement",
+                        "Aruba Application Authentication",
+                        "Aruba Application Authorization",
+                        "Cisco Web Authentication Proxy",
+                        "Event-based Enforcement",
+                        "ClearPass OnConnect Enforcement"
+                    ]
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Is Service enabled?"
+                },
+                "order_no": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Order number of the Service"
+                },
+                "hit_count": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Service Hit Count"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the Service"
+                },
+                "monitor_mode": {
+                    "type": "boolean",
+                    "description": "Enable to monitor network access without enforcement"
+                },
+                "rules_match_type": {
+                    "type": "string",
+                    "description": "Matches ANY\/ALL of the rule conditions",
+                    "enum": [
+                        "MATCHES_ANY",
+                        "MATCHES_ALL"
+                    ]
+                },
+                "rules_conditions": {
+                    "description": "List of service rules conditions",
+                    "type": "array",
+                    "items": {
+                        "$ref": "ServiceRules"
+                    }
+                },
+                "auth_methods": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Authentication Method Names"
+                },
+                "auth_sources": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Authentication Source Names"
+                },
+                "strip_username": {
+                    "type": "boolean",
+                    "description": "Enable to specify a comma-separated list of rules to strip username prefixes or suffixes"
+                },
+                "strip_username_csv": {
+                    "type": "string",
+                    "description": "Strip Username Rule"
+                },
+                "service_cert_cn": {
+                    "type": "string",
+                    "description": "Subject DN of Service Certificate"
+                },
+                "service_cert_expiry_date": {
+                    "type": "string",
+                    "description": "Expiry Date of Service Certificate (Date Format - MMM dd, yyyy HH:mm:ss Z)"
+                },
+                "role_mapping_policy": {
+                    "type": "string",
+                    "description": "Role Mapping Policy Name"
+                },
+                "enf_policy": {
+                    "type": "string",
+                    "description": "Enforcement Policy Name"
+                },
+                "use_cached_policy_results": {
+                    "type": "boolean",
+                    "description": "Enable to use cached Roles and Posture attributes from previous sessions"
+                },
+                "authz_sources": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Additional authorization sources from which to fetch role-mapping attributes"
+                },
+                "posture_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Posture Compliance"
+                },
+                "posture_policies": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Posture Policy Names"
+                },
+                "default_posture_token": {
+                    "type": "string",
+                    "description": "Default Posture Token",
+                    "enum": [
+                        "HEALTHY",
+                        "CHECKUP",
+                        "TRANSITION",
+                        "QUARANTINE",
+                        "INFECTED",
+                        "UNKNOWN"
+                    ]
+                },
+                "remediate_end_hosts": {
+                    "type": "boolean",
+                    "description": "Enable auto-remediation of non-compliant end-hosts"
+                },
+                "remediation_url": {
+                    "type": "string",
+                    "description": "Remediation URL"
+                },
+                "audit_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Audit End-hosts"
+                },
+                "audit_server": {
+                    "type": "string",
+                    "description": "Audit Server Name"
+                },
+                "audit_trigger_condition": {
+                    "type": "string",
+                    "description": "Audit Trigger Conditions",
+                    "enum": [
+                        "ALWAYS",
+                        "NO_POSTURE",
+                        "MAC_AUTH"
+                    ]
+                },
+                "audit_mac_auth_client_type": {
+                    "type": "string",
+                    "description": "Client Type For MAC authentication request Audit Trigger Condition",
+                    "enum": [
+                        "KNOWN",
+                        "UNKNOWN",
+                        "BOTH"
+                    ]
+                },
+                "action_after_audit": {
+                    "type": "string",
+                    "description": "Action after audit",
+                    "enum": [
+                        "NONE",
+                        "SNMP",
+                        "RADIUS"
+                    ]
+                },
+                "audit_coa_acton": {
+                    "type": "string",
+                    "description": "RADIUS CoA Action to be triggered after audit"
+                },
+                "profiler_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Profile Endpoints"
+                },
+                "profiler_endpoint_classification": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Endpoint classification(s) after which an action must be triggered"
+                },
+                "profiler_coa_action": {
+                    "type": "string",
+                    "description": "RADIUS CoA Action to be triggered by Profiler "
+                },
+                "acct_proxy_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Accounting Proxy Targets"
+                },
+                "acct_proxy_targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List Accounting Proxy Target names"
+                },
+                "acct_proxy_attrs_to_delete": {
+                    "description": "RADIUS attributes to be deleted for Accounting proxy",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToDelete"
+                    }
+                },
+                "acct_proxy_attrs_to_add": {
+                    "description": "RADIUS attributes to be added for Accounting proxy",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToAdd"
+                    }
+                },
+                "radius_proxy_scheme": {
+                    "type": "string",
+                    "description": "Proxying Scheme for RADIUS Proxy Service Type",
+                    "enum": [
+                        "Load Balance",
+                        "Failover"
+                    ]
+                },
+                "radius_proxy_targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Proxy Targets for RADIUS Proxy Service Type"
+                },
+                "radius_proxy_attrs_to_delete": {
+                    "description": "RADIUS attributes to be removed from remote server (proxy target) reply",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToDelete"
+                    }
+                },
+                "radius_proxy_enable_for_acct": {
+                    "type": "boolean",
+                    "description": "Enable proxy for accounting requests (Applicable only for RADIUS Proxy Service Type) "
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "type",
+                "template",
+                "order_no",
+                "enabled",
+                "hit_count",
+                "enf_policy"
+            ]
+        },
+        "ServiceUpdate": {
+            "id": "ServiceUpdate",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Service"
+                },
+                "template": {
+                    "type": "string",
+                    "description": "Template of the Service",
+                    "enum": [
+                        "Aruba 802.1X Wireless",
+                        "802.1X Wireless",
+                        "802.1X Wired",
+                        "MAC Authentication",
+                        "Web-based Authentication",
+                        "Web-based Health Check Only",
+                        "Web-based Open Network Access",
+                        "802.1X Wireless - Identity Only",
+                        "802.1X Wired - Identity Only",
+                        "RADIUS Enforcement ( Generic )",
+                        "RADIUS Proxy",
+                        "RADIUS Authorization",
+                        "TACACS+ Enforcement",
+                        "Aruba Application Authentication",
+                        "Aruba Application Authorization",
+                        "Cisco Web Authentication Proxy",
+                        "Event-based Enforcement",
+                        "ClearPass OnConnect Enforcement"
+                    ]
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Is Service enabled?"
+                },
+                "order_no": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Order number of the Service"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the Service"
+                },
+                "monitor_mode": {
+                    "type": "boolean",
+                    "description": "Enable to monitor network access without enforcement"
+                },
+                "rules_match_type": {
+                    "type": "string",
+                    "description": "Matches ANY\/ALL of the rule conditions",
+                    "enum": [
+                        "MATCHES_ANY",
+                        "MATCHES_ALL"
+                    ]
+                },
+                "rules_conditions": {
+                    "description": "List of service rules conditions",
+                    "type": "array",
+                    "items": {
+                        "$ref": "ServiceRules"
+                    }
+                },
+                "auth_methods": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Authentication Method Names"
+                },
+                "auth_sources": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Authentication Source Names"
+                },
+                "strip_username": {
+                    "type": "boolean",
+                    "description": "Enable to specify a comma-separated list of rules to strip username prefixes or suffixes"
+                },
+                "strip_username_csv": {
+                    "type": "string",
+                    "description": "Strip Username Rule"
+                },
+                "service_cert_cn": {
+                    "type": "string",
+                    "description": "Subject DN of Service Certificate"
+                },
+                "service_cert_expiry_date": {
+                    "type": "string",
+                    "description": "Expiry Date of Service Certificate (Date Format - MMM dd, yyyy HH:mm:ss Z)"
+                },
+                "role_mapping_policy": {
+                    "type": "string",
+                    "description": "Role Mapping Policy Name"
+                },
+                "enf_policy": {
+                    "type": "string",
+                    "description": "Enforcement Policy Name"
+                },
+                "use_cached_policy_results": {
+                    "type": "boolean",
+                    "description": "Enable to use cached Roles and Posture attributes from previous sessions"
+                },
+                "authz_sources": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Additional authorization sources from which to fetch role-mapping attributes"
+                },
+                "posture_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Posture Compliance"
+                },
+                "posture_policies": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Posture Policy Names"
+                },
+                "default_posture_token": {
+                    "type": "string",
+                    "description": "Default Posture Token",
+                    "enum": [
+                        "HEALTHY",
+                        "CHECKUP",
+                        "TRANSITION",
+                        "QUARANTINE",
+                        "INFECTED",
+                        "UNKNOWN"
+                    ]
+                },
+                "remediate_end_hosts": {
+                    "type": "boolean",
+                    "description": "Enable auto-remediation of non-compliant end-hosts"
+                },
+                "remediation_url": {
+                    "type": "string",
+                    "description": "Remediation URL"
+                },
+                "audit_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Audit End-hosts"
+                },
+                "audit_server": {
+                    "type": "string",
+                    "description": "Audit Server Name"
+                },
+                "audit_trigger_condition": {
+                    "type": "string",
+                    "description": "Audit Trigger Conditions",
+                    "enum": [
+                        "ALWAYS",
+                        "NO_POSTURE",
+                        "MAC_AUTH"
+                    ]
+                },
+                "audit_mac_auth_client_type": {
+                    "type": "string",
+                    "description": "Client Type For MAC authentication request Audit Trigger Condition",
+                    "enum": [
+                        "KNOWN",
+                        "UNKNOWN",
+                        "BOTH"
+                    ]
+                },
+                "action_after_audit": {
+                    "type": "string",
+                    "description": "Action after audit",
+                    "enum": [
+                        "NONE",
+                        "SNMP",
+                        "RADIUS"
+                    ]
+                },
+                "audit_coa_acton": {
+                    "type": "string",
+                    "description": "RADIUS CoA Action to be triggered after audit"
+                },
+                "profiler_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Profile Endpoints"
+                },
+                "profiler_endpoint_classification": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Endpoint classification(s) after which an action must be triggered"
+                },
+                "profiler_coa_action": {
+                    "type": "string",
+                    "description": "RADIUS CoA Action to be triggered by Profiler "
+                },
+                "acct_proxy_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Accounting Proxy Targets"
+                },
+                "acct_proxy_targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List Accounting Proxy Target names"
+                },
+                "acct_proxy_attrs_to_delete": {
+                    "description": "RADIUS attributes to be deleted for Accounting proxy",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToDelete"
+                    }
+                },
+                "acct_proxy_attrs_to_add": {
+                    "description": "RADIUS attributes to be added for Accounting proxy",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToAdd"
+                    }
+                },
+                "radius_proxy_scheme": {
+                    "type": "string",
+                    "description": "Proxying Scheme for RADIUS Proxy Service Type",
+                    "enum": [
+                        "Load Balance",
+                        "Failover"
+                    ]
+                },
+                "radius_proxy_targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Proxy Targets for RADIUS Proxy Service Type"
+                },
+                "radius_proxy_attrs_to_delete": {
+                    "description": "RADIUS attributes to be removed from remote server (proxy target) reply",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToDelete"
+                    }
+                },
+                "radius_proxy_enable_for_acct": {
+                    "type": "boolean",
+                    "description": "Enable proxy for accounting requests (Applicable only for RADIUS Proxy Service Type) "
+                }
+            },
+            "required": []
+        },
+        "ServiceCreate": {
+            "id": "ServiceCreate",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Service"
+                },
+                "template": {
+                    "type": "string",
+                    "description": "Template of the Service",
+                    "enum": [
+                        "Aruba 802.1X Wireless",
+                        "802.1X Wireless",
+                        "802.1X Wired",
+                        "MAC Authentication",
+                        "Web-based Authentication",
+                        "Web-based Health Check Only",
+                        "Web-based Open Network Access",
+                        "802.1X Wireless - Identity Only",
+                        "802.1X Wired - Identity Only",
+                        "RADIUS Enforcement ( Generic )",
+                        "RADIUS Proxy",
+                        "RADIUS Authorization",
+                        "TACACS+ Enforcement",
+                        "Aruba Application Authentication",
+                        "Aruba Application Authorization",
+                        "Cisco Web Authentication Proxy",
+                        "Event-based Enforcement",
+                        "ClearPass OnConnect Enforcement"
+                    ]
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Is Service enabled?"
+                },
+                "order_no": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Order number of the Service"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the Service"
+                },
+                "monitor_mode": {
+                    "type": "boolean",
+                    "description": "Enable to monitor network access without enforcement"
+                },
+                "rules_match_type": {
+                    "type": "string",
+                    "description": "Matches ANY\/ALL of the rule conditions",
+                    "enum": [
+                        "MATCHES_ANY",
+                        "MATCHES_ALL"
+                    ]
+                },
+                "rules_conditions": {
+                    "description": "List of service rules conditions",
+                    "type": "array",
+                    "items": {
+                        "$ref": "ServiceRules"
+                    }
+                },
+                "auth_methods": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Authentication Method Names"
+                },
+                "auth_sources": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Authentication Source Names"
+                },
+                "strip_username": {
+                    "type": "boolean",
+                    "description": "Enable to specify a comma-separated list of rules to strip username prefixes or suffixes"
+                },
+                "strip_username_csv": {
+                    "type": "string",
+                    "description": "Strip Username Rule"
+                },
+                "service_cert_cn": {
+                    "type": "string",
+                    "description": "Subject DN of Service Certificate"
+                },
+                "service_cert_expiry_date": {
+                    "type": "string",
+                    "description": "Expiry Date of Service Certificate (Date Format - MMM dd, yyyy HH:mm:ss Z)"
+                },
+                "role_mapping_policy": {
+                    "type": "string",
+                    "description": "Role Mapping Policy Name"
+                },
+                "enf_policy": {
+                    "type": "string",
+                    "description": "Enforcement Policy Name"
+                },
+                "use_cached_policy_results": {
+                    "type": "boolean",
+                    "description": "Enable to use cached Roles and Posture attributes from previous sessions"
+                },
+                "authz_sources": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Additional authorization sources from which to fetch role-mapping attributes"
+                },
+                "posture_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Posture Compliance"
+                },
+                "posture_policies": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Posture Policy Names"
+                },
+                "default_posture_token": {
+                    "type": "string",
+                    "description": "Default Posture Token",
+                    "enum": [
+                        "HEALTHY",
+                        "CHECKUP",
+                        "TRANSITION",
+                        "QUARANTINE",
+                        "INFECTED",
+                        "UNKNOWN"
+                    ]
+                },
+                "remediate_end_hosts": {
+                    "type": "boolean",
+                    "description": "Enable auto-remediation of non-compliant end-hosts"
+                },
+                "remediation_url": {
+                    "type": "string",
+                    "description": "Remediation URL"
+                },
+                "audit_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Audit End-hosts"
+                },
+                "audit_server": {
+                    "type": "string",
+                    "description": "Audit Server Name"
+                },
+                "audit_trigger_condition": {
+                    "type": "string",
+                    "description": "Audit Trigger Conditions",
+                    "enum": [
+                        "ALWAYS",
+                        "NO_POSTURE",
+                        "MAC_AUTH"
+                    ]
+                },
+                "audit_mac_auth_client_type": {
+                    "type": "string",
+                    "description": "Client Type For MAC authentication request Audit Trigger Condition",
+                    "enum": [
+                        "KNOWN",
+                        "UNKNOWN",
+                        "BOTH"
+                    ]
+                },
+                "action_after_audit": {
+                    "type": "string",
+                    "description": "Action after audit",
+                    "enum": [
+                        "NONE",
+                        "SNMP",
+                        "RADIUS"
+                    ]
+                },
+                "audit_coa_acton": {
+                    "type": "string",
+                    "description": "RADIUS CoA Action to be triggered after audit"
+                },
+                "profiler_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Profile Endpoints"
+                },
+                "profiler_endpoint_classification": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Endpoint classification(s) after which an action must be triggered"
+                },
+                "profiler_coa_action": {
+                    "type": "string",
+                    "description": "RADIUS CoA Action to be triggered by Profiler "
+                },
+                "acct_proxy_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Accounting Proxy Targets"
+                },
+                "acct_proxy_targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List Accounting Proxy Target names"
+                },
+                "acct_proxy_attrs_to_delete": {
+                    "description": "RADIUS attributes to be deleted for Accounting proxy",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToDelete"
+                    }
+                },
+                "acct_proxy_attrs_to_add": {
+                    "description": "RADIUS attributes to be added for Accounting proxy",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToAdd"
+                    }
+                },
+                "radius_proxy_scheme": {
+                    "type": "string",
+                    "description": "Proxying Scheme for RADIUS Proxy Service Type",
+                    "enum": [
+                        "Load Balance",
+                        "Failover"
+                    ]
+                },
+                "radius_proxy_targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Proxy Targets for RADIUS Proxy Service Type"
+                },
+                "radius_proxy_attrs_to_delete": {
+                    "description": "RADIUS attributes to be removed from remote server (proxy target) reply",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToDelete"
+                    }
+                },
+                "radius_proxy_enable_for_acct": {
+                    "type": "boolean",
+                    "description": "Enable proxy for accounting requests (Applicable only for RADIUS Proxy Service Type) "
+                }
+            },
+            "required": [
+                "name",
+                "template",
+                "enf_policy"
+            ]
+        },
+        "ServiceReplace": {
+            "id": "ServiceReplace",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Service"
+                },
+                "template": {
+                    "type": "string",
+                    "description": "Template of the Service",
+                    "enum": [
+                        "Aruba 802.1X Wireless",
+                        "802.1X Wireless",
+                        "802.1X Wired",
+                        "MAC Authentication",
+                        "Web-based Authentication",
+                        "Web-based Health Check Only",
+                        "Web-based Open Network Access",
+                        "802.1X Wireless - Identity Only",
+                        "802.1X Wired - Identity Only",
+                        "RADIUS Enforcement ( Generic )",
+                        "RADIUS Proxy",
+                        "RADIUS Authorization",
+                        "TACACS+ Enforcement",
+                        "Aruba Application Authentication",
+                        "Aruba Application Authorization",
+                        "Cisco Web Authentication Proxy",
+                        "Event-based Enforcement",
+                        "ClearPass OnConnect Enforcement"
+                    ]
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Is Service enabled?"
+                },
+                "order_no": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Order number of the Service"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the Service"
+                },
+                "monitor_mode": {
+                    "type": "boolean",
+                    "description": "Enable to monitor network access without enforcement"
+                },
+                "rules_match_type": {
+                    "type": "string",
+                    "description": "Matches ANY\/ALL of the rule conditions",
+                    "enum": [
+                        "MATCHES_ANY",
+                        "MATCHES_ALL"
+                    ]
+                },
+                "rules_conditions": {
+                    "description": "List of service rules conditions",
+                    "type": "array",
+                    "items": {
+                        "$ref": "ServiceRules"
+                    }
+                },
+                "auth_methods": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Authentication Method Names"
+                },
+                "auth_sources": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Authentication Source Names"
+                },
+                "strip_username": {
+                    "type": "boolean",
+                    "description": "Enable to specify a comma-separated list of rules to strip username prefixes or suffixes"
+                },
+                "strip_username_csv": {
+                    "type": "string",
+                    "description": "Strip Username Rule"
+                },
+                "service_cert_cn": {
+                    "type": "string",
+                    "description": "Subject DN of Service Certificate"
+                },
+                "service_cert_expiry_date": {
+                    "type": "string",
+                    "description": "Expiry Date of Service Certificate (Date Format - MMM dd, yyyy HH:mm:ss Z)"
+                },
+                "role_mapping_policy": {
+                    "type": "string",
+                    "description": "Role Mapping Policy Name"
+                },
+                "enf_policy": {
+                    "type": "string",
+                    "description": "Enforcement Policy Name"
+                },
+                "use_cached_policy_results": {
+                    "type": "boolean",
+                    "description": "Enable to use cached Roles and Posture attributes from previous sessions"
+                },
+                "authz_sources": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Additional authorization sources from which to fetch role-mapping attributes"
+                },
+                "posture_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Posture Compliance"
+                },
+                "posture_policies": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Posture Policy Names"
+                },
+                "default_posture_token": {
+                    "type": "string",
+                    "description": "Default Posture Token",
+                    "enum": [
+                        "HEALTHY",
+                        "CHECKUP",
+                        "TRANSITION",
+                        "QUARANTINE",
+                        "INFECTED",
+                        "UNKNOWN"
+                    ]
+                },
+                "remediate_end_hosts": {
+                    "type": "boolean",
+                    "description": "Enable auto-remediation of non-compliant end-hosts"
+                },
+                "remediation_url": {
+                    "type": "string",
+                    "description": "Remediation URL"
+                },
+                "audit_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Audit End-hosts"
+                },
+                "audit_server": {
+                    "type": "string",
+                    "description": "Audit Server Name"
+                },
+                "audit_trigger_condition": {
+                    "type": "string",
+                    "description": "Audit Trigger Conditions",
+                    "enum": [
+                        "ALWAYS",
+                        "NO_POSTURE",
+                        "MAC_AUTH"
+                    ]
+                },
+                "audit_mac_auth_client_type": {
+                    "type": "string",
+                    "description": "Client Type For MAC authentication request Audit Trigger Condition",
+                    "enum": [
+                        "KNOWN",
+                        "UNKNOWN",
+                        "BOTH"
+                    ]
+                },
+                "action_after_audit": {
+                    "type": "string",
+                    "description": "Action after audit",
+                    "enum": [
+                        "NONE",
+                        "SNMP",
+                        "RADIUS"
+                    ]
+                },
+                "audit_coa_acton": {
+                    "type": "string",
+                    "description": "RADIUS CoA Action to be triggered after audit"
+                },
+                "profiler_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Profile Endpoints"
+                },
+                "profiler_endpoint_classification": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Endpoint classification(s) after which an action must be triggered"
+                },
+                "profiler_coa_action": {
+                    "type": "string",
+                    "description": "RADIUS CoA Action to be triggered by Profiler "
+                },
+                "acct_proxy_enabled": {
+                    "type": "boolean",
+                    "description": "Enable Accounting Proxy Targets"
+                },
+                "acct_proxy_targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List Accounting Proxy Target names"
+                },
+                "acct_proxy_attrs_to_delete": {
+                    "description": "RADIUS attributes to be deleted for Accounting proxy",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToDelete"
+                    }
+                },
+                "acct_proxy_attrs_to_add": {
+                    "description": "RADIUS attributes to be added for Accounting proxy",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToAdd"
+                    }
+                },
+                "radius_proxy_scheme": {
+                    "type": "string",
+                    "description": "Proxying Scheme for RADIUS Proxy Service Type",
+                    "enum": [
+                        "Load Balance",
+                        "Failover"
+                    ]
+                },
+                "radius_proxy_targets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of Proxy Targets for RADIUS Proxy Service Type"
+                },
+                "radius_proxy_attrs_to_delete": {
+                    "description": "RADIUS attributes to be removed from remote server (proxy target) reply",
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttributesToDelete"
+                    }
+                },
+                "radius_proxy_enable_for_acct": {
+                    "type": "boolean",
+                    "description": "Enable proxy for accounting requests (Applicable only for RADIUS Proxy Service Type) "
+                }
+            },
+            "required": [
+                "name",
+                "template",
+                "enf_policy"
+            ]
+        }
+    }
+}

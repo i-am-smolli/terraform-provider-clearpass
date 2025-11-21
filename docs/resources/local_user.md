@@ -24,7 +24,11 @@ Manages a local user in ClearPass.
 
 ### Optional
 
+- `attributes` (Map of String) Additional attributes (key/value pairs) may be stored with the local user account.
+- `change_pwd_next_login` (Boolean) Flag indicating if the password change is required in next login.
 - `enabled` (Boolean) Whether the user account is enabled. Defaults to 'true' if not specified.
+- `password_hash` (String, Sensitive) The password hash of the local user.
+- `password_ntlm_hash` (String, Sensitive) The NTLM password hash of the local user.
 
 ### Read-Only
 

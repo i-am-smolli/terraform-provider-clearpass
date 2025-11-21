@@ -1,0 +1,1055 @@
+{
+    "apiVersion": "1",
+    "swaggerVersion": "1.2",
+    "basePath": "https:\/\/10.1.9.123\/api",
+    "resourcePath": "\/enforcement-policy",
+    "apis": [
+        {
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get a list of enforcement policies",
+                    "notes": "Get a list of enforcement policies. \u003Cdiv\u003E\n  \u003Ca id=\u0022A692039783bc37\u0022 href=\u0022#\u0022 onclick=\u0022$(\u0027#P692039783bc37\u0027).slideDown();$(\u0027#A692039783bc37\u0027).slideUp();return false;\u0022\u003EMore about JSON filter expressions\u003C\/a\u003E\n  \u003Cdiv id=\u0022P692039783bc37\u0022 style=\u0022display: none;\u0022\u003E\n\u003Cp\u003E\n  A filter is specified as a JSON object, where the properties of the object\n  specify the type of query to be performed.\n\u003C\/p\u003E\n\u003Ctable\u003E\n  \u003Cthead\u003E\n    \u003Ctr\u003E\n      \u003Cth\u003EDescription\u003C\/th\u003E\n      \u003Cth\u003EJSON Filter Syntax\u003C\/th\u003E\n    \u003C\/tr\u003E\n  \u003C\/thead\u003E\n  \u003Ctbody\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ENo filter, matches everything\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$eq\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$in\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$nin\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField contains a substring \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$contains\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$ne\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-sensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-insensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022, \u0022$options\u0022:\u0022i\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField exists (does not contain a null value)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:true}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is NULL\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:false}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with AND\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with OR\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$or\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EInverting a filter expression\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$not\u0022:{ \u003Ci\u003Efilter\u003C\/i\u003E }}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is greater than or equal to 2 and less than 5\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2, \u0022$lt\u0022:5}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2}}, {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:5}} ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n  \u003C\/tbody\u003E\n\u003C\/table\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E",
+                    "nickname": "GET_for_EnforcementPolicy",
+                    "type": "EnforcementPolicyResult",
+                    "parameters": [
+                        {
+                            "name": "filter",
+                            "paramType": "query",
+                            "type": "string",
+                            "description": "JSON filter expression specifying the items to return",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "{}"
+                        },
+                        {
+                            "name": "sort",
+                            "paramType": "query",
+                            "type": "string",
+                            "description": "Sort ordering for returned items (default +id)",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "+id"
+                        },
+                        {
+                            "name": "offset",
+                            "paramType": "query",
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Zero based offset to start from",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "0",
+                            "minimum": "0"
+                        },
+                        {
+                            "name": "limit",
+                            "paramType": "query",
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Maximum number of items to return (1 \u2013 1000)",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "25",
+                            "minimum": "1",
+                            "maximum": "1000"
+                        },
+                        {
+                            "name": "calculate_count",
+                            "paramType": "query",
+                            "type": "boolean",
+                            "description": "Whether to calculate the total item count",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "false"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "POST",
+                    "summary": "Create a new enforcement policy",
+                    "notes": "Create a new enforcement policy",
+                    "nickname": "POST_for_EnforcementPolicy",
+                    "type": "EnforcementPolicyResult",
+                    "parameters": [
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "EnforcementPolicyCreate"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "201",
+                            "message": "Created"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/enforcement-policy"
+        },
+        {
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get a enforcement policy",
+                    "notes": "Get a enforcement policy",
+                    "nickname": "GET_for_EnforcementPolicy",
+                    "type": "EnforcementPolicyResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "enforcement_policy_id",
+                            "description": "Numeric ID of the enforcement policy",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                },
+                {
+                    "method": "PATCH",
+                    "summary": "Update a enforcement policy",
+                    "notes": "Update a enforcement policy",
+                    "nickname": "PATCH_for_EnforcementPolicy",
+                    "type": "EnforcementPolicyResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "enforcement_policy_id",
+                            "description": "Numeric ID of the enforcement policy",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "EnforcementPolicyUpdate"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "PUT",
+                    "summary": "Replace a enforcement policy",
+                    "notes": "Replace a enforcement policy",
+                    "nickname": "PUT_for_EnforcementPolicy",
+                    "type": "EnforcementPolicyResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "enforcement_policy_id",
+                            "description": "Numeric ID of the enforcement policy",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "EnforcementPolicyReplace"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "DELETE",
+                    "summary": "Delete a enforcement policy",
+                    "notes": "Delete a enforcement policy",
+                    "nickname": "DELETE_for_EnforcementPolicy",
+                    "type": "void",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "enforcement_policy_id",
+                            "description": "Numeric ID of the enforcement policy",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/enforcement-policy\/{enforcement_policy_id}"
+        },
+        {
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get a enforcement policy by name",
+                    "notes": "Get a enforcement policy by name",
+                    "nickname": "GET_for_EnforcementPolicy_by_name",
+                    "type": "EnforcementPolicyResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "name",
+                            "description": "Unique name of the enforcement policy",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                },
+                {
+                    "method": "PATCH",
+                    "summary": "Update a enforcement policy by name",
+                    "notes": "Update a enforcement policy by name",
+                    "nickname": "PATCH_for_EnforcementPolicy_by_name",
+                    "type": "EnforcementPolicyResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "name",
+                            "description": "Unique name of the enforcement policy",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "EnforcementPolicyUpdate"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "PUT",
+                    "summary": "Replace a enforcement policy by name",
+                    "notes": "Replace a enforcement policy by name",
+                    "nickname": "PUT_for_EnforcementPolicy_by_name",
+                    "type": "EnforcementPolicyResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "name",
+                            "description": "Unique name of the enforcement policy",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "EnforcementPolicyReplace"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "DELETE",
+                    "summary": "Delete a enforcement policy by name",
+                    "notes": "Delete a enforcement policy by name",
+                    "nickname": "DELETE_for_EnforcementPolicy_by_name",
+                    "type": "void",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "name",
+                            "description": "Unique name of the enforcement policy",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/enforcement-policy\/name\/{name}"
+        }
+    ],
+    "produces": [
+        "application\/vnd.policy-elements.v1+json",
+        "application\/hal+json",
+        "application\/json"
+    ],
+    "models": {
+        "EnforcementPolicy": {
+            "id": "EnforcementPolicy",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Numeric ID of Enforcement Policy"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Enforcement Policy"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the Enforcement Policy"
+                },
+                "enforcement_type": {
+                    "type": "string",
+                    "description": "Enforcement Type of the Enforcement Policy",
+                    "enum": [
+                        "RADIUS",
+                        "TACACS",
+                        "WEBAUTH",
+                        "Application",
+                        "Event"
+                    ]
+                },
+                "default_enforcement_profile": {
+                    "type": "string",
+                    "description": "Default Enforcement Profile for the Enforcement Policy"
+                },
+                "rule_eval_algo": {
+                    "type": "string",
+                    "description": "Rule Evaluation Algorithm of the Enforcement Policy rules",
+                    "enum": [
+                        "first-applicable",
+                        "evaluate-all"
+                    ]
+                },
+                "rules": {
+                    "description": "List of Rules for Enforcement Policy"
+                }
+            },
+            "required": []
+        },
+        "EnforcementPolicyList": {
+            "id": "EnforcementPolicyList",
+            "properties": {
+                "_embedded": {
+                    "$ref": "EnforcementPolicyItems",
+                    "description": "Object containing result"
+                },
+                "_links": {
+                    "$ref": "HalLinks",
+                    "description": "Object containing metadata"
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Total number of items matching the filter; returned if calculate_count is true"
+                }
+            },
+            "required": [
+                "_embedded",
+                "_links"
+            ]
+        },
+        "EnforcementPolicyItems": {
+            "id": "EnforcementPolicyItems",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "EnforcementPolicyResult"
+                    },
+                    "description": "List of items matching the filter"
+                }
+            },
+            "required": [
+                "items"
+            ]
+        },
+        "HalLinks": {
+            "id": "HalLinks",
+            "properties": {
+                "self": {
+                    "type": "string",
+                    "description": "URL of result"
+                },
+                "first": {
+                    "type": "string",
+                    "description": "URL of first page of results"
+                },
+                "last": {
+                    "type": "string",
+                    "description": "URL of last page of results"
+                },
+                "prev": {
+                    "type": "string",
+                    "description": "URL of previous page of results"
+                },
+                "next": {
+                    "type": "string",
+                    "description": "URL of next page of results"
+                }
+            },
+            "required": [
+                "self",
+                "first"
+            ]
+        },
+        "EnforcementPolicyResult": {
+            "id": "EnforcementPolicyResult",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Numeric ID of Enforcement Policy"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Enforcement Policy"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the Enforcement Policy"
+                },
+                "enforcement_type": {
+                    "type": "string",
+                    "description": "Enforcement Type of the Enforcement Policy",
+                    "enum": [
+                        "RADIUS",
+                        "TACACS",
+                        "WEBAUTH",
+                        "Application",
+                        "Event"
+                    ]
+                },
+                "default_enforcement_profile": {
+                    "type": "string",
+                    "description": "Default Enforcement Profile for the Enforcement Policy"
+                },
+                "rule_eval_algo": {
+                    "type": "string",
+                    "description": "Rule Evaluation Algorithm of the Enforcement Policy rules",
+                    "enum": [
+                        "first-applicable",
+                        "evaluate-all"
+                    ]
+                },
+                "rules": {
+                    "description": "List of Rules for Enforcement Policy",
+                    "type": "RulesSettingsResult"
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "enforcement_type",
+                "default_enforcement_profile",
+                "rule_eval_algo",
+                "rules"
+            ]
+        },
+        "RulesSettingsResult": {
+            "id": "RulesSettingsResult",
+            "properties": {
+                "enforcement_profile_names": {
+                    "type": "string",
+                    "description": "List of Enforcement Profile names for a rule"
+                },
+                "condition": {
+                    "description": "Conditions of Enforcement Policy rules",
+                    "type": "RulesConditionSettingsResult"
+                }
+            },
+            "required": [
+                "enforcement_profile_names",
+                "condition"
+            ]
+        },
+        "RulesConditionSettingsResult": {
+            "id": "RulesConditionSettingsResult",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Condition type"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Condition name"
+                },
+                "oper": {
+                    "type": "string",
+                    "description": "Condition operator"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "Condition value"
+                }
+            },
+            "required": [
+                "type",
+                "name",
+                "oper",
+                "value"
+            ]
+        },
+        "EnforcementPolicyUpdate": {
+            "id": "EnforcementPolicyUpdate",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Enforcement Policy"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the Enforcement Policy"
+                },
+                "enforcement_type": {
+                    "type": "string",
+                    "description": "Enforcement Type of the Enforcement Policy",
+                    "enum": [
+                        "RADIUS",
+                        "TACACS",
+                        "WEBAUTH",
+                        "Application",
+                        "Event"
+                    ]
+                },
+                "default_enforcement_profile": {
+                    "type": "string",
+                    "description": "Default Enforcement Profile for the Enforcement Policy"
+                },
+                "rule_eval_algo": {
+                    "type": "string",
+                    "description": "Rule Evaluation Algorithm of the Enforcement Policy rules",
+                    "enum": [
+                        "first-applicable",
+                        "evaluate-all"
+                    ]
+                },
+                "rules": {
+                    "description": "List of Rules for Enforcement Policy",
+                    "type": "RulesSettingsUpdate"
+                }
+            },
+            "required": []
+        },
+        "RulesSettingsUpdate": {
+            "id": "RulesSettingsUpdate",
+            "properties": {
+                "enforcement_profile_names": {
+                    "type": "string",
+                    "description": "List of Enforcement Profile names for a rule"
+                },
+                "condition": {
+                    "description": "Conditions of Enforcement Policy rules",
+                    "type": "RulesConditionSettingsUpdate"
+                }
+            },
+            "required": []
+        },
+        "RulesConditionSettingsUpdate": {
+            "id": "RulesConditionSettingsUpdate",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Condition type"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Condition name"
+                },
+                "oper": {
+                    "type": "string",
+                    "description": "Condition operator"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "Condition value"
+                }
+            },
+            "required": []
+        },
+        "EnforcementPolicyCreate": {
+            "id": "EnforcementPolicyCreate",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Enforcement Policy"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the Enforcement Policy"
+                },
+                "enforcement_type": {
+                    "type": "string",
+                    "description": "Enforcement Type of the Enforcement Policy",
+                    "enum": [
+                        "RADIUS",
+                        "TACACS",
+                        "WEBAUTH",
+                        "Application",
+                        "Event"
+                    ]
+                },
+                "default_enforcement_profile": {
+                    "type": "string",
+                    "description": "Default Enforcement Profile for the Enforcement Policy"
+                },
+                "rule_eval_algo": {
+                    "type": "string",
+                    "description": "Rule Evaluation Algorithm of the Enforcement Policy rules",
+                    "enum": [
+                        "first-applicable",
+                        "evaluate-all"
+                    ]
+                },
+                "rules": {
+                    "description": "List of Rules for Enforcement Policy",
+                    "type": "RulesSettingsCreate"
+                }
+            },
+            "required": [
+                "name",
+                "enforcement_type",
+                "default_enforcement_profile",
+                "rule_eval_algo",
+                "rules"
+            ]
+        },
+        "RulesSettingsCreate": {
+            "id": "RulesSettingsCreate",
+            "properties": {
+                "enforcement_profile_names": {
+                    "type": "string",
+                    "description": "List of Enforcement Profile names for a rule"
+                },
+                "condition": {
+                    "description": "Conditions of Enforcement Policy rules",
+                    "type": "RulesConditionSettingsCreate"
+                }
+            },
+            "required": [
+                "enforcement_profile_names",
+                "condition"
+            ]
+        },
+        "RulesConditionSettingsCreate": {
+            "id": "RulesConditionSettingsCreate",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Condition type"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Condition name"
+                },
+                "oper": {
+                    "type": "string",
+                    "description": "Condition operator"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "Condition value"
+                }
+            },
+            "required": [
+                "type",
+                "name",
+                "oper",
+                "value"
+            ]
+        },
+        "EnforcementPolicyReplace": {
+            "id": "EnforcementPolicyReplace",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Enforcement Policy"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the Enforcement Policy"
+                },
+                "enforcement_type": {
+                    "type": "string",
+                    "description": "Enforcement Type of the Enforcement Policy",
+                    "enum": [
+                        "RADIUS",
+                        "TACACS",
+                        "WEBAUTH",
+                        "Application",
+                        "Event"
+                    ]
+                },
+                "default_enforcement_profile": {
+                    "type": "string",
+                    "description": "Default Enforcement Profile for the Enforcement Policy"
+                },
+                "rule_eval_algo": {
+                    "type": "string",
+                    "description": "Rule Evaluation Algorithm of the Enforcement Policy rules",
+                    "enum": [
+                        "first-applicable",
+                        "evaluate-all"
+                    ]
+                },
+                "rules": {
+                    "description": "List of Rules for Enforcement Policy",
+                    "type": "RulesSettingsReplace"
+                }
+            },
+            "required": [
+                "name",
+                "enforcement_type",
+                "default_enforcement_profile",
+                "rule_eval_algo",
+                "rules"
+            ]
+        },
+        "RulesSettingsReplace": {
+            "id": "RulesSettingsReplace",
+            "properties": {
+                "enforcement_profile_names": {
+                    "type": "string",
+                    "description": "List of Enforcement Profile names for a rule"
+                },
+                "condition": {
+                    "description": "Conditions of Enforcement Policy rules",
+                    "type": "RulesConditionSettingsReplace"
+                }
+            },
+            "required": [
+                "enforcement_profile_names",
+                "condition"
+            ]
+        },
+        "RulesConditionSettingsReplace": {
+            "id": "RulesConditionSettingsReplace",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Condition type"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Condition name"
+                },
+                "oper": {
+                    "type": "string",
+                    "description": "Condition operator"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "Condition value"
+                }
+            },
+            "required": [
+                "type",
+                "name",
+                "oper",
+                "value"
+            ]
+        }
+    }
+}

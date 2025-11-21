@@ -38,3 +38,15 @@ provider "clearpass" {
 func TestProvider(t *testing.T) {
 
 }
+
+func testAccPreCheck(t *testing.T) {
+	if v := os.Getenv("CLEARPASS_HOST"); v == "" {
+		t.Fatal("CLEARPASS_HOST must be set for acceptance tests")
+	}
+	if v := os.Getenv("CLEARPASS_CLIENT_ID"); v == "" {
+		t.Fatal("CLEARPASS_CLIENT_ID must be set for acceptance tests")
+	}
+	if v := os.Getenv("CLEARPASS_CLIENT_SECRET"); v == "" {
+		t.Fatal("CLEARPASS_CLIENT_SECRET must be set for acceptance tests")
+	}
+}
