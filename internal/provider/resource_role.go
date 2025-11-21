@@ -8,13 +8,13 @@ import (
 
 	"terraform-provider-clearpass/internal/client"
 
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 )
 
 // Ensure provider-defined types implement framework interfaces
@@ -45,22 +45,24 @@ func (r *roleResource) Metadata(ctx context.Context, req resource.MetadataReques
 // Schema defines the HCL attributes for the resource.
 func (r *roleResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manages a user role in ClearPass.",
+		Description: "Manages a user role in ClearPass. Roles define access levels and permissions for authenticated users. " +
+			"Common roles include [Employee] for full access, Guest for limited access, and custom roles for specific requirements. " +
+			"Roles are referenced by enforcement policies and role mapping rules.",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
-				Description: "Numeric ID of the role. This is used as the Terraform ID.",
+				Description: "Numeric ID of the role assigned by ClearPass. Used as the Terraform resource ID.",
 				Computed:    true,
 				PlanModifiers: []planmodifier.Int64{
 					int64planmodifier.UseStateForUnknown(),
 				},
 			},
 			"name": schema.StringAttribute{
-				Description: "The unique name of the role (e.g., 'Guest' or '[Employee]').",
+				Description: "Unique name of the role (e.g., 'Guest', '[Employee]', '[Contractor]'). System roles typically use square brackets.",
 				Required:    true,
 			},
 			"description": schema.StringAttribute{
-				Description: "Description of the role.",
+				Description: "Human-readable description explaining the role's purpose and intended use.",
 				Optional:    true,
 				Computed:    true, // Proactively prevent "inconsistent result"
 				PlanModifiers: []planmodifier.String{
