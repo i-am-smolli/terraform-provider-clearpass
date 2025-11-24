@@ -106,7 +106,7 @@ func (p *clearpassProvider) Configure(ctx context.Context, req provider.Configur
 	insecure := config.Insecure.ValueBool()
 
 	// 2. Call our client's GetAccessToken function!
-	authResp, err := client.GetAccessToken(ctx, host, clientID, clientSecret)
+	authResp, err := client.GetAccessToken(ctx, host, clientID, clientSecret, insecure)
 	if err != nil {
 		resp.Diagnostics.AddError("Authentication Failed", err.Error())
 		return
