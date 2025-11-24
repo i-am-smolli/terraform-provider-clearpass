@@ -15,7 +15,7 @@ A Terraform provider for managing Aruba ClearPass Policy Manager.
 terraform {
   required_providers {
     clearpass = {
-      source = "registry.terraform.io/hashicorp/clearpass"
+      source = "i-am-smolli/clearpass"
     }
   }
 }

@@ -3,7 +3,7 @@ package client
 import (
 	"bytes"
 	"context"
-	"crypto/tls" // To replicate curl's "-k"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 // GetAccessToken performs the OAuth2 client_credentials flow to get a new access token.
 // This is a standalone function, separate from the API client,
 // as the token is usually retrieved once during provider configuration.
-func GetAccessToken(ctx context.Context, host, clientID, clientSecret string) (*AuthResponse, error) {
+func GetAccessToken(ctx context.Context, host, clientID, clientSecret string, insecure bool) (*AuthResponse, error) {
 
 	// 1. Prepare the request payload
 	authPayload := AuthRequest{
@@ -26,10 +26,9 @@ func GetAccessToken(ctx context.Context, host, clientID, clientSecret string) (*
 		return nil, fmt.Errorf("failed to marshal auth request: %w", err)
 	}
 
-	// 2. Create the insecure HTTP client (to replicate curl -k)
-	// WARNING: This should only be used in trusted environments.
+	// 2. Create the HTTP client
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecure},
 	}
 	httpClient := &http.Client{Transport: tr}
 

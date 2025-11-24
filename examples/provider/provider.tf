@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     clearpass = {
-      source = "registry.terraform.io/hashicorp/clearpass"
+      source = "i-am-smolli/clearpass"
     }
   }
 }
