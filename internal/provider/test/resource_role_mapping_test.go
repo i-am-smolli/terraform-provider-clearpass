@@ -53,7 +53,7 @@ resource "clearpass_role_mapping" "test_map" {
 
   rules = [
     {
-      match_type = "AND" 
+      match_type = "AND"
       role_name  = "[Employee]"
       condition  = [
         {

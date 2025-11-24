@@ -96,10 +96,10 @@ resource "clearpass_service" "test_service" {
   enabled            = true
   strip_username     = false
   match_type         = "MATCHES_ANY"
-  
+
   auth_methods       = ["[EAP PEAP]", "[EAP FAST]"]
   auth_sources       = ["[Local User Repository]"]
-  
+
   monitor_mode       = true
   posture_enabled    = false
   audit_enabled      = false

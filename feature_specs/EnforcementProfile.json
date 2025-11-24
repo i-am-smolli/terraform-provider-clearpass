@@ -1,1616 +1,1476 @@
 {
-    "apiVersion": "1",
-    "swaggerVersion": "1.2",
-    "basePath": "https:\/\/10.1.9.123\/api",
-    "resourcePath": "\/enforcement-profile",
-    "apis": [
+  "apiVersion": "1",
+  "swaggerVersion": "1.2",
+  "basePath": "https://10.1.9.123/api",
+  "resourcePath": "/enforcement-profile",
+  "apis": [
+    {
+      "operations": [
         {
-            "operations": [
-                {
-                    "method": "GET",
-                    "summary": "Get a list of Enforcement Profiles",
-                    "notes": "Get a list of Enforcement Profiles. \u003Cdiv\u003E\n  \u003Ca id=\u0022A69205d388548d\u0022 href=\u0022#\u0022 onclick=\u0022$(\u0027#P69205d388548d\u0027).slideDown();$(\u0027#A69205d388548d\u0027).slideUp();return false;\u0022\u003EMore about JSON filter expressions\u003C\/a\u003E\n  \u003Cdiv id=\u0022P69205d388548d\u0022 style=\u0022display: none;\u0022\u003E\n\u003Cp\u003E\n  A filter is specified as a JSON object, where the properties of the object\n  specify the type of query to be performed.\n\u003C\/p\u003E\n\u003Ctable\u003E\n  \u003Cthead\u003E\n    \u003Ctr\u003E\n      \u003Cth\u003EDescription\u003C\/th\u003E\n      \u003Cth\u003EJSON Filter Syntax\u003C\/th\u003E\n    \u003C\/tr\u003E\n  \u003C\/thead\u003E\n  \u003Ctbody\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ENo filter, matches everything\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$eq\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$in\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$nin\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField contains a substring \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$contains\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$ne\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-sensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-insensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022, \u0022$options\u0022:\u0022i\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField exists (does not contain a null value)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:true}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is NULL\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:false}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with AND\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with OR\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$or\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EInverting a filter expression\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$not\u0022:{ \u003Ci\u003Efilter\u003C\/i\u003E }}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is greater than or equal to 2 and less than 5\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2, \u0022$lt\u0022:5}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2}}, {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:5}} ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n  \u003C\/tbody\u003E\n\u003C\/table\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E",
-                    "nickname": "GET_for_EnforcementProfile",
-                    "type": "EnforcementProfileResult",
-                    "parameters": [
-                        {
-                            "name": "filter",
-                            "paramType": "query",
-                            "type": "string",
-                            "description": "JSON filter expression specifying the items to return",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "{}"
-                        },
-                        {
-                            "name": "sort",
-                            "paramType": "query",
-                            "type": "string",
-                            "description": "Sort ordering for returned items (default +id)",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "+id"
-                        },
-                        {
-                            "name": "offset",
-                            "paramType": "query",
-                            "type": "integer",
-                            "format": "int64",
-                            "description": "Zero based offset to start from",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "0",
-                            "minimum": "0"
-                        },
-                        {
-                            "name": "limit",
-                            "paramType": "query",
-                            "type": "integer",
-                            "format": "int64",
-                            "description": "Maximum number of items to return (1 \u2013 1000)",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "25",
-                            "minimum": "1",
-                            "maximum": "1000"
-                        },
-                        {
-                            "name": "calculate_count",
-                            "paramType": "query",
-                            "type": "boolean",
-                            "description": "Whether to calculate the total item count",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "false"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "POST",
-                    "summary": "Create a new Enforcement Profile",
-                    "notes": "Create a new Enforcement Profile",
-                    "nickname": "POST_for_EnforcementProfile",
-                    "type": "EnforcementProfileResult",
-                    "parameters": [
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "EnforcementProfileCreate"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "201",
-                            "message": "Created"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                }
-            ],
-            "path": "\/enforcement-profile"
+          "method": "GET",
+          "summary": "Get a list of Enforcement Profiles",
+          "notes": "Get a list of Enforcement Profiles. \u003Cdiv\u003E\n  \u003Ca id=\u0022A69205d388548d\u0022 href=\u0022#\u0022 onclick=\u0022$(\u0027#P69205d388548d\u0027).slideDown();$(\u0027#A69205d388548d\u0027).slideUp();return false;\u0022\u003EMore about JSON filter expressions\u003C/a\u003E\n  \u003Cdiv id=\u0022P69205d388548d\u0022 style=\u0022display: none;\u0022\u003E\n\u003Cp\u003E\n  A filter is specified as a JSON object, where the properties of the object\n  specify the type of query to be performed.\n\u003C/p\u003E\n\u003Ctable\u003E\n  \u003Cthead\u003E\n    \u003Ctr\u003E\n      \u003Cth\u003EDescription\u003C/th\u003E\n      \u003Cth\u003EJSON Filter Syntax\u003C/th\u003E\n    \u003C/tr\u003E\n  \u003C/thead\u003E\n  \u003Ctbody\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ENo filter, matches everything\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$eq\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is one of a list of values\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:[\u0022\u003Ci\u003Evalue1\u003C/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C/i\u003E\u0022]}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$in\u0022:[\u0022\u003Ci\u003Evalue1\u003C/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C/i\u003E\u0022]}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not one of a list of values\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$nin\u0022:[\u0022\u003Ci\u003Evalue1\u003C/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C/i\u003E\u0022]}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField contains a substring \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$contains\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$ne\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gt\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than or equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gte\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$lt\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than or equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$lte\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-sensitive)\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-insensitive)\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C/i\u003E\u0022, \u0022$options\u0022:\u0022i\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField exists (does not contain a null value)\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$exists\u0022:true}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is NULL\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$exists\u0022:false}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with AND\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ \u003Ci\u003Efilter1\u003C/i\u003E, \u003Ci\u003Efilter2\u003C/i\u003E, ... ]}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with OR\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$or\u0022:[ \u003Ci\u003Efilter1\u003C/i\u003E, \u003Ci\u003Efilter2\u003C/i\u003E, ... ]}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EInverting a filter expression\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$not\u0022:{ \u003Ci\u003Efilter\u003C/i\u003E }}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is greater than or equal to 2 and less than 5\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gte\u0022:2, \u0022$lt\u0022:5}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ {\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gte\u0022:2}}, {\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$lt\u0022:5}} ]}\u003C/td\u003E\n    \u003C/tr\u003E\n  \u003C/tbody\u003E\n\u003C/table\u003E\n  \u003C/div\u003E\n\u003C/div\u003E",
+          "nickname": "GET_for_EnforcementProfile",
+          "type": "EnforcementProfileResult",
+          "parameters": [
+            {
+              "name": "filter",
+              "paramType": "query",
+              "type": "string",
+              "description": "JSON filter expression specifying the items to return",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "{}"
+            },
+            {
+              "name": "sort",
+              "paramType": "query",
+              "type": "string",
+              "description": "Sort ordering for returned items (default +id)",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "+id"
+            },
+            {
+              "name": "offset",
+              "paramType": "query",
+              "type": "integer",
+              "format": "int64",
+              "description": "Zero based offset to start from",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "0",
+              "minimum": "0"
+            },
+            {
+              "name": "limit",
+              "paramType": "query",
+              "type": "integer",
+              "format": "int64",
+              "description": "Maximum number of items to return (1 \u2013 1000)",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "25",
+              "minimum": "1",
+              "maximum": "1000"
+            },
+            {
+              "name": "calculate_count",
+              "paramType": "query",
+              "type": "boolean",
+              "description": "Whether to calculate the total item count",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "false"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         },
         {
-            "operations": [
-                {
-                    "method": "GET",
-                    "summary": "Get an Enforcement Profile",
-                    "notes": "Get an Enforcement Profile",
-                    "nickname": "GET_for_EnforcementProfile",
-                    "type": "EnforcementProfileResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "enforcement_profile_id",
-                            "description": "Numeric ID of the Enforcement Profile",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                },
-                {
-                    "method": "PATCH",
-                    "summary": "Update an Enforcement Profile",
-                    "notes": "Update an Enforcement Profile",
-                    "nickname": "PATCH_for_EnforcementProfile",
-                    "type": "EnforcementProfileResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "enforcement_profile_id",
-                            "description": "Numeric ID of the Enforcement Profile",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "EnforcementProfileUpdate"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "PUT",
-                    "summary": "Replace an Enforcement Profile",
-                    "notes": "Replace an Enforcement Profile",
-                    "nickname": "PUT_for_EnforcementProfile",
-                    "type": "EnforcementProfileResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "enforcement_profile_id",
-                            "description": "Numeric ID of the Enforcement Profile",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "EnforcementProfileReplace"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "DELETE",
-                    "summary": "Delete an Enforcement Profile",
-                    "notes": "Delete an Enforcement Profile",
-                    "nickname": "DELETE_for_EnforcementProfile",
-                    "type": "void",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "enforcement_profile_id",
-                            "description": "Numeric ID of the Enforcement Profile",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                }
-            ],
-            "path": "\/enforcement-profile\/{enforcement_profile_id}"
-        },
-        {
-            "operations": [
-                {
-                    "method": "GET",
-                    "summary": "Get an Enforcement Profile by name",
-                    "notes": "Get an Enforcement Profile by name",
-                    "nickname": "GET_for_EnforcementProfile_by_name",
-                    "type": "EnforcementProfileResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "name",
-                            "description": "name of the enforcement profile",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                },
-                {
-                    "method": "PATCH",
-                    "summary": "Update an Enforcement Profile by name",
-                    "notes": "Update an Enforcement Profile by name",
-                    "nickname": "PATCH_for_EnforcementProfile_by_name",
-                    "type": "EnforcementProfileResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "name",
-                            "description": "name of the enforcement profile",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "EnforcementProfileUpdate"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "PUT",
-                    "summary": "Replace an Enforcement Profile by name",
-                    "notes": "Replace an Enforcement Profile by name",
-                    "nickname": "PUT_for_EnforcementProfile_by_name",
-                    "type": "EnforcementProfileResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "name",
-                            "description": "name of the enforcement profile",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "EnforcementProfileReplace"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "DELETE",
-                    "summary": "Delete an Enforcement Profile by name",
-                    "notes": "Delete an Enforcement Profile by name",
-                    "nickname": "DELETE_for_EnforcementProfile_by_name",
-                    "type": "void",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "name",
-                            "description": "name of the enforcement profile",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                }
-            ],
-            "path": "\/enforcement-profile\/name\/{name}"
+          "method": "POST",
+          "summary": "Create a new Enforcement Profile",
+          "notes": "Create a new Enforcement Profile",
+          "nickname": "POST_for_EnforcementProfile",
+          "type": "EnforcementProfileResult",
+          "parameters": [
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "EnforcementProfileCreate"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "201",
+              "message": "Created"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         }
-    ],
-    "produces": [
-        "application\/vnd.enforcement-profile.v1+json",
-        "application\/hal+json",
-        "application\/json"
-    ],
-    "models": {
-        "EnforcementProfile": {
-            "id": "EnforcementProfile",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Numeric ID of the Enforcement Profile"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Name of the Enforcement Profile"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of the Enforcement Profile"
-                },
-                "type": {
-                    "type": "string",
-                    "description": "Enforcement Profile Type",
-                    "enum": [
-                        "RADIUS",
-                        "TACACS",
-                        "SNMP",
-                        "Application",
-                        "Agent",
-                        "CLI",
-                        "HTTP",
-                        "RADIUS_DynAuthZ",
-                        "Post_Authentication",
-                        "Aruba_DUR"
-                    ]
-                },
-                "agent_template": {
-                    "type": "string",
-                    "description": "Agent Enforcement Profile Template",
-                    "enum": [
-                        "Agent",
-                        "AgentScript"
-                    ]
-                },
-                "post_auth_template": {
-                    "type": "string",
-                    "description": "Post Authentication Enforcement Profile Template",
-                    "enum": [
-                        "EntityUpdate",
-                        "SessionRestriction",
-                        "SessionNotify"
-                    ]
-                },
-                "radius_dyn_authz_template": {
-                    "type": "string",
-                    "description": "Post Authentication Enforcement Profile Template"
-                },
-                "action": {
-                    "type": "string",
-                    "description": "Enforcement Profile Action",
-                    "enum": [
-                        "Accept",
-                        "Reject",
-                        "Drop"
-                    ]
-                },
-                "device_group_list": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Device Group List"
-                },
-                "attributes": {
-                    "description": "Attributes",
-                    "type": "array",
-                    "items": {
-                        "$ref": "Attributes"
-                    }
-                },
-                "tacacs_service_params": {
-                    "description": "Tacacs+ Service Params",
-                    "type": "TacacsServiceParam"
-                },
-                "dur_config": {
-                    "description": "Downloadable User Role Configuration",
-                    "type": "DURConfig"
-                }
+      ],
+      "path": "/enforcement-profile"
+    },
+    {
+      "operations": [
+        {
+          "method": "GET",
+          "summary": "Get an Enforcement Profile",
+          "notes": "Get an Enforcement Profile",
+          "nickname": "GET_for_EnforcementProfile",
+          "type": "EnforcementProfileResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "enforcement_profile_id",
+              "description": "Numeric ID of the Enforcement Profile",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
             },
-            "required": []
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
         },
-        "EnforcementProfileList": {
-            "id": "EnforcementProfileList",
-            "properties": {
-                "_embedded": {
-                    "$ref": "EnforcementProfileItems",
-                    "description": "Object containing result"
-                },
-                "_links": {
-                    "$ref": "HalLinks",
-                    "description": "Object containing metadata"
-                },
-                "count": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Total number of items matching the filter; returned if calculate_count is true"
-                }
+        {
+          "method": "PATCH",
+          "summary": "Update an Enforcement Profile",
+          "notes": "Update an Enforcement Profile",
+          "nickname": "PATCH_for_EnforcementProfile",
+          "type": "EnforcementProfileResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "enforcement_profile_id",
+              "description": "Numeric ID of the Enforcement Profile",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
             },
-            "required": [
-                "_embedded",
-                "_links"
-            ]
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "EnforcementProfileUpdate"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         },
-        "EnforcementProfileItems": {
-            "id": "EnforcementProfileItems",
-            "properties": {
-                "items": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "EnforcementProfileResult"
-                    },
-                    "description": "List of items matching the filter"
-                }
+        {
+          "method": "PUT",
+          "summary": "Replace an Enforcement Profile",
+          "notes": "Replace an Enforcement Profile",
+          "nickname": "PUT_for_EnforcementProfile",
+          "type": "EnforcementProfileResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "enforcement_profile_id",
+              "description": "Numeric ID of the Enforcement Profile",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
             },
-            "required": [
-                "items"
-            ]
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "EnforcementProfileReplace"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         },
-        "HalLinks": {
-            "id": "HalLinks",
-            "properties": {
-                "self": {
-                    "type": "string",
-                    "description": "URL of result"
-                },
-                "first": {
-                    "type": "string",
-                    "description": "URL of first page of results"
-                },
-                "last": {
-                    "type": "string",
-                    "description": "URL of last page of results"
-                },
-                "prev": {
-                    "type": "string",
-                    "description": "URL of previous page of results"
-                },
-                "next": {
-                    "type": "string",
-                    "description": "URL of next page of results"
-                }
+        {
+          "method": "DELETE",
+          "summary": "Delete an Enforcement Profile",
+          "notes": "Delete an Enforcement Profile",
+          "nickname": "DELETE_for_EnforcementProfile",
+          "type": "void",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "enforcement_profile_id",
+              "description": "Numeric ID of the Enforcement Profile",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "204",
+              "message": "No Content"
             },
-            "required": [
-                "self",
-                "first"
-            ]
-        },
-        "Attributes": {
-            "id": "Attributes",
-            "properties": {
-                "type": {
-                    "type": "string",
-                    "description": "Type of the Attribute"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Name of the Attribute"
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Value of the Attribute"
-                }
+            {
+              "code": "401",
+              "message": "Unauthorized"
             },
-            "required": []
-        },
-        "TacacsServiceParam": {
-            "id": "TacacsServiceParam",
-            "properties": {
-                "privilege_level": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Privilege Level \u003C0-15\u003E"
-                },
-                "services": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Selected Services"
-                },
-                "authorize_attribute_status": {
-                    "type": "string",
-                    "description": "Authorize Attribute Status",
-                    "enum": [
-                        "ADD",
-                        "REPLACE",
-                        "FAIL"
-                    ]
-                },
-                "tacacs_command_config": {
-                    "description": "Commands",
-                    "type": "TacacsCommandConfig"
-                }
+            {
+              "code": "403",
+              "message": "Forbidden"
             },
-            "required": []
-        },
-        "TacacsCommandConfig": {
-            "id": "TacacsCommandConfig",
-            "properties": {
-                "service_type": {
-                    "type": "string",
-                    "description": "Service Type",
-                    "enum": [
-                        "Shell",
-                        "PIX Shell"
-                    ]
-                },
-                "permit_unmatched_cmds": {
-                    "type": "boolean",
-                    "description": "Enable to permit unmatched commands"
-                },
-                "commands": {
-                    "description": "Specify which commands with arguments are permitted\/denied",
-                    "type": "array",
-                    "items": {
-                        "$ref": "TacacsCommand"
-                    }
-                }
+            {
+              "code": "404",
+              "message": "Not Found"
             },
-            "required": []
-        },
-        "TacacsCommand": {
-            "id": "TacacsCommand",
-            "properties": {
-                "command": {
-                    "type": "string",
-                    "description": "Shell Command"
-                },
-                "permit_unmatched_args": {
-                    "type": "boolean",
-                    "description": "Enable to permit unmatched arguments"
-                },
-                "command_args": {
-                    "description": "List of Command Arguments",
-                    "type": "array",
-                    "items": {
-                        "$ref": "TacacsCommandArgs"
-                    }
-                }
+            {
+              "code": "406",
+              "message": "Not Acceptable"
             },
-            "required": []
-        },
-        "TacacsCommandArgs": {
-            "id": "TacacsCommandArgs",
-            "properties": {
-                "argument": {
-                    "type": "string",
-                    "description": "Command Argument"
-                },
-                "permit_action": {
-                    "type": "boolean",
-                    "description": "Enable to permit unmatched action"
-                }
-            },
-            "required": []
-        },
-        "DURConfig": {
-            "id": "DURConfig",
-            "properties": {
-                "config_mode": {
-                    "type": "string",
-                    "description": "Role Configuration Mode for Aruba Downloadable Role Enforcement profile",
-                    "enum": [
-                        "Standard",
-                        "Advanced"
-                    ]
-                },
-                "product": {
-                    "type": "string",
-                    "description": "Product Name for Aruba Downloadable Role Enforcement profile",
-                    "enum": [
-                        "AOS-CX",
-                        "Mobility Controller",
-                        "ArubaOS-Switch",
-                        "Mobility Access Switch"
-                    ]
-                },
-                "aruba_os_switch_config": {
-                    "type": "ArubaOSSwitchConfig",
-                    "description": "ArubaOS-Switch Downloadable Role Configuration"
-                },
-                "mobility_access_switch_config": {
-                    "type": "MASConfig",
-                    "description": "Mobility Access Switch Downloadable Role Configuration"
-                },
-                "mobility_controller_config": {
-                    "type": "AMCConfig",
-                    "description": "Mobility Controller Downloadable Role Configuration"
-                },
-                "aos_cx_config": {
-                    "type": "AOSCXConfig",
-                    "description": "AOS-CX Downloadable Role Configuration"
-                }
-            },
-            "required": []
-        },
-        "ArubaOSSwitchConfig": {
-            "id": "ArubaOSSwitchConfig",
-            "properties": {
-                "captive_portal_profile_name": {
-                    "type": "string",
-                    "description": "Captive Portal Profile name"
-                },
-                "policy_name": {
-                    "type": "string",
-                    "description": "Policy name"
-                },
-                "controller_static_role": {
-                    "type": "string",
-                    "description": "Controller Static Role"
-                },
-                "controller_downloadable_role": {
-                    "type": "string",
-                    "description": "Controller Downloadable Role"
-                },
-                "vlan_id": {
-                    "type": "string",
-                    "description": "VLAN ID \u003C1-4094\u003E"
-                },
-                "vlan_name": {
-                    "type": "string",
-                    "description": "VLAN Name"
-                },
-                "vlan_tagged_id": {
-                    "type": "string",
-                    "description": "VLAN ID Tagged"
-                },
-                "vlan_tagged_name": {
-                    "type": "string",
-                    "description": "VLAN Name Tagged"
-                },
-                "reauth_period": {
-                    "type": "string",
-                    "description": "Re-Authentication Period \u003C0-999999999\u003E"
-                },
-                "logoff_period": {
-                    "type": "string",
-                    "description": "Logoff Period \u003C0(mac-pin) OR 60-9999999\u003E"
-                },
-                "cached_reauth_period": {
-                    "type": "string",
-                    "description": "Cached Re-Authentication Period \u003C60-2147483647\u003E"
-                },
-                "enable_device_config": {
-                    "type": "boolean",
-                    "description": "Enable Device Configuration"
-                },
-                "enable_poe_allocate_by_class": {
-                    "type": "boolean",
-                    "description": "Enable POE Allocate By Class"
-                },
-                "poe_priority": {
-                    "type": "string",
-                    "description": "POE Priority",
-                    "enum": [
-                        "low",
-                        "high",
-                        "critical"
-                    ]
-                },
-                "enable_admin_edge_port": {
-                    "type": "boolean",
-                    "description": "Enable Admin Edge Port"
-                },
-                "enable_port_mode": {
-                    "type": "boolean",
-                    "description": "Enable Port Mode"
-                }
-            },
-            "required": []
-        },
-        "MASConfig": {
-            "id": "MASConfig",
-            "properties": {
-                "captive_portal_profile_name": {
-                    "type": "string",
-                    "description": "Captive Portal Profile name"
-                },
-                "policer_profile_name": {
-                    "type": "string",
-                    "description": "Policer Profile name"
-                },
-                "qos_profile_name": {
-                    "type": "string",
-                    "description": "QoS Profile name"
-                },
-                "voip_profile_name": {
-                    "type": "string",
-                    "description": "VoIP Profile name"
-                },
-                "reauth_interval": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Re-authentication Interval Time (0-4096)"
-                },
-                "vlan_id": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "VLAN ID \u003C1-4094\u003E"
-                },
-                "acl_list": {
-                    "description": "Access Control List",
-                    "type": "array",
-                    "items": {
-                        "$ref": "acl"
-                    }
-                }
-            },
-            "required": []
-        },
-        "AMCConfig": {
-            "id": "AMCConfig",
-            "properties": {
-                "captive_portal_profile_name": {
-                    "type": "string",
-                    "description": "Captive Portal Profile name"
-                },
-                "reauth_interval": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Re-authentication Interval Time (0-4096)"
-                },
-                "vlan_id": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "VLAN ID \u003C1-4094\u003E"
-                },
-                "vlan_name": {
-                    "type": "string",
-                    "description": "VLAN Name"
-                },
-                "parameterized_vlan": {
-                    "type": "string",
-                    "description": "Parameterized VLAN"
-                },
-                "acl_list": {
-                    "description": "Access Control List",
-                    "type": "array",
-                    "items": {
-                        "$ref": "acl"
-                    }
-                }
-            },
-            "required": []
-        },
-        "acl": {
-            "id": "acl",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Name of the ACL"
-                },
-                "type": {
-                    "type": "string",
-                    "description": "Type of the ACL",
-                    "enum": [
-                        "Ethertype",
-                        "MAC",
-                        "Stateless",
-                        "Session"
-                    ]
-                }
-            },
-            "required": []
-        },
-        "AOSCXConfig": {
-            "id": "AOSCXConfig",
-            "properties": {
-                "role_name": {
-                    "type": "string",
-                    "description": "Role name"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description"
-                },
-                "captive_portal_name": {
-                    "type": "string",
-                    "description": "Captive Portal name"
-                },
-                "authentication_mode": {
-                    "type": "string",
-                    "description": "Authentication Mode",
-                    "enum": [
-                        "",
-                        "client-mode",
-                        "device-mode",
-                        "multi-domain-mode"
-                    ]
-                },
-                "device_traffic_class": {
-                    "type": "string",
-                    "description": "Device Traffic Class",
-                    "enum": [
-                        "None",
-                        "Voice"
-                    ]
-                },
-                "session_timeout_type": {
-                    "type": "string",
-                    "description": "Session Timeout Type",
-                    "enum": [
-                        "Static",
-                        "Parameterized"
-                    ]
-                },
-                "session_timeout": {
-                    "type": "string",
-                    "description": "Session Timeout \u003C1-4294967295\u003E"
-                },
-                "parameterized_session_timeout": {
-                    "type": "string",
-                    "description": "Parameterized Session Timeout"
-                },
-                "cached_reauth_period": {
-                    "type": "string",
-                    "description": "Cached Re-authentication period \u003C30-4294967295\u003E"
-                },
-                "reauth_period_type": {
-                    "type": "string",
-                    "description": "Re-Authentication Period Type",
-                    "enum": [
-                        "Manual",
-                        "Random",
-                        "Parameterized"
-                    ]
-                },
-                "reauth_period": {
-                    "type": "string",
-                    "description": "Re-Authentication Period \u003C1-4294967295\u003E"
-                },
-                "minimum_reauth_period": {
-                    "type": "string",
-                    "description": "Minimum re-authentication period \u003C1-4294967295\u003E"
-                },
-                "parameterized_reauth": {
-                    "type": "string",
-                    "description": "Parameterized Re-Authentication"
-                },
-                "client_inactivity_timeout_type": {
-                    "type": "string",
-                    "description": "Client Inactivity Timeout Type",
-                    "enum": [
-                        "Value",
-                        "None",
-                        "Parameterized"
-                    ]
-                },
-                "client_inactivity_timeout": {
-                    "type": "string",
-                    "description": "Client Inactivity Timeout value \u003C300-4294967295\u003E"
-                },
-                "parameterized_client_inactivity_timeout": {
-                    "type": "string",
-                    "description": "Parameterized Client Inactivity Timeout"
-                },
-                "allowed_vlan_ids_trunk": {
-                    "type": "string",
-                    "description": "Allowed VLANs on Trunk \u003C1-4094\u003E"
-                },
-                "allowed_vlan_names_trunk": {
-                    "type": "string",
-                    "description": "List of Allowed VLAN Names on Trunk"
-                },
-                "parameterized_allowed_vlan_type": {
-                    "type": "string",
-                    "description": "Parameterized Allowed VLAN Type",
-                    "enum": [
-                        "Id",
-                        "Name"
-                    ]
-                },
-                "parameterized_allowed_vlan": {
-                    "type": "string",
-                    "description": "Parameterized Allowed VLAN"
-                },
-                "native_trunk_vlan_type": {
-                    "type": "string",
-                    "description": "Native Trunk VLAN Type",
-                    "enum": [
-                        "Id",
-                        "Name",
-                        "Parameterized"
-                    ]
-                },
-                "native_trunk_vlan_id": {
-                    "type": "string",
-                    "description": "Native Trunk VLAN \u003C1-4094\u003E"
-                },
-                "native_trunk_vlan_name": {
-                    "type": "string",
-                    "description": "Native Trunk VLAN Name"
-                },
-                "parameterized_native_trunk_vlan": {
-                    "type": "string",
-                    "description": "Parameterized Native Trunk VLAN"
-                },
-                "access_vlan_type": {
-                    "type": "string",
-                    "description": "Access VLAN Type",
-                    "enum": [
-                        "Id",
-                        "Name",
-                        "Parameterized"
-                    ]
-                },
-                "access_vlan_id": {
-                    "type": "string",
-                    "description": "Access VLAN \u003C1-4094\u003E"
-                },
-                "access_vlan_name": {
-                    "type": "string",
-                    "description": "Access VLAN Name"
-                },
-                "parameterized_access_vlan": {
-                    "type": "string",
-                    "description": "Parameterized Access VLAN"
-                },
-                "gateway_zone": {
-                    "type": "string",
-                    "description": "Gateway Zone"
-                },
-                "secondary_role_type": {
-                    "type": "string",
-                    "description": "Secondary Role Type",
-                    "enum": [
-                        "None",
-                        "Static",
-                        "Dynamic"
-                    ]
-                },
-                "gateway_static_role": {
-                    "type": "string",
-                    "description": "Gateway Static Role"
-                },
-                "gateway_downloadable_role": {
-                    "type": "string",
-                    "description": "Gateway Downloadable Role"
-                },
-                "mtu": {
-                    "type": "string",
-                    "description": "MTU \u003C68-9198\u003E"
-                },
-                "trust_mode": {
-                    "type": "string",
-                    "description": "Trust Mode",
-                    "enum": [
-                        "",
-                        "none",
-                        "cos",
-                        "dscp"
-                    ]
-                },
-                "poe_priority": {
-                    "type": "string",
-                    "description": "PoE Priority",
-                    "enum": [
-                        "",
-                        "low",
-                        "high",
-                        "critical"
-                    ]
-                },
-                "private_vlan_port_type": {
-                    "type": "string",
-                    "description": "Private VLAN Port Type",
-                    "enum": [
-                        "",
-                        "promiscuous",
-                        "secondary"
-                    ]
-                },
-                "policy_name": {
-                    "type": "string",
-                    "description": "Policy name"
-                }
-            },
-            "required": []
-        },
-        "EnforcementProfileResult": {
-            "id": "EnforcementProfileResult",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Numeric ID of the Enforcement Profile"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Name of the Enforcement Profile"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of the Enforcement Profile"
-                },
-                "type": {
-                    "type": "string",
-                    "description": "Enforcement Profile Type",
-                    "enum": [
-                        "RADIUS",
-                        "TACACS",
-                        "SNMP",
-                        "Application",
-                        "Agent",
-                        "CLI",
-                        "HTTP",
-                        "RADIUS_DynAuthZ",
-                        "Post_Authentication",
-                        "Aruba_DUR"
-                    ]
-                },
-                "agent_template": {
-                    "type": "string",
-                    "description": "Agent Enforcement Profile Template",
-                    "enum": [
-                        "Agent",
-                        "AgentScript"
-                    ]
-                },
-                "post_auth_template": {
-                    "type": "string",
-                    "description": "Post Authentication Enforcement Profile Template",
-                    "enum": [
-                        "EntityUpdate",
-                        "SessionRestriction",
-                        "SessionNotify"
-                    ]
-                },
-                "radius_dyn_authz_template": {
-                    "type": "string",
-                    "description": "Post Authentication Enforcement Profile Template"
-                },
-                "action": {
-                    "type": "string",
-                    "description": "Enforcement Profile Action",
-                    "enum": [
-                        "Accept",
-                        "Reject",
-                        "Drop"
-                    ]
-                },
-                "device_group_list": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Device Group List"
-                },
-                "attributes": {
-                    "description": "Attributes",
-                    "type": "array",
-                    "items": {
-                        "$ref": "Attributes"
-                    }
-                },
-                "tacacs_service_params": {
-                    "description": "Tacacs+ Service Params",
-                    "type": "TacacsServiceParam"
-                },
-                "dur_config": {
-                    "description": "Downloadable User Role Configuration",
-                    "type": "DURConfig"
-                }
-            },
-            "required": [
-                "id",
-                "name",
-                "type"
-            ]
-        },
-        "EnforcementProfileUpdate": {
-            "id": "EnforcementProfileUpdate",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Name of the Enforcement Profile"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of the Enforcement Profile"
-                },
-                "type": {
-                    "type": "string",
-                    "description": "Enforcement Profile Type",
-                    "enum": [
-                        "RADIUS",
-                        "TACACS",
-                        "SNMP",
-                        "Application",
-                        "Agent",
-                        "CLI",
-                        "HTTP",
-                        "RADIUS_DynAuthZ",
-                        "Post_Authentication",
-                        "Aruba_DUR"
-                    ]
-                },
-                "agent_template": {
-                    "type": "string",
-                    "description": "Agent Enforcement Profile Template",
-                    "enum": [
-                        "Agent",
-                        "AgentScript"
-                    ]
-                },
-                "post_auth_template": {
-                    "type": "string",
-                    "description": "Post Authentication Enforcement Profile Template",
-                    "enum": [
-                        "EntityUpdate",
-                        "SessionRestriction",
-                        "SessionNotify"
-                    ]
-                },
-                "radius_dyn_authz_template": {
-                    "type": "string",
-                    "description": "Post Authentication Enforcement Profile Template"
-                },
-                "action": {
-                    "type": "string",
-                    "description": "Enforcement Profile Action",
-                    "enum": [
-                        "Accept",
-                        "Reject",
-                        "Drop"
-                    ]
-                },
-                "device_group_list": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Device Group List"
-                },
-                "attributes": {
-                    "description": "Attributes",
-                    "type": "array",
-                    "items": {
-                        "$ref": "Attributes"
-                    }
-                },
-                "tacacs_service_params": {
-                    "description": "Tacacs+ Service Params",
-                    "type": "TacacsServiceParam"
-                },
-                "dur_config": {
-                    "description": "Downloadable User Role Configuration",
-                    "type": "DURConfig"
-                }
-            },
-            "required": []
-        },
-        "EnforcementProfileCreate": {
-            "id": "EnforcementProfileCreate",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Name of the Enforcement Profile"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of the Enforcement Profile"
-                },
-                "type": {
-                    "type": "string",
-                    "description": "Enforcement Profile Type",
-                    "enum": [
-                        "RADIUS",
-                        "TACACS",
-                        "SNMP",
-                        "Application",
-                        "Agent",
-                        "CLI",
-                        "HTTP",
-                        "RADIUS_DynAuthZ",
-                        "Post_Authentication",
-                        "Aruba_DUR"
-                    ]
-                },
-                "agent_template": {
-                    "type": "string",
-                    "description": "Agent Enforcement Profile Template",
-                    "enum": [
-                        "Agent",
-                        "AgentScript"
-                    ]
-                },
-                "post_auth_template": {
-                    "type": "string",
-                    "description": "Post Authentication Enforcement Profile Template",
-                    "enum": [
-                        "EntityUpdate",
-                        "SessionRestriction",
-                        "SessionNotify"
-                    ]
-                },
-                "radius_dyn_authz_template": {
-                    "type": "string",
-                    "description": "Post Authentication Enforcement Profile Template"
-                },
-                "action": {
-                    "type": "string",
-                    "description": "Enforcement Profile Action",
-                    "enum": [
-                        "Accept",
-                        "Reject",
-                        "Drop"
-                    ]
-                },
-                "device_group_list": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Device Group List"
-                },
-                "attributes": {
-                    "description": "Attributes",
-                    "type": "array",
-                    "items": {
-                        "$ref": "Attributes"
-                    }
-                },
-                "tacacs_service_params": {
-                    "description": "Tacacs+ Service Params",
-                    "type": "TacacsServiceParam"
-                },
-                "dur_config": {
-                    "description": "Downloadable User Role Configuration",
-                    "type": "DURConfig"
-                }
-            },
-            "required": [
-                "name",
-                "type"
-            ]
-        },
-        "EnforcementProfileReplace": {
-            "id": "EnforcementProfileReplace",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Name of the Enforcement Profile"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of the Enforcement Profile"
-                },
-                "type": {
-                    "type": "string",
-                    "description": "Enforcement Profile Type",
-                    "enum": [
-                        "RADIUS",
-                        "TACACS",
-                        "SNMP",
-                        "Application",
-                        "Agent",
-                        "CLI",
-                        "HTTP",
-                        "RADIUS_DynAuthZ",
-                        "Post_Authentication",
-                        "Aruba_DUR"
-                    ]
-                },
-                "agent_template": {
-                    "type": "string",
-                    "description": "Agent Enforcement Profile Template",
-                    "enum": [
-                        "Agent",
-                        "AgentScript"
-                    ]
-                },
-                "post_auth_template": {
-                    "type": "string",
-                    "description": "Post Authentication Enforcement Profile Template",
-                    "enum": [
-                        "EntityUpdate",
-                        "SessionRestriction",
-                        "SessionNotify"
-                    ]
-                },
-                "radius_dyn_authz_template": {
-                    "type": "string",
-                    "description": "Post Authentication Enforcement Profile Template"
-                },
-                "action": {
-                    "type": "string",
-                    "description": "Enforcement Profile Action",
-                    "enum": [
-                        "Accept",
-                        "Reject",
-                        "Drop"
-                    ]
-                },
-                "device_group_list": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Device Group List"
-                },
-                "attributes": {
-                    "description": "Attributes",
-                    "type": "array",
-                    "items": {
-                        "$ref": "Attributes"
-                    }
-                },
-                "tacacs_service_params": {
-                    "description": "Tacacs+ Service Params",
-                    "type": "TacacsServiceParam"
-                },
-                "dur_config": {
-                    "description": "Downloadable User Role Configuration",
-                    "type": "DURConfig"
-                }
-            },
-            "required": [
-                "name",
-                "type"
-            ]
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
         }
+      ],
+      "path": "/enforcement-profile/{enforcement_profile_id}"
+    },
+    {
+      "operations": [
+        {
+          "method": "GET",
+          "summary": "Get an Enforcement Profile by name",
+          "notes": "Get an Enforcement Profile by name",
+          "nickname": "GET_for_EnforcementProfile_by_name",
+          "type": "EnforcementProfileResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "name",
+              "description": "name of the enforcement profile",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
+        },
+        {
+          "method": "PATCH",
+          "summary": "Update an Enforcement Profile by name",
+          "notes": "Update an Enforcement Profile by name",
+          "nickname": "PATCH_for_EnforcementProfile_by_name",
+          "type": "EnforcementProfileResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "name",
+              "description": "name of the enforcement profile",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            },
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "EnforcementProfileUpdate"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
+        },
+        {
+          "method": "PUT",
+          "summary": "Replace an Enforcement Profile by name",
+          "notes": "Replace an Enforcement Profile by name",
+          "nickname": "PUT_for_EnforcementProfile_by_name",
+          "type": "EnforcementProfileResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "name",
+              "description": "name of the enforcement profile",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            },
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "EnforcementProfileReplace"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
+        },
+        {
+          "method": "DELETE",
+          "summary": "Delete an Enforcement Profile by name",
+          "notes": "Delete an Enforcement Profile by name",
+          "nickname": "DELETE_for_EnforcementProfile_by_name",
+          "type": "void",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "name",
+              "description": "name of the enforcement profile",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
+        }
+      ],
+      "path": "/enforcement-profile/name/{name}"
     }
+  ],
+  "produces": [
+    "application/vnd.enforcement-profile.v1+json",
+    "application/hal+json",
+    "application/json"
+  ],
+  "models": {
+    "EnforcementProfile": {
+      "id": "EnforcementProfile",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Numeric ID of the Enforcement Profile"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the Enforcement Profile"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the Enforcement Profile"
+        },
+        "type": {
+          "type": "string",
+          "description": "Enforcement Profile Type",
+          "enum": [
+            "RADIUS",
+            "TACACS",
+            "SNMP",
+            "Application",
+            "Agent",
+            "CLI",
+            "HTTP",
+            "RADIUS_DynAuthZ",
+            "Post_Authentication",
+            "Aruba_DUR"
+          ]
+        },
+        "agent_template": {
+          "type": "string",
+          "description": "Agent Enforcement Profile Template",
+          "enum": ["Agent", "AgentScript"]
+        },
+        "post_auth_template": {
+          "type": "string",
+          "description": "Post Authentication Enforcement Profile Template",
+          "enum": ["EntityUpdate", "SessionRestriction", "SessionNotify"]
+        },
+        "radius_dyn_authz_template": {
+          "type": "string",
+          "description": "Post Authentication Enforcement Profile Template"
+        },
+        "action": {
+          "type": "string",
+          "description": "Enforcement Profile Action",
+          "enum": ["Accept", "Reject", "Drop"]
+        },
+        "device_group_list": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Device Group List"
+        },
+        "attributes": {
+          "description": "Attributes",
+          "type": "array",
+          "items": {
+            "$ref": "Attributes"
+          }
+        },
+        "tacacs_service_params": {
+          "description": "Tacacs+ Service Params",
+          "type": "TacacsServiceParam"
+        },
+        "dur_config": {
+          "description": "Downloadable User Role Configuration",
+          "type": "DURConfig"
+        }
+      },
+      "required": []
+    },
+    "EnforcementProfileList": {
+      "id": "EnforcementProfileList",
+      "properties": {
+        "_embedded": {
+          "$ref": "EnforcementProfileItems",
+          "description": "Object containing result"
+        },
+        "_links": {
+          "$ref": "HalLinks",
+          "description": "Object containing metadata"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Total number of items matching the filter; returned if calculate_count is true"
+        }
+      },
+      "required": ["_embedded", "_links"]
+    },
+    "EnforcementProfileItems": {
+      "id": "EnforcementProfileItems",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "EnforcementProfileResult"
+          },
+          "description": "List of items matching the filter"
+        }
+      },
+      "required": ["items"]
+    },
+    "HalLinks": {
+      "id": "HalLinks",
+      "properties": {
+        "self": {
+          "type": "string",
+          "description": "URL of result"
+        },
+        "first": {
+          "type": "string",
+          "description": "URL of first page of results"
+        },
+        "last": {
+          "type": "string",
+          "description": "URL of last page of results"
+        },
+        "prev": {
+          "type": "string",
+          "description": "URL of previous page of results"
+        },
+        "next": {
+          "type": "string",
+          "description": "URL of next page of results"
+        }
+      },
+      "required": ["self", "first"]
+    },
+    "Attributes": {
+      "id": "Attributes",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of the Attribute"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the Attribute"
+        },
+        "value": {
+          "type": "string",
+          "description": "Value of the Attribute"
+        }
+      },
+      "required": []
+    },
+    "TacacsServiceParam": {
+      "id": "TacacsServiceParam",
+      "properties": {
+        "privilege_level": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Privilege Level \u003C0-15\u003E"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Selected Services"
+        },
+        "authorize_attribute_status": {
+          "type": "string",
+          "description": "Authorize Attribute Status",
+          "enum": ["ADD", "REPLACE", "FAIL"]
+        },
+        "tacacs_command_config": {
+          "description": "Commands",
+          "type": "TacacsCommandConfig"
+        }
+      },
+      "required": []
+    },
+    "TacacsCommandConfig": {
+      "id": "TacacsCommandConfig",
+      "properties": {
+        "service_type": {
+          "type": "string",
+          "description": "Service Type",
+          "enum": ["Shell", "PIX Shell"]
+        },
+        "permit_unmatched_cmds": {
+          "type": "boolean",
+          "description": "Enable to permit unmatched commands"
+        },
+        "commands": {
+          "description": "Specify which commands with arguments are permitted/denied",
+          "type": "array",
+          "items": {
+            "$ref": "TacacsCommand"
+          }
+        }
+      },
+      "required": []
+    },
+    "TacacsCommand": {
+      "id": "TacacsCommand",
+      "properties": {
+        "command": {
+          "type": "string",
+          "description": "Shell Command"
+        },
+        "permit_unmatched_args": {
+          "type": "boolean",
+          "description": "Enable to permit unmatched arguments"
+        },
+        "command_args": {
+          "description": "List of Command Arguments",
+          "type": "array",
+          "items": {
+            "$ref": "TacacsCommandArgs"
+          }
+        }
+      },
+      "required": []
+    },
+    "TacacsCommandArgs": {
+      "id": "TacacsCommandArgs",
+      "properties": {
+        "argument": {
+          "type": "string",
+          "description": "Command Argument"
+        },
+        "permit_action": {
+          "type": "boolean",
+          "description": "Enable to permit unmatched action"
+        }
+      },
+      "required": []
+    },
+    "DURConfig": {
+      "id": "DURConfig",
+      "properties": {
+        "config_mode": {
+          "type": "string",
+          "description": "Role Configuration Mode for Aruba Downloadable Role Enforcement profile",
+          "enum": ["Standard", "Advanced"]
+        },
+        "product": {
+          "type": "string",
+          "description": "Product Name for Aruba Downloadable Role Enforcement profile",
+          "enum": [
+            "AOS-CX",
+            "Mobility Controller",
+            "ArubaOS-Switch",
+            "Mobility Access Switch"
+          ]
+        },
+        "aruba_os_switch_config": {
+          "type": "ArubaOSSwitchConfig",
+          "description": "ArubaOS-Switch Downloadable Role Configuration"
+        },
+        "mobility_access_switch_config": {
+          "type": "MASConfig",
+          "description": "Mobility Access Switch Downloadable Role Configuration"
+        },
+        "mobility_controller_config": {
+          "type": "AMCConfig",
+          "description": "Mobility Controller Downloadable Role Configuration"
+        },
+        "aos_cx_config": {
+          "type": "AOSCXConfig",
+          "description": "AOS-CX Downloadable Role Configuration"
+        }
+      },
+      "required": []
+    },
+    "ArubaOSSwitchConfig": {
+      "id": "ArubaOSSwitchConfig",
+      "properties": {
+        "captive_portal_profile_name": {
+          "type": "string",
+          "description": "Captive Portal Profile name"
+        },
+        "policy_name": {
+          "type": "string",
+          "description": "Policy name"
+        },
+        "controller_static_role": {
+          "type": "string",
+          "description": "Controller Static Role"
+        },
+        "controller_downloadable_role": {
+          "type": "string",
+          "description": "Controller Downloadable Role"
+        },
+        "vlan_id": {
+          "type": "string",
+          "description": "VLAN ID \u003C1-4094\u003E"
+        },
+        "vlan_name": {
+          "type": "string",
+          "description": "VLAN Name"
+        },
+        "vlan_tagged_id": {
+          "type": "string",
+          "description": "VLAN ID Tagged"
+        },
+        "vlan_tagged_name": {
+          "type": "string",
+          "description": "VLAN Name Tagged"
+        },
+        "reauth_period": {
+          "type": "string",
+          "description": "Re-Authentication Period \u003C0-999999999\u003E"
+        },
+        "logoff_period": {
+          "type": "string",
+          "description": "Logoff Period \u003C0(mac-pin) OR 60-9999999\u003E"
+        },
+        "cached_reauth_period": {
+          "type": "string",
+          "description": "Cached Re-Authentication Period \u003C60-2147483647\u003E"
+        },
+        "enable_device_config": {
+          "type": "boolean",
+          "description": "Enable Device Configuration"
+        },
+        "enable_poe_allocate_by_class": {
+          "type": "boolean",
+          "description": "Enable POE Allocate By Class"
+        },
+        "poe_priority": {
+          "type": "string",
+          "description": "POE Priority",
+          "enum": ["low", "high", "critical"]
+        },
+        "enable_admin_edge_port": {
+          "type": "boolean",
+          "description": "Enable Admin Edge Port"
+        },
+        "enable_port_mode": {
+          "type": "boolean",
+          "description": "Enable Port Mode"
+        }
+      },
+      "required": []
+    },
+    "MASConfig": {
+      "id": "MASConfig",
+      "properties": {
+        "captive_portal_profile_name": {
+          "type": "string",
+          "description": "Captive Portal Profile name"
+        },
+        "policer_profile_name": {
+          "type": "string",
+          "description": "Policer Profile name"
+        },
+        "qos_profile_name": {
+          "type": "string",
+          "description": "QoS Profile name"
+        },
+        "voip_profile_name": {
+          "type": "string",
+          "description": "VoIP Profile name"
+        },
+        "reauth_interval": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Re-authentication Interval Time (0-4096)"
+        },
+        "vlan_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "VLAN ID \u003C1-4094\u003E"
+        },
+        "acl_list": {
+          "description": "Access Control List",
+          "type": "array",
+          "items": {
+            "$ref": "acl"
+          }
+        }
+      },
+      "required": []
+    },
+    "AMCConfig": {
+      "id": "AMCConfig",
+      "properties": {
+        "captive_portal_profile_name": {
+          "type": "string",
+          "description": "Captive Portal Profile name"
+        },
+        "reauth_interval": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Re-authentication Interval Time (0-4096)"
+        },
+        "vlan_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "VLAN ID \u003C1-4094\u003E"
+        },
+        "vlan_name": {
+          "type": "string",
+          "description": "VLAN Name"
+        },
+        "parameterized_vlan": {
+          "type": "string",
+          "description": "Parameterized VLAN"
+        },
+        "acl_list": {
+          "description": "Access Control List",
+          "type": "array",
+          "items": {
+            "$ref": "acl"
+          }
+        }
+      },
+      "required": []
+    },
+    "acl": {
+      "id": "acl",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the ACL"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the ACL",
+          "enum": ["Ethertype", "MAC", "Stateless", "Session"]
+        }
+      },
+      "required": []
+    },
+    "AOSCXConfig": {
+      "id": "AOSCXConfig",
+      "properties": {
+        "role_name": {
+          "type": "string",
+          "description": "Role name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description"
+        },
+        "captive_portal_name": {
+          "type": "string",
+          "description": "Captive Portal name"
+        },
+        "authentication_mode": {
+          "type": "string",
+          "description": "Authentication Mode",
+          "enum": ["", "client-mode", "device-mode", "multi-domain-mode"]
+        },
+        "device_traffic_class": {
+          "type": "string",
+          "description": "Device Traffic Class",
+          "enum": ["None", "Voice"]
+        },
+        "session_timeout_type": {
+          "type": "string",
+          "description": "Session Timeout Type",
+          "enum": ["Static", "Parameterized"]
+        },
+        "session_timeout": {
+          "type": "string",
+          "description": "Session Timeout \u003C1-4294967295\u003E"
+        },
+        "parameterized_session_timeout": {
+          "type": "string",
+          "description": "Parameterized Session Timeout"
+        },
+        "cached_reauth_period": {
+          "type": "string",
+          "description": "Cached Re-authentication period \u003C30-4294967295\u003E"
+        },
+        "reauth_period_type": {
+          "type": "string",
+          "description": "Re-Authentication Period Type",
+          "enum": ["Manual", "Random", "Parameterized"]
+        },
+        "reauth_period": {
+          "type": "string",
+          "description": "Re-Authentication Period \u003C1-4294967295\u003E"
+        },
+        "minimum_reauth_period": {
+          "type": "string",
+          "description": "Minimum re-authentication period \u003C1-4294967295\u003E"
+        },
+        "parameterized_reauth": {
+          "type": "string",
+          "description": "Parameterized Re-Authentication"
+        },
+        "client_inactivity_timeout_type": {
+          "type": "string",
+          "description": "Client Inactivity Timeout Type",
+          "enum": ["Value", "None", "Parameterized"]
+        },
+        "client_inactivity_timeout": {
+          "type": "string",
+          "description": "Client Inactivity Timeout value \u003C300-4294967295\u003E"
+        },
+        "parameterized_client_inactivity_timeout": {
+          "type": "string",
+          "description": "Parameterized Client Inactivity Timeout"
+        },
+        "allowed_vlan_ids_trunk": {
+          "type": "string",
+          "description": "Allowed VLANs on Trunk \u003C1-4094\u003E"
+        },
+        "allowed_vlan_names_trunk": {
+          "type": "string",
+          "description": "List of Allowed VLAN Names on Trunk"
+        },
+        "parameterized_allowed_vlan_type": {
+          "type": "string",
+          "description": "Parameterized Allowed VLAN Type",
+          "enum": ["Id", "Name"]
+        },
+        "parameterized_allowed_vlan": {
+          "type": "string",
+          "description": "Parameterized Allowed VLAN"
+        },
+        "native_trunk_vlan_type": {
+          "type": "string",
+          "description": "Native Trunk VLAN Type",
+          "enum": ["Id", "Name", "Parameterized"]
+        },
+        "native_trunk_vlan_id": {
+          "type": "string",
+          "description": "Native Trunk VLAN \u003C1-4094\u003E"
+        },
+        "native_trunk_vlan_name": {
+          "type": "string",
+          "description": "Native Trunk VLAN Name"
+        },
+        "parameterized_native_trunk_vlan": {
+          "type": "string",
+          "description": "Parameterized Native Trunk VLAN"
+        },
+        "access_vlan_type": {
+          "type": "string",
+          "description": "Access VLAN Type",
+          "enum": ["Id", "Name", "Parameterized"]
+        },
+        "access_vlan_id": {
+          "type": "string",
+          "description": "Access VLAN \u003C1-4094\u003E"
+        },
+        "access_vlan_name": {
+          "type": "string",
+          "description": "Access VLAN Name"
+        },
+        "parameterized_access_vlan": {
+          "type": "string",
+          "description": "Parameterized Access VLAN"
+        },
+        "gateway_zone": {
+          "type": "string",
+          "description": "Gateway Zone"
+        },
+        "secondary_role_type": {
+          "type": "string",
+          "description": "Secondary Role Type",
+          "enum": ["None", "Static", "Dynamic"]
+        },
+        "gateway_static_role": {
+          "type": "string",
+          "description": "Gateway Static Role"
+        },
+        "gateway_downloadable_role": {
+          "type": "string",
+          "description": "Gateway Downloadable Role"
+        },
+        "mtu": {
+          "type": "string",
+          "description": "MTU \u003C68-9198\u003E"
+        },
+        "trust_mode": {
+          "type": "string",
+          "description": "Trust Mode",
+          "enum": ["", "none", "cos", "dscp"]
+        },
+        "poe_priority": {
+          "type": "string",
+          "description": "PoE Priority",
+          "enum": ["", "low", "high", "critical"]
+        },
+        "private_vlan_port_type": {
+          "type": "string",
+          "description": "Private VLAN Port Type",
+          "enum": ["", "promiscuous", "secondary"]
+        },
+        "policy_name": {
+          "type": "string",
+          "description": "Policy name"
+        }
+      },
+      "required": []
+    },
+    "EnforcementProfileResult": {
+      "id": "EnforcementProfileResult",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Numeric ID of the Enforcement Profile"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the Enforcement Profile"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the Enforcement Profile"
+        },
+        "type": {
+          "type": "string",
+          "description": "Enforcement Profile Type",
+          "enum": [
+            "RADIUS",
+            "TACACS",
+            "SNMP",
+            "Application",
+            "Agent",
+            "CLI",
+            "HTTP",
+            "RADIUS_DynAuthZ",
+            "Post_Authentication",
+            "Aruba_DUR"
+          ]
+        },
+        "agent_template": {
+          "type": "string",
+          "description": "Agent Enforcement Profile Template",
+          "enum": ["Agent", "AgentScript"]
+        },
+        "post_auth_template": {
+          "type": "string",
+          "description": "Post Authentication Enforcement Profile Template",
+          "enum": ["EntityUpdate", "SessionRestriction", "SessionNotify"]
+        },
+        "radius_dyn_authz_template": {
+          "type": "string",
+          "description": "Post Authentication Enforcement Profile Template"
+        },
+        "action": {
+          "type": "string",
+          "description": "Enforcement Profile Action",
+          "enum": ["Accept", "Reject", "Drop"]
+        },
+        "device_group_list": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Device Group List"
+        },
+        "attributes": {
+          "description": "Attributes",
+          "type": "array",
+          "items": {
+            "$ref": "Attributes"
+          }
+        },
+        "tacacs_service_params": {
+          "description": "Tacacs+ Service Params",
+          "type": "TacacsServiceParam"
+        },
+        "dur_config": {
+          "description": "Downloadable User Role Configuration",
+          "type": "DURConfig"
+        }
+      },
+      "required": ["id", "name", "type"]
+    },
+    "EnforcementProfileUpdate": {
+      "id": "EnforcementProfileUpdate",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the Enforcement Profile"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the Enforcement Profile"
+        },
+        "type": {
+          "type": "string",
+          "description": "Enforcement Profile Type",
+          "enum": [
+            "RADIUS",
+            "TACACS",
+            "SNMP",
+            "Application",
+            "Agent",
+            "CLI",
+            "HTTP",
+            "RADIUS_DynAuthZ",
+            "Post_Authentication",
+            "Aruba_DUR"
+          ]
+        },
+        "agent_template": {
+          "type": "string",
+          "description": "Agent Enforcement Profile Template",
+          "enum": ["Agent", "AgentScript"]
+        },
+        "post_auth_template": {
+          "type": "string",
+          "description": "Post Authentication Enforcement Profile Template",
+          "enum": ["EntityUpdate", "SessionRestriction", "SessionNotify"]
+        },
+        "radius_dyn_authz_template": {
+          "type": "string",
+          "description": "Post Authentication Enforcement Profile Template"
+        },
+        "action": {
+          "type": "string",
+          "description": "Enforcement Profile Action",
+          "enum": ["Accept", "Reject", "Drop"]
+        },
+        "device_group_list": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Device Group List"
+        },
+        "attributes": {
+          "description": "Attributes",
+          "type": "array",
+          "items": {
+            "$ref": "Attributes"
+          }
+        },
+        "tacacs_service_params": {
+          "description": "Tacacs+ Service Params",
+          "type": "TacacsServiceParam"
+        },
+        "dur_config": {
+          "description": "Downloadable User Role Configuration",
+          "type": "DURConfig"
+        }
+      },
+      "required": []
+    },
+    "EnforcementProfileCreate": {
+      "id": "EnforcementProfileCreate",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the Enforcement Profile"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the Enforcement Profile"
+        },
+        "type": {
+          "type": "string",
+          "description": "Enforcement Profile Type",
+          "enum": [
+            "RADIUS",
+            "TACACS",
+            "SNMP",
+            "Application",
+            "Agent",
+            "CLI",
+            "HTTP",
+            "RADIUS_DynAuthZ",
+            "Post_Authentication",
+            "Aruba_DUR"
+          ]
+        },
+        "agent_template": {
+          "type": "string",
+          "description": "Agent Enforcement Profile Template",
+          "enum": ["Agent", "AgentScript"]
+        },
+        "post_auth_template": {
+          "type": "string",
+          "description": "Post Authentication Enforcement Profile Template",
+          "enum": ["EntityUpdate", "SessionRestriction", "SessionNotify"]
+        },
+        "radius_dyn_authz_template": {
+          "type": "string",
+          "description": "Post Authentication Enforcement Profile Template"
+        },
+        "action": {
+          "type": "string",
+          "description": "Enforcement Profile Action",
+          "enum": ["Accept", "Reject", "Drop"]
+        },
+        "device_group_list": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Device Group List"
+        },
+        "attributes": {
+          "description": "Attributes",
+          "type": "array",
+          "items": {
+            "$ref": "Attributes"
+          }
+        },
+        "tacacs_service_params": {
+          "description": "Tacacs+ Service Params",
+          "type": "TacacsServiceParam"
+        },
+        "dur_config": {
+          "description": "Downloadable User Role Configuration",
+          "type": "DURConfig"
+        }
+      },
+      "required": ["name", "type"]
+    },
+    "EnforcementProfileReplace": {
+      "id": "EnforcementProfileReplace",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the Enforcement Profile"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the Enforcement Profile"
+        },
+        "type": {
+          "type": "string",
+          "description": "Enforcement Profile Type",
+          "enum": [
+            "RADIUS",
+            "TACACS",
+            "SNMP",
+            "Application",
+            "Agent",
+            "CLI",
+            "HTTP",
+            "RADIUS_DynAuthZ",
+            "Post_Authentication",
+            "Aruba_DUR"
+          ]
+        },
+        "agent_template": {
+          "type": "string",
+          "description": "Agent Enforcement Profile Template",
+          "enum": ["Agent", "AgentScript"]
+        },
+        "post_auth_template": {
+          "type": "string",
+          "description": "Post Authentication Enforcement Profile Template",
+          "enum": ["EntityUpdate", "SessionRestriction", "SessionNotify"]
+        },
+        "radius_dyn_authz_template": {
+          "type": "string",
+          "description": "Post Authentication Enforcement Profile Template"
+        },
+        "action": {
+          "type": "string",
+          "description": "Enforcement Profile Action",
+          "enum": ["Accept", "Reject", "Drop"]
+        },
+        "device_group_list": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Device Group List"
+        },
+        "attributes": {
+          "description": "Attributes",
+          "type": "array",
+          "items": {
+            "$ref": "Attributes"
+          }
+        },
+        "tacacs_service_params": {
+          "description": "Tacacs+ Service Params",
+          "type": "TacacsServiceParam"
+        },
+        "dur_config": {
+          "description": "Downloadable User Role Configuration",
+          "type": "DURConfig"
+        }
+      },
+      "required": ["name", "type"]
+    }
+  }
 }

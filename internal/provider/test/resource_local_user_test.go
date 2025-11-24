@@ -49,7 +49,7 @@ resource "clearpass_local_user" "test" {
   username  = "tf-acc-test-user"
   password  = "SecretPassword123!"
   role_name = "[Employee]"
-  enabled   = false 
+  enabled   = false
   change_pwd_next_login = true
   attributes = {
     "Department" = "Engineering"

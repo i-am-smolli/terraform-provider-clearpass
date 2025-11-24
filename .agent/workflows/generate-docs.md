@@ -16,6 +16,7 @@ This workflow guides you through generating complete Terraform Registry document
 ### 1. Create Examples Directory Structure
 
 // turbo
+
 ```bash
 mkdir -p examples/provider
 mkdir -p examples/resources
@@ -47,6 +48,7 @@ provider "clearpass" {
 For each resource in `internal/provider/resource_*.go`:
 
 #### 3a. Create Resource Example Directory
+
 ```bash
 # Example for clearpass_role resource
 mkdir -p examples/resources/clearpass_role
@@ -55,11 +57,13 @@ mkdir -p examples/resources/clearpass_role
 #### 3b. Create `resource.tf` Example File
 
 Create `examples/resources/clearpass_RESOURCENAME/resource.tf` with:
+
 - A complete, working example showing all common use cases
 - Comments explaining important fields
 - Realistic values (not just "test" everywhere)
 
 Example for `clearpass_role`:
+
 ```hcl
 resource "clearpass_role" "employee" {
   name        = "[Employee]"
@@ -75,6 +79,7 @@ resource "clearpass_role" "guest" {
 #### 3c. Create `import.sh` for Import Documentation
 
 Create `examples/resources/clearpass_RESOURCENAME/import.sh`:
+
 ```bash
 # Role can be imported by ID
 terraform import clearpass_role.employee 123
@@ -85,7 +90,9 @@ terraform import clearpass_role.employee 123
 For each `internal/provider/resource_*.go` file, improve the `Description` fields:
 
 #### 4a. Resource-level Description
+
 Update the main schema description to be comprehensive:
+
 ```go
 resp.Schema = schema.Schema{
     Description: "Manages a user role in ClearPass. Roles are used to define access levels " +
@@ -98,15 +105,18 @@ resp.Schema = schema.Schema{
 ```
 
 #### 4b. Attribute Descriptions
+
 For each attribute, provide clear, helpful descriptions:
 
 **Good descriptions include:**
+
 - What the field does
-- Valid values or format (if applicable)  
+- Valid values or format (if applicable)
 - Whether it's commonly used
 - Examples in parentheses
 
 **Example:**
+
 ```go
 "name": schema.StringAttribute{
     Description: "The unique name of the role (e.g., 'Guest', '[Employee]', '[Contractor]'). " +
@@ -122,6 +132,7 @@ For each attribute, provide clear, helpful descriptions:
 ### 5. Review Existing Generated Docs
 
 Check the current documentation:
+
 ```bash
 ls -la docs/resources/
 ```
@@ -131,11 +142,13 @@ Review each generated `.md` file to identify resources that need better descript
 ### 6. Run Documentation Generation
 
 // turbo
+
 ```bash
 go generate ./...
 ```
 
 This runs the `tfplugindocs` command defined in `doc.go`, which:
+
 - Reads schema descriptions from resource files
 - Includes examples from `examples/` directory
 - Generates markdown files in `docs/` directory
@@ -143,12 +156,14 @@ This runs the `tfplugindocs` command defined in `doc.go`, which:
 ### 7. Verify Generated Documentation
 
 Check the generated documentation:
+
 ```bash
 ls -la docs/resources/
 cat docs/resources/clearpass_role.md
 ```
 
 Ensure:
+
 - ✅ Schema has all attributes documented
 - ✅ Examples are included
 - ✅ Import documentation is present (if import.sh exists)
@@ -157,6 +172,7 @@ Ensure:
 ### 8. Iterate on Quality
 
 For each resource, ask:
+
 1. **Is the resource description clear about what it manages?**
 2. **Do attribute descriptions help users understand how to use them?**
 3. **Are examples realistic and useful?**
@@ -174,6 +190,7 @@ git commit -m "docs: Add comprehensive examples and improve schema descriptions"
 ## Resources to Document
 
 Current resources in provider:
+
 - `clearpass_role`
 - `clearpass_local_user`
 - `clearpass_role_mapping`
@@ -183,13 +200,15 @@ Current resources in provider:
 
 ## Quality Standards
 
-### Schema Descriptions Should:
+### Schema Descriptions Should
+
 - Be 1-3 sentences
 - Explain WHAT the field is and WHY you'd use it
 - Include examples of valid values when helpful
 - Use proper terminology from ClearPass documentation
 
-### Examples Should:
+### Examples Should
+
 - Show realistic use cases
 - Include comments for non-obvious configurations
 - Use meaningful names (not "test", "foo", etc.)
@@ -198,9 +217,10 @@ Current resources in provider:
 
 ## Terraform Registry Documentation Standards
 
-Reference: https://developer.hashicorp.com/terraform/registry/providers/docs
+Reference: <https://developer.hashicorp.com/terraform/registry/providers/docs>
 
 Key requirements:
+
 - All resources must have examples
 - Descriptions should be user-friendly, not just field names
 - Import examples help users migrate existing infrastructure

@@ -1,1037 +1,964 @@
 {
-    "apiVersion": "1",
-    "swaggerVersion": "1.2",
-    "basePath": "https:\/\/10.1.9.123\/api",
-    "resourcePath": "\/role-mapping",
-    "apis": [
+  "apiVersion": "1",
+  "swaggerVersion": "1.2",
+  "basePath": "https://10.1.9.123/api",
+  "resourcePath": "/role-mapping",
+  "apis": [
+    {
+      "operations": [
         {
-            "operations": [
-                {
-                    "method": "GET",
-                    "summary": "Get a list of role mappings",
-                    "notes": "Get a list of role mappings. \u003Cdiv\u003E\n  \u003Ca id=\u0022A69205d7036c75\u0022 href=\u0022#\u0022 onclick=\u0022$(\u0027#P69205d7036c75\u0027).slideDown();$(\u0027#A69205d7036c75\u0027).slideUp();return false;\u0022\u003EMore about JSON filter expressions\u003C\/a\u003E\n  \u003Cdiv id=\u0022P69205d7036c75\u0022 style=\u0022display: none;\u0022\u003E\n\u003Cp\u003E\n  A filter is specified as a JSON object, where the properties of the object\n  specify the type of query to be performed.\n\u003C\/p\u003E\n\u003Ctable\u003E\n  \u003Cthead\u003E\n    \u003Ctr\u003E\n      \u003Cth\u003EDescription\u003C\/th\u003E\n      \u003Cth\u003EJSON Filter Syntax\u003C\/th\u003E\n    \u003C\/tr\u003E\n  \u003C\/thead\u003E\n  \u003Ctbody\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ENo filter, matches everything\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$eq\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$in\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$nin\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField contains a substring \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$contains\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$ne\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-sensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-insensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022, \u0022$options\u0022:\u0022i\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField exists (does not contain a null value)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:true}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is NULL\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:false}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with AND\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with OR\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$or\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EInverting a filter expression\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$not\u0022:{ \u003Ci\u003Efilter\u003C\/i\u003E }}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is greater than or equal to 2 and less than 5\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2, \u0022$lt\u0022:5}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2}}, {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:5}} ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n  \u003C\/tbody\u003E\n\u003C\/table\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E",
-                    "nickname": "GET_for_RoleMapping",
-                    "type": "RoleMappingResult",
-                    "parameters": [
-                        {
-                            "name": "filter",
-                            "paramType": "query",
-                            "type": "string",
-                            "description": "JSON filter expression specifying the items to return",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "{}"
-                        },
-                        {
-                            "name": "sort",
-                            "paramType": "query",
-                            "type": "string",
-                            "description": "Sort ordering for returned items (default +id)",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "+id"
-                        },
-                        {
-                            "name": "offset",
-                            "paramType": "query",
-                            "type": "integer",
-                            "format": "int64",
-                            "description": "Zero based offset to start from",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "0",
-                            "minimum": "0"
-                        },
-                        {
-                            "name": "limit",
-                            "paramType": "query",
-                            "type": "integer",
-                            "format": "int64",
-                            "description": "Maximum number of items to return (1 \u2013 1000)",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "25",
-                            "minimum": "1",
-                            "maximum": "1000"
-                        },
-                        {
-                            "name": "calculate_count",
-                            "paramType": "query",
-                            "type": "boolean",
-                            "description": "Whether to calculate the total item count",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "false"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "POST",
-                    "summary": "Create a new role mapping",
-                    "notes": "Create a new role mapping",
-                    "nickname": "POST_for_RoleMapping",
-                    "type": "RoleMappingResult",
-                    "parameters": [
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "RoleMappingCreate"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "201",
-                            "message": "Created"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                }
-            ],
-            "path": "\/role-mapping"
+          "method": "GET",
+          "summary": "Get a list of role mappings",
+          "notes": "Get a list of role mappings. \u003Cdiv\u003E\n  \u003Ca id=\u0022A69205d7036c75\u0022 href=\u0022#\u0022 onclick=\u0022$(\u0027#P69205d7036c75\u0027).slideDown();$(\u0027#A69205d7036c75\u0027).slideUp();return false;\u0022\u003EMore about JSON filter expressions\u003C/a\u003E\n  \u003Cdiv id=\u0022P69205d7036c75\u0022 style=\u0022display: none;\u0022\u003E\n\u003Cp\u003E\n  A filter is specified as a JSON object, where the properties of the object\n  specify the type of query to be performed.\n\u003C/p\u003E\n\u003Ctable\u003E\n  \u003Cthead\u003E\n    \u003Ctr\u003E\n      \u003Cth\u003EDescription\u003C/th\u003E\n      \u003Cth\u003EJSON Filter Syntax\u003C/th\u003E\n    \u003C/tr\u003E\n  \u003C/thead\u003E\n  \u003Ctbody\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ENo filter, matches everything\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$eq\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is one of a list of values\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:[\u0022\u003Ci\u003Evalue1\u003C/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C/i\u003E\u0022]}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$in\u0022:[\u0022\u003Ci\u003Evalue1\u003C/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C/i\u003E\u0022]}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not one of a list of values\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$nin\u0022:[\u0022\u003Ci\u003Evalue1\u003C/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C/i\u003E\u0022]}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField contains a substring \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$contains\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$ne\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gt\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than or equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gte\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$lt\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than or equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$lte\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-sensitive)\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-insensitive)\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C/i\u003E\u0022, \u0022$options\u0022:\u0022i\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField exists (does not contain a null value)\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$exists\u0022:true}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is NULL\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$exists\u0022:false}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with AND\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ \u003Ci\u003Efilter1\u003C/i\u003E, \u003Ci\u003Efilter2\u003C/i\u003E, ... ]}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with OR\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$or\u0022:[ \u003Ci\u003Efilter1\u003C/i\u003E, \u003Ci\u003Efilter2\u003C/i\u003E, ... ]}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EInverting a filter expression\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$not\u0022:{ \u003Ci\u003Efilter\u003C/i\u003E }}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is greater than or equal to 2 and less than 5\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gte\u0022:2, \u0022$lt\u0022:5}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ {\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gte\u0022:2}}, {\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$lt\u0022:5}} ]}\u003C/td\u003E\n    \u003C/tr\u003E\n  \u003C/tbody\u003E\n\u003C/table\u003E\n  \u003C/div\u003E\n\u003C/div\u003E",
+          "nickname": "GET_for_RoleMapping",
+          "type": "RoleMappingResult",
+          "parameters": [
+            {
+              "name": "filter",
+              "paramType": "query",
+              "type": "string",
+              "description": "JSON filter expression specifying the items to return",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "{}"
+            },
+            {
+              "name": "sort",
+              "paramType": "query",
+              "type": "string",
+              "description": "Sort ordering for returned items (default +id)",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "+id"
+            },
+            {
+              "name": "offset",
+              "paramType": "query",
+              "type": "integer",
+              "format": "int64",
+              "description": "Zero based offset to start from",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "0",
+              "minimum": "0"
+            },
+            {
+              "name": "limit",
+              "paramType": "query",
+              "type": "integer",
+              "format": "int64",
+              "description": "Maximum number of items to return (1 \u2013 1000)",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "25",
+              "minimum": "1",
+              "maximum": "1000"
+            },
+            {
+              "name": "calculate_count",
+              "paramType": "query",
+              "type": "boolean",
+              "description": "Whether to calculate the total item count",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "false"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         },
         {
-            "operations": [
-                {
-                    "method": "GET",
-                    "summary": "Get a role mapping",
-                    "notes": "Get a role mapping",
-                    "nickname": "GET_for_RoleMapping",
-                    "type": "RoleMappingResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "role_mapping_id",
-                            "description": "Numeric ID of the role mapping",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                },
-                {
-                    "method": "PATCH",
-                    "summary": "Update a role mapping",
-                    "notes": "Update a role mapping",
-                    "nickname": "PATCH_for_RoleMapping",
-                    "type": "RoleMappingResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "role_mapping_id",
-                            "description": "Numeric ID of the role mapping",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "RoleMappingUpdate"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "PUT",
-                    "summary": "Replace a role mapping",
-                    "notes": "Replace a role mapping",
-                    "nickname": "PUT_for_RoleMapping",
-                    "type": "RoleMappingResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "role_mapping_id",
-                            "description": "Numeric ID of the role mapping",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "RoleMappingReplace"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "DELETE",
-                    "summary": "Delete a role mapping",
-                    "notes": "Delete a role mapping",
-                    "nickname": "DELETE_for_RoleMapping",
-                    "type": "void",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "role_mapping_id",
-                            "description": "Numeric ID of the role mapping",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                }
-            ],
-            "path": "\/role-mapping\/{role_mapping_id}"
-        },
-        {
-            "operations": [
-                {
-                    "method": "GET",
-                    "summary": "Get a role mapping by name",
-                    "notes": "Get a role mapping by name",
-                    "nickname": "GET_for_RoleMapping_by_name",
-                    "type": "RoleMappingResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "name",
-                            "description": "Unique name of the role mapping",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                },
-                {
-                    "method": "PATCH",
-                    "summary": "Update a role mapping by name",
-                    "notes": "Update a role mapping by name",
-                    "nickname": "PATCH_for_RoleMapping_by_name",
-                    "type": "RoleMappingResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "name",
-                            "description": "Unique name of the role mapping",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "RoleMappingUpdate"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "PUT",
-                    "summary": "Replace a role mapping by name",
-                    "notes": "Replace a role mapping by name",
-                    "nickname": "PUT_for_RoleMapping_by_name",
-                    "type": "RoleMappingResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "name",
-                            "description": "Unique name of the role mapping",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "RoleMappingReplace"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "DELETE",
-                    "summary": "Delete a role mapping by name",
-                    "notes": "Delete a role mapping by name",
-                    "nickname": "DELETE_for_RoleMapping_by_name",
-                    "type": "void",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "name",
-                            "description": "Unique name of the role mapping",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                }
-            ],
-            "path": "\/role-mapping\/name\/{name}"
+          "method": "POST",
+          "summary": "Create a new role mapping",
+          "notes": "Create a new role mapping",
+          "nickname": "POST_for_RoleMapping",
+          "type": "RoleMappingResult",
+          "parameters": [
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "RoleMappingCreate"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "201",
+              "message": "Created"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         }
-    ],
-    "produces": [
-        "application\/vnd.identity.v1+json",
-        "application\/hal+json",
-        "application\/json"
-    ],
-    "models": {
-        "RoleMapping": {
-            "id": "RoleMapping",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Numeric id of the role mapping"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Role mapping policy name"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Role mapping description"
-                },
-                "default_role_name": {
-                    "type": "string",
-                    "description": "Role mapping default role name"
-                },
-                "rule_combine_algo": {
-                    "type": "string",
-                    "description": "Role mapping rules evaluation algorithm",
-                    "enum": [
-                        "first-applicable",
-                        "evaluate-all"
-                    ]
-                },
-                "rules": {
-                    "description": "List of role mapping rules"
-                }
+      ],
+      "path": "/role-mapping"
+    },
+    {
+      "operations": [
+        {
+          "method": "GET",
+          "summary": "Get a role mapping",
+          "notes": "Get a role mapping",
+          "nickname": "GET_for_RoleMapping",
+          "type": "RoleMappingResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "role_mapping_id",
+              "description": "Numeric ID of the role mapping",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
             },
-            "required": []
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
         },
-        "RoleMappingList": {
-            "id": "RoleMappingList",
-            "properties": {
-                "_embedded": {
-                    "$ref": "RoleMappingItems",
-                    "description": "Object containing result"
-                },
-                "_links": {
-                    "$ref": "HalLinks",
-                    "description": "Object containing metadata"
-                },
-                "count": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Total number of items matching the filter; returned if calculate_count is true"
-                }
+        {
+          "method": "PATCH",
+          "summary": "Update a role mapping",
+          "notes": "Update a role mapping",
+          "nickname": "PATCH_for_RoleMapping",
+          "type": "RoleMappingResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "role_mapping_id",
+              "description": "Numeric ID of the role mapping",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
             },
-            "required": [
-                "_embedded",
-                "_links"
-            ]
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "RoleMappingUpdate"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         },
-        "RoleMappingItems": {
-            "id": "RoleMappingItems",
-            "properties": {
-                "items": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "RoleMappingResult"
-                    },
-                    "description": "List of items matching the filter"
-                }
+        {
+          "method": "PUT",
+          "summary": "Replace a role mapping",
+          "notes": "Replace a role mapping",
+          "nickname": "PUT_for_RoleMapping",
+          "type": "RoleMappingResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "role_mapping_id",
+              "description": "Numeric ID of the role mapping",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
             },
-            "required": [
-                "items"
-            ]
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "RoleMappingReplace"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         },
-        "HalLinks": {
-            "id": "HalLinks",
-            "properties": {
-                "self": {
-                    "type": "string",
-                    "description": "URL of result"
-                },
-                "first": {
-                    "type": "string",
-                    "description": "URL of first page of results"
-                },
-                "last": {
-                    "type": "string",
-                    "description": "URL of last page of results"
-                },
-                "prev": {
-                    "type": "string",
-                    "description": "URL of previous page of results"
-                },
-                "next": {
-                    "type": "string",
-                    "description": "URL of next page of results"
-                }
+        {
+          "method": "DELETE",
+          "summary": "Delete a role mapping",
+          "notes": "Delete a role mapping",
+          "nickname": "DELETE_for_RoleMapping",
+          "type": "void",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "role_mapping_id",
+              "description": "Numeric ID of the role mapping",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "204",
+              "message": "No Content"
             },
-            "required": [
-                "self",
-                "first"
-            ]
-        },
-        "RoleMappingResult": {
-            "id": "RoleMappingResult",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Numeric id of the role mapping"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Role mapping policy name"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Role mapping description"
-                },
-                "default_role_name": {
-                    "type": "string",
-                    "description": "Role mapping default role name"
-                },
-                "rule_combine_algo": {
-                    "type": "string",
-                    "description": "Role mapping rules evaluation algorithm",
-                    "enum": [
-                        "first-applicable",
-                        "evaluate-all"
-                    ]
-                },
-                "rules": {
-                    "description": "List of role mapping rules",
-                    "type": "RulesSettingsResult"
-                }
+            {
+              "code": "401",
+              "message": "Unauthorized"
             },
-            "required": [
-                "id",
-                "name",
-                "default_role_name",
-                "rule_combine_algo",
-                "rules"
-            ]
-        },
-        "RulesSettingsResult": {
-            "id": "RulesSettingsResult",
-            "properties": {
-                "match_type": {
-                    "type": "string",
-                    "description": "Matches ANY\/ALL the conditions specified in the rule",
-                    "enum": [
-                        "AND",
-                        "OR"
-                    ]
-                },
-                "role_name": {
-                    "type": "string",
-                    "description": "Role name"
-                },
-                "condition": {
-                    "description": "Conditions of role mapping rules",
-                    "type": "RulesConditionSettingsResult"
-                }
+            {
+              "code": "403",
+              "message": "Forbidden"
             },
-            "required": [
-                "match_type",
-                "role_name",
-                "condition"
-            ]
-        },
-        "RulesConditionSettingsResult": {
-            "id": "RulesConditionSettingsResult",
-            "properties": {
-                "type": {
-                    "type": "string",
-                    "description": "Condition type"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Condition name"
-                },
-                "oper": {
-                    "type": "string",
-                    "description": "Condition operator"
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Condition value"
-                },
-                "value_disp_name": {
-                    "type": "string",
-                    "description": "Display value name"
-                }
+            {
+              "code": "404",
+              "message": "Not Found"
             },
-            "required": [
-                "type",
-                "name",
-                "oper",
-                "value",
-                "value_disp_name"
-            ]
-        },
-        "RoleMappingUpdate": {
-            "id": "RoleMappingUpdate",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Role mapping policy name"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Role mapping description"
-                },
-                "default_role_name": {
-                    "type": "string",
-                    "description": "Role mapping default role name"
-                },
-                "rule_combine_algo": {
-                    "type": "string",
-                    "description": "Role mapping rules evaluation algorithm",
-                    "enum": [
-                        "first-applicable",
-                        "evaluate-all"
-                    ]
-                },
-                "rules": {
-                    "description": "List of role mapping rules",
-                    "type": "RulesSettingsUpdate"
-                }
+            {
+              "code": "406",
+              "message": "Not Acceptable"
             },
-            "required": []
-        },
-        "RulesSettingsUpdate": {
-            "id": "RulesSettingsUpdate",
-            "properties": {
-                "match_type": {
-                    "type": "string",
-                    "description": "Matches ANY\/ALL the conditions specified in the rule",
-                    "enum": [
-                        "AND",
-                        "OR"
-                    ]
-                },
-                "role_name": {
-                    "type": "string",
-                    "description": "Role name"
-                },
-                "condition": {
-                    "description": "Conditions of role mapping rules",
-                    "type": "RulesConditionSettingsUpdate"
-                }
-            },
-            "required": []
-        },
-        "RulesConditionSettingsUpdate": {
-            "id": "RulesConditionSettingsUpdate",
-            "properties": {
-                "type": {
-                    "type": "string",
-                    "description": "Condition type"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Condition name"
-                },
-                "oper": {
-                    "type": "string",
-                    "description": "Condition operator"
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Condition value"
-                }
-            },
-            "required": []
-        },
-        "RoleMappingCreate": {
-            "id": "RoleMappingCreate",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Role mapping policy name"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Role mapping description"
-                },
-                "default_role_name": {
-                    "type": "string",
-                    "description": "Role mapping default role name"
-                },
-                "rule_combine_algo": {
-                    "type": "string",
-                    "description": "Role mapping rules evaluation algorithm",
-                    "enum": [
-                        "first-applicable",
-                        "evaluate-all"
-                    ]
-                },
-                "rules": {
-                    "description": "List of role mapping rules",
-                    "type": "RulesSettingsCreate"
-                }
-            },
-            "required": [
-                "name",
-                "default_role_name",
-                "rule_combine_algo",
-                "rules"
-            ]
-        },
-        "RulesSettingsCreate": {
-            "id": "RulesSettingsCreate",
-            "properties": {
-                "match_type": {
-                    "type": "string",
-                    "description": "Matches ANY\/ALL the conditions specified in the rule",
-                    "enum": [
-                        "AND",
-                        "OR"
-                    ]
-                },
-                "role_name": {
-                    "type": "string",
-                    "description": "Role name"
-                },
-                "condition": {
-                    "description": "Conditions of role mapping rules",
-                    "type": "RulesConditionSettingsCreate"
-                }
-            },
-            "required": [
-                "match_type",
-                "role_name",
-                "condition"
-            ]
-        },
-        "RulesConditionSettingsCreate": {
-            "id": "RulesConditionSettingsCreate",
-            "properties": {
-                "type": {
-                    "type": "string",
-                    "description": "Condition type"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Condition name"
-                },
-                "oper": {
-                    "type": "string",
-                    "description": "Condition operator"
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Condition value"
-                }
-            },
-            "required": [
-                "type",
-                "name",
-                "oper",
-                "value"
-            ]
-        },
-        "RoleMappingReplace": {
-            "id": "RoleMappingReplace",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Role mapping policy name"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Role mapping description"
-                },
-                "default_role_name": {
-                    "type": "string",
-                    "description": "Role mapping default role name"
-                },
-                "rule_combine_algo": {
-                    "type": "string",
-                    "description": "Role mapping rules evaluation algorithm",
-                    "enum": [
-                        "first-applicable",
-                        "evaluate-all"
-                    ]
-                },
-                "rules": {
-                    "description": "List of role mapping rules",
-                    "type": "RulesSettingsReplace"
-                }
-            },
-            "required": [
-                "name",
-                "default_role_name",
-                "rule_combine_algo",
-                "rules"
-            ]
-        },
-        "RulesSettingsReplace": {
-            "id": "RulesSettingsReplace",
-            "properties": {
-                "match_type": {
-                    "type": "string",
-                    "description": "Matches ANY\/ALL the conditions specified in the rule",
-                    "enum": [
-                        "AND",
-                        "OR"
-                    ]
-                },
-                "role_name": {
-                    "type": "string",
-                    "description": "Role name"
-                },
-                "condition": {
-                    "description": "Conditions of role mapping rules",
-                    "type": "RulesConditionSettingsReplace"
-                }
-            },
-            "required": [
-                "match_type",
-                "role_name",
-                "condition"
-            ]
-        },
-        "RulesConditionSettingsReplace": {
-            "id": "RulesConditionSettingsReplace",
-            "properties": {
-                "type": {
-                    "type": "string",
-                    "description": "Condition type"
-                },
-                "name": {
-                    "type": "string",
-                    "description": "Condition name"
-                },
-                "oper": {
-                    "type": "string",
-                    "description": "Condition operator"
-                },
-                "value": {
-                    "type": "string",
-                    "description": "Condition value"
-                }
-            },
-            "required": [
-                "type",
-                "name",
-                "oper",
-                "value"
-            ]
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
         }
+      ],
+      "path": "/role-mapping/{role_mapping_id}"
+    },
+    {
+      "operations": [
+        {
+          "method": "GET",
+          "summary": "Get a role mapping by name",
+          "notes": "Get a role mapping by name",
+          "nickname": "GET_for_RoleMapping_by_name",
+          "type": "RoleMappingResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "name",
+              "description": "Unique name of the role mapping",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
+        },
+        {
+          "method": "PATCH",
+          "summary": "Update a role mapping by name",
+          "notes": "Update a role mapping by name",
+          "nickname": "PATCH_for_RoleMapping_by_name",
+          "type": "RoleMappingResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "name",
+              "description": "Unique name of the role mapping",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            },
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "RoleMappingUpdate"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
+        },
+        {
+          "method": "PUT",
+          "summary": "Replace a role mapping by name",
+          "notes": "Replace a role mapping by name",
+          "nickname": "PUT_for_RoleMapping_by_name",
+          "type": "RoleMappingResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "name",
+              "description": "Unique name of the role mapping",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            },
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "RoleMappingReplace"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
+        },
+        {
+          "method": "DELETE",
+          "summary": "Delete a role mapping by name",
+          "notes": "Delete a role mapping by name",
+          "nickname": "DELETE_for_RoleMapping_by_name",
+          "type": "void",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "name",
+              "description": "Unique name of the role mapping",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
+        }
+      ],
+      "path": "/role-mapping/name/{name}"
     }
+  ],
+  "produces": [
+    "application/vnd.identity.v1+json",
+    "application/hal+json",
+    "application/json"
+  ],
+  "models": {
+    "RoleMapping": {
+      "id": "RoleMapping",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Numeric id of the role mapping"
+        },
+        "name": {
+          "type": "string",
+          "description": "Role mapping policy name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Role mapping description"
+        },
+        "default_role_name": {
+          "type": "string",
+          "description": "Role mapping default role name"
+        },
+        "rule_combine_algo": {
+          "type": "string",
+          "description": "Role mapping rules evaluation algorithm",
+          "enum": ["first-applicable", "evaluate-all"]
+        },
+        "rules": {
+          "description": "List of role mapping rules"
+        }
+      },
+      "required": []
+    },
+    "RoleMappingList": {
+      "id": "RoleMappingList",
+      "properties": {
+        "_embedded": {
+          "$ref": "RoleMappingItems",
+          "description": "Object containing result"
+        },
+        "_links": {
+          "$ref": "HalLinks",
+          "description": "Object containing metadata"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Total number of items matching the filter; returned if calculate_count is true"
+        }
+      },
+      "required": ["_embedded", "_links"]
+    },
+    "RoleMappingItems": {
+      "id": "RoleMappingItems",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "RoleMappingResult"
+          },
+          "description": "List of items matching the filter"
+        }
+      },
+      "required": ["items"]
+    },
+    "HalLinks": {
+      "id": "HalLinks",
+      "properties": {
+        "self": {
+          "type": "string",
+          "description": "URL of result"
+        },
+        "first": {
+          "type": "string",
+          "description": "URL of first page of results"
+        },
+        "last": {
+          "type": "string",
+          "description": "URL of last page of results"
+        },
+        "prev": {
+          "type": "string",
+          "description": "URL of previous page of results"
+        },
+        "next": {
+          "type": "string",
+          "description": "URL of next page of results"
+        }
+      },
+      "required": ["self", "first"]
+    },
+    "RoleMappingResult": {
+      "id": "RoleMappingResult",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Numeric id of the role mapping"
+        },
+        "name": {
+          "type": "string",
+          "description": "Role mapping policy name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Role mapping description"
+        },
+        "default_role_name": {
+          "type": "string",
+          "description": "Role mapping default role name"
+        },
+        "rule_combine_algo": {
+          "type": "string",
+          "description": "Role mapping rules evaluation algorithm",
+          "enum": ["first-applicable", "evaluate-all"]
+        },
+        "rules": {
+          "description": "List of role mapping rules",
+          "type": "RulesSettingsResult"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "default_role_name",
+        "rule_combine_algo",
+        "rules"
+      ]
+    },
+    "RulesSettingsResult": {
+      "id": "RulesSettingsResult",
+      "properties": {
+        "match_type": {
+          "type": "string",
+          "description": "Matches ANY/ALL the conditions specified in the rule",
+          "enum": ["AND", "OR"]
+        },
+        "role_name": {
+          "type": "string",
+          "description": "Role name"
+        },
+        "condition": {
+          "description": "Conditions of role mapping rules",
+          "type": "RulesConditionSettingsResult"
+        }
+      },
+      "required": ["match_type", "role_name", "condition"]
+    },
+    "RulesConditionSettingsResult": {
+      "id": "RulesConditionSettingsResult",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Condition type"
+        },
+        "name": {
+          "type": "string",
+          "description": "Condition name"
+        },
+        "oper": {
+          "type": "string",
+          "description": "Condition operator"
+        },
+        "value": {
+          "type": "string",
+          "description": "Condition value"
+        },
+        "value_disp_name": {
+          "type": "string",
+          "description": "Display value name"
+        }
+      },
+      "required": ["type", "name", "oper", "value", "value_disp_name"]
+    },
+    "RoleMappingUpdate": {
+      "id": "RoleMappingUpdate",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Role mapping policy name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Role mapping description"
+        },
+        "default_role_name": {
+          "type": "string",
+          "description": "Role mapping default role name"
+        },
+        "rule_combine_algo": {
+          "type": "string",
+          "description": "Role mapping rules evaluation algorithm",
+          "enum": ["first-applicable", "evaluate-all"]
+        },
+        "rules": {
+          "description": "List of role mapping rules",
+          "type": "RulesSettingsUpdate"
+        }
+      },
+      "required": []
+    },
+    "RulesSettingsUpdate": {
+      "id": "RulesSettingsUpdate",
+      "properties": {
+        "match_type": {
+          "type": "string",
+          "description": "Matches ANY/ALL the conditions specified in the rule",
+          "enum": ["AND", "OR"]
+        },
+        "role_name": {
+          "type": "string",
+          "description": "Role name"
+        },
+        "condition": {
+          "description": "Conditions of role mapping rules",
+          "type": "RulesConditionSettingsUpdate"
+        }
+      },
+      "required": []
+    },
+    "RulesConditionSettingsUpdate": {
+      "id": "RulesConditionSettingsUpdate",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Condition type"
+        },
+        "name": {
+          "type": "string",
+          "description": "Condition name"
+        },
+        "oper": {
+          "type": "string",
+          "description": "Condition operator"
+        },
+        "value": {
+          "type": "string",
+          "description": "Condition value"
+        }
+      },
+      "required": []
+    },
+    "RoleMappingCreate": {
+      "id": "RoleMappingCreate",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Role mapping policy name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Role mapping description"
+        },
+        "default_role_name": {
+          "type": "string",
+          "description": "Role mapping default role name"
+        },
+        "rule_combine_algo": {
+          "type": "string",
+          "description": "Role mapping rules evaluation algorithm",
+          "enum": ["first-applicable", "evaluate-all"]
+        },
+        "rules": {
+          "description": "List of role mapping rules",
+          "type": "RulesSettingsCreate"
+        }
+      },
+      "required": ["name", "default_role_name", "rule_combine_algo", "rules"]
+    },
+    "RulesSettingsCreate": {
+      "id": "RulesSettingsCreate",
+      "properties": {
+        "match_type": {
+          "type": "string",
+          "description": "Matches ANY/ALL the conditions specified in the rule",
+          "enum": ["AND", "OR"]
+        },
+        "role_name": {
+          "type": "string",
+          "description": "Role name"
+        },
+        "condition": {
+          "description": "Conditions of role mapping rules",
+          "type": "RulesConditionSettingsCreate"
+        }
+      },
+      "required": ["match_type", "role_name", "condition"]
+    },
+    "RulesConditionSettingsCreate": {
+      "id": "RulesConditionSettingsCreate",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Condition type"
+        },
+        "name": {
+          "type": "string",
+          "description": "Condition name"
+        },
+        "oper": {
+          "type": "string",
+          "description": "Condition operator"
+        },
+        "value": {
+          "type": "string",
+          "description": "Condition value"
+        }
+      },
+      "required": ["type", "name", "oper", "value"]
+    },
+    "RoleMappingReplace": {
+      "id": "RoleMappingReplace",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Role mapping policy name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Role mapping description"
+        },
+        "default_role_name": {
+          "type": "string",
+          "description": "Role mapping default role name"
+        },
+        "rule_combine_algo": {
+          "type": "string",
+          "description": "Role mapping rules evaluation algorithm",
+          "enum": ["first-applicable", "evaluate-all"]
+        },
+        "rules": {
+          "description": "List of role mapping rules",
+          "type": "RulesSettingsReplace"
+        }
+      },
+      "required": ["name", "default_role_name", "rule_combine_algo", "rules"]
+    },
+    "RulesSettingsReplace": {
+      "id": "RulesSettingsReplace",
+      "properties": {
+        "match_type": {
+          "type": "string",
+          "description": "Matches ANY/ALL the conditions specified in the rule",
+          "enum": ["AND", "OR"]
+        },
+        "role_name": {
+          "type": "string",
+          "description": "Role name"
+        },
+        "condition": {
+          "description": "Conditions of role mapping rules",
+          "type": "RulesConditionSettingsReplace"
+        }
+      },
+      "required": ["match_type", "role_name", "condition"]
+    },
+    "RulesConditionSettingsReplace": {
+      "id": "RulesConditionSettingsReplace",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Condition type"
+        },
+        "name": {
+          "type": "string",
+          "description": "Condition name"
+        },
+        "oper": {
+          "type": "string",
+          "description": "Condition operator"
+        },
+        "value": {
+          "type": "string",
+          "description": "Condition value"
+        }
+      },
+      "required": ["type", "name", "oper", "value"]
+    }
+  }
 }

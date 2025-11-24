@@ -24,14 +24,14 @@ If you need more resources or features, you're welcome to contribute!
 
 ## Supported Resources
 
-| Resource | Description |
-|----------|-------------|
-| `clearpass_role` | User roles defining access levels and permissions |
-| `clearpass_local_user` | Local user accounts with authentication |
-| `clearpass_role_mapping` | Policy-based role assignment rules |
-| `clearpass_service` | Authentication services (802.1X, MAB, Guest, etc.) |
+| Resource                        | Description                                                 |
+| ------------------------------- | ----------------------------------------------------------- |
+| `clearpass_role`                | User roles defining access levels and permissions           |
+| `clearpass_local_user`          | Local user accounts with authentication                     |
+| `clearpass_role_mapping`        | Policy-based role assignment rules                          |
+| `clearpass_service`             | Authentication services (802.1X, MAB, Guest, etc.)          |
 | `clearpass_enforcement_profile` | Network access enforcement profiles (RADIUS, TACACS, Agent) |
-| `clearpass_enforcement_policy` | Policies linking roles to enforcement actions |
+| `clearpass_enforcement_policy`  | Policies linking roles to enforcement actions               |
 
 ## Requirements
 
@@ -39,11 +39,13 @@ If you need more resources or features, you're welcome to contribute!
 - [Go](https://golang.org/doc/install) >= 1.21 (for building from source)
 - Aruba ClearPass Policy Manager 6.12+ with API access
 - A service configured (Configuration -> Services) that supports OAuth2 (Application Name EQUALS OAuth2)
+
 ## Quick Start
 
 ### 1. Configure ClearPass API Access
 
 Create an API Client in ClearPass:
+
 1. Navigate to **Guest** → **Administration** → **API Services**
 2. Create a new **API Client** with appropriate permissions
 3. Note the **Client ID** and **Client Secret**. Client secret will be shown only once.
@@ -100,6 +102,7 @@ terraform apply
 The provider supports OAuth2 client credentials authentication. Configure using:
 
 **Provider Configuration**:
+
 ```hcl
 provider "clearpass" {
   host          = "clearpass.example.com"
@@ -109,6 +112,7 @@ provider "clearpass" {
 ```
 
 **Terraform Variables**:
+
 ```hcl
 variable "clearpass_client_secret" {
   type      = string
@@ -221,17 +225,18 @@ mkdir -p ~/.terraform.d/plugins/local/dev/clearpass/0.0.1/darwin_arm64
 cp terraform-provider-clearpass ~/.terraform.d/plugins/local/dev/clearpass/0.0.1/darwin_arm64/
 ```
 
-
 ### Running Tests
 
 > **⚠️ TESTING WARNING**: Always run tests against a dev/lab ClearPass instance. Never test against production. Seriously.
 
 **Unit Tests**:
+
 ```bash
 go test ./...
 ```
 
 **Acceptance Tests** (requires a **TEST** ClearPass instance - reminder: do not use production):
+
 ```bash
 export CLEARPASS_HOST="your-dev-clearpass-host"  # DEV! NOT PRODUCTION!
 export CLEARPASS_CLIENT_ID="your-client-id"
@@ -294,16 +299,19 @@ terraform apply
 ### Common Issues
 
 **Error: authentication failed**
+
 - Verify your Client ID and Client Secret
 - Ensure the API client has appropriate permissions
 - Check the ClearPass API service is enabled
 
 **Error: connection refused**
+
 - Verify the ClearPass host is reachable
 - Check firewall rules allow HTTPS (443) traffic
 - Ensure you're using the correct hostname/IP
 
 **Import errors**
+
 - Verify the resource ID exists in ClearPass
 - Check your API client has read permissions
 - Use numeric IDs, not resource names
@@ -329,9 +337,9 @@ terraform apply
 This provider is built against the ClearPass API v1.2 specification with support for:
 
 - ✅ Roles
-- ✅ Local Users  
+- ✅ Local Users
 - ✅ Role Mappings
-- ✅ Services 
+- ✅ Services
 - ✅ Enforcement Profiles
 - ✅ Enforcement Policies
 
@@ -353,9 +361,10 @@ Let's be honest - there's no official support here. But you can try:
 
 ## A Challenge to Real Developers
 
-If you're reading this and thinking "I could make a better provider," you're probably right! This was built to address immediate automation needs, not by Terraform experts. 
+If you're reading this and thinking "I could make a better provider," you're probably right! This was built to address immediate automation needs, not by Terraform experts.
 
 Contributions are welcome for:
+
 - A more complete ClearPass API implementation
 - Better error handling
 - More sophisticated state management
@@ -365,6 +374,7 @@ Contributions are welcome for:
 ## Acknowledgments
 
 Built with:
+
 - [terraform-plugin-framework](https://github.com/hashicorp/terraform-plugin-framework) - The actual experts
 - [terraform-plugin-docs](https://github.com/hashicorp/terraform-plugin-docs) - For professional-looking documentation
 - Coffee ☕ - Lots of it

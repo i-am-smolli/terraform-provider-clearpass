@@ -86,7 +86,7 @@ resource "clearpass_enforcement_policy" "test_policy" {
     {
       # Reference the profile by name
       enforcement_profile_names = [clearpass_enforcement_profile.dep_profile.name]
-      
+
       condition = [{
         type  = "Connection"
         name  = "SSID"

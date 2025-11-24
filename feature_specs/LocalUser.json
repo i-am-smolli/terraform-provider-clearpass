@@ -1,888 +1,870 @@
 {
-    "apiVersion": "1",
-    "swaggerVersion": "1.2",
-    "basePath": "https:\/\/10.1.9.123\/api",
-    "resourcePath": "\/local-user",
-    "apis": [
+  "apiVersion": "1",
+  "swaggerVersion": "1.2",
+  "basePath": "https://10.1.9.123/api",
+  "resourcePath": "/local-user",
+  "apis": [
+    {
+      "operations": [
         {
-            "operations": [
-                {
-                    "method": "GET",
-                    "summary": "Get a list of local users",
-                    "notes": "Get a list of local users. \u003Cdiv\u003E\n  \u003Ca id=\u0022A6920342360fc2\u0022 href=\u0022#\u0022 onclick=\u0022$(\u0027#P6920342360fc2\u0027).slideDown();$(\u0027#A6920342360fc2\u0027).slideUp();return false;\u0022\u003EMore about JSON filter expressions\u003C\/a\u003E\n  \u003Cdiv id=\u0022P6920342360fc2\u0022 style=\u0022display: none;\u0022\u003E\n\u003Cp\u003E\n  A filter is specified as a JSON object, where the properties of the object\n  specify the type of query to be performed.\n\u003C\/p\u003E\n\u003Ctable\u003E\n  \u003Cthead\u003E\n    \u003Ctr\u003E\n      \u003Cth\u003EDescription\u003C\/th\u003E\n      \u003Cth\u003EJSON Filter Syntax\u003C\/th\u003E\n    \u003C\/tr\u003E\n  \u003C\/thead\u003E\n  \u003Ctbody\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ENo filter, matches everything\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$eq\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$in\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$nin\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField contains a substring \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$contains\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$ne\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-sensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-insensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022, \u0022$options\u0022:\u0022i\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField exists (does not contain a null value)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:true}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is NULL\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:false}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with AND\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with OR\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$or\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EInverting a filter expression\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$not\u0022:{ \u003Ci\u003Efilter\u003C\/i\u003E }}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is greater than or equal to 2 and less than 5\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2, \u0022$lt\u0022:5}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2}}, {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:5}} ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n  \u003C\/tbody\u003E\n\u003C\/table\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E",
-                    "nickname": "GET_for_LocalUser",
-                    "type": "LocalUserResult",
-                    "parameters": [
-                        {
-                            "name": "filter",
-                            "paramType": "query",
-                            "type": "string",
-                            "description": "JSON filter expression specifying the items to return",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "{}"
-                        },
-                        {
-                            "name": "sort",
-                            "paramType": "query",
-                            "type": "string",
-                            "description": "Sort ordering for returned items (default +id)",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "+id"
-                        },
-                        {
-                            "name": "offset",
-                            "paramType": "query",
-                            "type": "integer",
-                            "format": "int64",
-                            "description": "Zero based offset to start from",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "0",
-                            "minimum": "0"
-                        },
-                        {
-                            "name": "limit",
-                            "paramType": "query",
-                            "type": "integer",
-                            "format": "int64",
-                            "description": "Maximum number of items to return (1 \u2013 1000)",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "25",
-                            "minimum": "1",
-                            "maximum": "1000"
-                        },
-                        {
-                            "name": "calculate_count",
-                            "paramType": "query",
-                            "type": "boolean",
-                            "description": "Whether to calculate the total item count",
-                            "required": false,
-                            "allowMultiple": false,
-                            "defaultValue": "false"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "POST",
-                    "summary": "Create a new local user",
-                    "notes": "Create a new local user",
-                    "nickname": "POST_for_LocalUser",
-                    "type": "LocalUserResult",
-                    "parameters": [
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "LocalUserCreate"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "201",
-                            "message": "Created"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                }
-            ],
-            "path": "\/local-user"
+          "method": "GET",
+          "summary": "Get a list of local users",
+          "notes": "Get a list of local users. \u003Cdiv\u003E\n  \u003Ca id=\u0022A6920342360fc2\u0022 href=\u0022#\u0022 onclick=\u0022$(\u0027#P6920342360fc2\u0027).slideDown();$(\u0027#A6920342360fc2\u0027).slideUp();return false;\u0022\u003EMore about JSON filter expressions\u003C/a\u003E\n  \u003Cdiv id=\u0022P6920342360fc2\u0022 style=\u0022display: none;\u0022\u003E\n\u003Cp\u003E\n  A filter is specified as a JSON object, where the properties of the object\n  specify the type of query to be performed.\n\u003C/p\u003E\n\u003Ctable\u003E\n  \u003Cthead\u003E\n    \u003Ctr\u003E\n      \u003Cth\u003EDescription\u003C/th\u003E\n      \u003Cth\u003EJSON Filter Syntax\u003C/th\u003E\n    \u003C/tr\u003E\n  \u003C/thead\u003E\n  \u003Ctbody\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ENo filter, matches everything\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$eq\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is one of a list of values\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:[\u0022\u003Ci\u003Evalue1\u003C/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C/i\u003E\u0022]}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$in\u0022:[\u0022\u003Ci\u003Evalue1\u003C/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C/i\u003E\u0022]}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not one of a list of values\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$nin\u0022:[\u0022\u003Ci\u003Evalue1\u003C/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C/i\u003E\u0022]}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField contains a substring \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$contains\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$ne\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gt\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than or equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gte\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$lt\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than or equal to \u0022value\u0022\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$lte\u0022:\u0022\u003Ci\u003Evalue\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-sensitive)\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C/i\u003E\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-insensitive)\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C/i\u003E\u0022, \u0022$options\u0022:\u0022i\u0022}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField exists (does not contain a null value)\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$exists\u0022:true}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is NULL\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$exists\u0022:false}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with AND\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ \u003Ci\u003Efilter1\u003C/i\u003E, \u003Ci\u003Efilter2\u003C/i\u003E, ... ]}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with OR\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$or\u0022:[ \u003Ci\u003Efilter1\u003C/i\u003E, \u003Ci\u003Efilter2\u003C/i\u003E, ... ]}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EInverting a filter expression\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$not\u0022:{ \u003Ci\u003Efilter\u003C/i\u003E }}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is greater than or equal to 2 and less than 5\u003C/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gte\u0022:2, \u0022$lt\u0022:5}}\u003C/td\u003E\n    \u003C/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ {\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$gte\u0022:2}}, {\u0022\u003Ci\u003EfieldName\u003C/i\u003E\u0022:{\u0022$lt\u0022:5}} ]}\u003C/td\u003E\n    \u003C/tr\u003E\n  \u003C/tbody\u003E\n\u003C/table\u003E\n  \u003C/div\u003E\n\u003C/div\u003E",
+          "nickname": "GET_for_LocalUser",
+          "type": "LocalUserResult",
+          "parameters": [
+            {
+              "name": "filter",
+              "paramType": "query",
+              "type": "string",
+              "description": "JSON filter expression specifying the items to return",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "{}"
+            },
+            {
+              "name": "sort",
+              "paramType": "query",
+              "type": "string",
+              "description": "Sort ordering for returned items (default +id)",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "+id"
+            },
+            {
+              "name": "offset",
+              "paramType": "query",
+              "type": "integer",
+              "format": "int64",
+              "description": "Zero based offset to start from",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "0",
+              "minimum": "0"
+            },
+            {
+              "name": "limit",
+              "paramType": "query",
+              "type": "integer",
+              "format": "int64",
+              "description": "Maximum number of items to return (1 \u2013 1000)",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "25",
+              "minimum": "1",
+              "maximum": "1000"
+            },
+            {
+              "name": "calculate_count",
+              "paramType": "query",
+              "type": "boolean",
+              "description": "Whether to calculate the total item count",
+              "required": false,
+              "allowMultiple": false,
+              "defaultValue": "false"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         },
         {
-            "operations": [
-                {
-                    "method": "GET",
-                    "summary": "Get a local user",
-                    "notes": "Get a local user",
-                    "nickname": "GET_for_LocalUser",
-                    "type": "LocalUserResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "local_user_id",
-                            "description": "Numeric ID of the local user",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                },
-                {
-                    "method": "PATCH",
-                    "summary": "Update some fields of a local user",
-                    "notes": "Update some fields of a local user",
-                    "nickname": "PATCH_for_LocalUser",
-                    "type": "LocalUserResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "local_user_id",
-                            "description": "Numeric ID of the local user",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "LocalUserUpdate"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "PUT",
-                    "summary": "Replace a local user",
-                    "notes": "Replace a local user",
-                    "nickname": "PUT_for_LocalUser",
-                    "type": "LocalUserResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "local_user_id",
-                            "description": "Numeric ID of the local user",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "LocalUserReplace"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "DELETE",
-                    "summary": "Delete a local user",
-                    "notes": "Delete a local user",
-                    "nickname": "DELETE_for_LocalUser",
-                    "type": "void",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "local_user_id",
-                            "description": "Numeric ID of the local user",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "integer"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                }
-            ],
-            "path": "\/local-user\/{local_user_id}"
-        },
-        {
-            "operations": [
-                {
-                    "method": "GET",
-                    "summary": "Get a local user by user_id",
-                    "notes": "Get a local user by user_id",
-                    "nickname": "GET_for_LocalUser_by_user_id",
-                    "type": "LocalUserResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "user_id",
-                            "description": "Unique user_id of the local user",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                },
-                {
-                    "method": "PATCH",
-                    "summary": "Update some fields of a local user by user_id",
-                    "notes": "Update some fields of a local user by user_id",
-                    "nickname": "PATCH_for_LocalUser_by_user_id",
-                    "type": "LocalUserResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "user_id",
-                            "description": "Unique user_id of the local user",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "LocalUserUpdate"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "PUT",
-                    "summary": "Replace a local user by user_id",
-                    "notes": "Replace a local user by user_id",
-                    "nickname": "PUT_for_LocalUser_by_user_id",
-                    "type": "LocalUserResult",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "user_id",
-                            "description": "Unique user_id of the local user",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        },
-                        {
-                            "name": "body",
-                            "paramType": "body",
-                            "required": true,
-                            "type": "LocalUserReplace"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "200",
-                            "message": "OK"
-                        },
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "304",
-                            "message": "Not Modified"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        },
-                        {
-                            "code": 422,
-                            "message": "Unprocessable Entity"
-                        }
-                    ]
-                },
-                {
-                    "method": "DELETE",
-                    "summary": "Delete a local user by user_id",
-                    "notes": "Delete a local user by user_id",
-                    "nickname": "DELETE_for_LocalUser_by_user_id",
-                    "type": "void",
-                    "parameters": [
-                        {
-                            "paramType": "path",
-                            "name": "user_id",
-                            "description": "Unique user_id of the local user",
-                            "dataType": "string",
-                            "required": false,
-                            "minimum": 0,
-                            "maximum": 1,
-                            "type": "string"
-                        }
-                    ],
-                    "responseMessages": [
-                        {
-                            "code": "204",
-                            "message": "No Content"
-                        },
-                        {
-                            "code": "401",
-                            "message": "Unauthorized"
-                        },
-                        {
-                            "code": "403",
-                            "message": "Forbidden"
-                        },
-                        {
-                            "code": "404",
-                            "message": "Not Found"
-                        },
-                        {
-                            "code": "406",
-                            "message": "Not Acceptable"
-                        },
-                        {
-                            "code": "415",
-                            "message": "Unsupported Media Type"
-                        }
-                    ]
-                }
-            ],
-            "path": "\/local-user\/user-id\/{user_id}"
+          "method": "POST",
+          "summary": "Create a new local user",
+          "notes": "Create a new local user",
+          "nickname": "POST_for_LocalUser",
+          "type": "LocalUserResult",
+          "parameters": [
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "LocalUserCreate"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "201",
+              "message": "Created"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         }
-    ],
-    "produces": [
-        "application\/vnd.identity.v1+json",
-        "application\/hal+json",
-        "application\/json"
-    ],
-    "models": {
-        "LocalUser": {
-            "id": "LocalUser",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Numeric ID of the local user"
-                },
-                "user_id": {
-                    "type": "string",
-                    "description": "Unique user id of the local user"
-                },
-                "username": {
-                    "type": "string",
-                    "description": "User name of the local user"
-                },
-                "password": {
-                    "type": "string",
-                    "description": "Password of the local user"
-                },
-                "password_hash": {
-                    "type": "string",
-                    "description": "Password Hash of the local user"
-                },
-                "password_ntlm_hash": {
-                    "type": "string",
-                    "description": "Password NTLM Hash of the local user"
-                },
-                "role_name": {
-                    "type": "string",
-                    "description": "Role name of the local user"
-                },
-                "enabled": {
-                    "type": "boolean",
-                    "description": "Flag indicating if the account is enabled"
-                },
-                "change_pwd_next_login": {
-                    "type": "boolean",
-                    "description": "Flag indicating if the password change is required in next login"
-                },
-                "attributes": {
-                    "type": "object",
-                    "description": "Additional attributes(key\/value pairs) may be stored with the local user account"
-                }
+      ],
+      "path": "/local-user"
+    },
+    {
+      "operations": [
+        {
+          "method": "GET",
+          "summary": "Get a local user",
+          "notes": "Get a local user",
+          "nickname": "GET_for_LocalUser",
+          "type": "LocalUserResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "local_user_id",
+              "description": "Numeric ID of the local user",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
             },
-            "required": []
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
         },
-        "LocalUserList": {
-            "id": "LocalUserList",
-            "properties": {
-                "_embedded": {
-                    "$ref": "LocalUserItems",
-                    "description": "Object containing result"
-                },
-                "_links": {
-                    "$ref": "HalLinks",
-                    "description": "Object containing metadata"
-                },
-                "count": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Total number of items matching the filter; returned if calculate_count is true"
-                }
+        {
+          "method": "PATCH",
+          "summary": "Update some fields of a local user",
+          "notes": "Update some fields of a local user",
+          "nickname": "PATCH_for_LocalUser",
+          "type": "LocalUserResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "local_user_id",
+              "description": "Numeric ID of the local user",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
             },
-            "required": [
-                "_embedded",
-                "_links"
-            ]
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "LocalUserUpdate"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         },
-        "LocalUserItems": {
-            "id": "LocalUserItems",
-            "properties": {
-                "items": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "LocalUserResult"
-                    },
-                    "description": "List of items matching the filter"
-                }
+        {
+          "method": "PUT",
+          "summary": "Replace a local user",
+          "notes": "Replace a local user",
+          "nickname": "PUT_for_LocalUser",
+          "type": "LocalUserResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "local_user_id",
+              "description": "Numeric ID of the local user",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
             },
-            "required": [
-                "items"
-            ]
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "LocalUserReplace"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
         },
-        "HalLinks": {
-            "id": "HalLinks",
-            "properties": {
-                "self": {
-                    "type": "string",
-                    "description": "URL of result"
-                },
-                "first": {
-                    "type": "string",
-                    "description": "URL of first page of results"
-                },
-                "last": {
-                    "type": "string",
-                    "description": "URL of last page of results"
-                },
-                "prev": {
-                    "type": "string",
-                    "description": "URL of previous page of results"
-                },
-                "next": {
-                    "type": "string",
-                    "description": "URL of next page of results"
-                }
+        {
+          "method": "DELETE",
+          "summary": "Delete a local user",
+          "notes": "Delete a local user",
+          "nickname": "DELETE_for_LocalUser",
+          "type": "void",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "local_user_id",
+              "description": "Numeric ID of the local user",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "integer"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "204",
+              "message": "No Content"
             },
-            "required": [
-                "self",
-                "first"
-            ]
-        },
-        "LocalUserResult": {
-            "id": "LocalUserResult",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64",
-                    "description": "Numeric ID of the local user"
-                },
-                "user_id": {
-                    "type": "string",
-                    "description": "Unique user id of the local user"
-                },
-                "username": {
-                    "type": "string",
-                    "description": "User name of the local user"
-                },
-                "password_hash": {
-                    "type": "string",
-                    "description": "Password Hash of the local user"
-                },
-                "password_ntlm_hash": {
-                    "type": "string",
-                    "description": "Password NTLM Hash of the local user"
-                },
-                "role_name": {
-                    "type": "string",
-                    "description": "Role name of the local user"
-                },
-                "enabled": {
-                    "type": "boolean",
-                    "description": "Flag indicating if the account is enabled"
-                },
-                "change_pwd_next_login": {
-                    "type": "boolean",
-                    "description": "Flag indicating if the password change is required in next login"
-                },
-                "attributes": {
-                    "type": "object",
-                    "description": "Additional attributes(key\/value pairs) may be stored with the local user account"
-                }
+            {
+              "code": "401",
+              "message": "Unauthorized"
             },
-            "required": [
-                "id",
-                "user_id",
-                "username",
-                "role_name",
-                "enabled",
-                "change_pwd_next_login",
-                "attributes"
-            ]
-        },
-        "LocalUserUpdate": {
-            "id": "LocalUserUpdate",
-            "properties": {
-                "user_id": {
-                    "type": "string",
-                    "description": "Unique user id of the local user"
-                },
-                "username": {
-                    "type": "string",
-                    "description": "User name of the local user"
-                },
-                "password": {
-                    "type": "string",
-                    "description": "Password of the local user"
-                },
-                "password_hash": {
-                    "type": "string",
-                    "description": "Password Hash of the local user"
-                },
-                "password_ntlm_hash": {
-                    "type": "string",
-                    "description": "Password NTLM Hash of the local user"
-                },
-                "role_name": {
-                    "type": "string",
-                    "description": "Role name of the local user"
-                },
-                "enabled": {
-                    "type": "boolean",
-                    "description": "Flag indicating if the account is enabled"
-                },
-                "change_pwd_next_login": {
-                    "type": "boolean",
-                    "description": "Flag indicating if the password change is required in next login"
-                },
-                "attributes": {
-                    "type": "object",
-                    "description": "Additional attributes(key\/value pairs) may be stored with the local user account"
-                }
+            {
+              "code": "403",
+              "message": "Forbidden"
             },
-            "required": []
-        },
-        "LocalUserCreate": {
-            "id": "LocalUserCreate",
-            "properties": {
-                "user_id": {
-                    "type": "string",
-                    "description": "Unique user id of the local user"
-                },
-                "username": {
-                    "type": "string",
-                    "description": "User name of the local user"
-                },
-                "password": {
-                    "type": "string",
-                    "description": "Password of the local user"
-                },
-                "password_hash": {
-                    "type": "string",
-                    "description": "Password Hash of the local user"
-                },
-                "password_ntlm_hash": {
-                    "type": "string",
-                    "description": "Password NTLM Hash of the local user"
-                },
-                "role_name": {
-                    "type": "string",
-                    "description": "Role name of the local user"
-                },
-                "enabled": {
-                    "type": "boolean",
-                    "description": "Flag indicating if the account is enabled"
-                },
-                "change_pwd_next_login": {
-                    "type": "boolean",
-                    "description": "Flag indicating if the password change is required in next login"
-                },
-                "attributes": {
-                    "type": "object",
-                    "description": "Additional attributes(key\/value pairs) may be stored with the local user account"
-                }
+            {
+              "code": "404",
+              "message": "Not Found"
             },
-            "required": [
-                "user_id",
-                "password",
-                "username",
-                "role_name"
-            ]
-        },
-        "LocalUserReplace": {
-            "id": "LocalUserReplace",
-            "properties": {
-                "user_id": {
-                    "type": "string",
-                    "description": "Unique user id of the local user"
-                },
-                "username": {
-                    "type": "string",
-                    "description": "User name of the local user"
-                },
-                "password": {
-                    "type": "string",
-                    "description": "Password of the local user"
-                },
-                "password_hash": {
-                    "type": "string",
-                    "description": "Password Hash of the local user"
-                },
-                "password_ntlm_hash": {
-                    "type": "string",
-                    "description": "Password NTLM Hash of the local user"
-                },
-                "role_name": {
-                    "type": "string",
-                    "description": "Role name of the local user"
-                },
-                "enabled": {
-                    "type": "boolean",
-                    "description": "Flag indicating if the account is enabled"
-                },
-                "change_pwd_next_login": {
-                    "type": "boolean",
-                    "description": "Flag indicating if the password change is required in next login"
-                },
-                "attributes": {
-                    "type": "object",
-                    "description": "Additional attributes(key\/value pairs) may be stored with the local user account"
-                }
+            {
+              "code": "406",
+              "message": "Not Acceptable"
             },
-            "required": [
-                "user_id",
-                "password",
-                "username",
-                "role_name"
-            ]
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
         }
+      ],
+      "path": "/local-user/{local_user_id}"
+    },
+    {
+      "operations": [
+        {
+          "method": "GET",
+          "summary": "Get a local user by user_id",
+          "notes": "Get a local user by user_id",
+          "nickname": "GET_for_LocalUser_by_user_id",
+          "type": "LocalUserResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "user_id",
+              "description": "Unique user_id of the local user",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
+        },
+        {
+          "method": "PATCH",
+          "summary": "Update some fields of a local user by user_id",
+          "notes": "Update some fields of a local user by user_id",
+          "nickname": "PATCH_for_LocalUser_by_user_id",
+          "type": "LocalUserResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "user_id",
+              "description": "Unique user_id of the local user",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            },
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "LocalUserUpdate"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
+        },
+        {
+          "method": "PUT",
+          "summary": "Replace a local user by user_id",
+          "notes": "Replace a local user by user_id",
+          "nickname": "PUT_for_LocalUser_by_user_id",
+          "type": "LocalUserResult",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "user_id",
+              "description": "Unique user_id of the local user",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            },
+            {
+              "name": "body",
+              "paramType": "body",
+              "required": true,
+              "type": "LocalUserReplace"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "200",
+              "message": "OK"
+            },
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "304",
+              "message": "Not Modified"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            },
+            {
+              "code": 422,
+              "message": "Unprocessable Entity"
+            }
+          ]
+        },
+        {
+          "method": "DELETE",
+          "summary": "Delete a local user by user_id",
+          "notes": "Delete a local user by user_id",
+          "nickname": "DELETE_for_LocalUser_by_user_id",
+          "type": "void",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "user_id",
+              "description": "Unique user_id of the local user",
+              "dataType": "string",
+              "required": false,
+              "minimum": 0,
+              "maximum": 1,
+              "type": "string"
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": "204",
+              "message": "No Content"
+            },
+            {
+              "code": "401",
+              "message": "Unauthorized"
+            },
+            {
+              "code": "403",
+              "message": "Forbidden"
+            },
+            {
+              "code": "404",
+              "message": "Not Found"
+            },
+            {
+              "code": "406",
+              "message": "Not Acceptable"
+            },
+            {
+              "code": "415",
+              "message": "Unsupported Media Type"
+            }
+          ]
+        }
+      ],
+      "path": "/local-user/user-id/{user_id}"
     }
+  ],
+  "produces": [
+    "application/vnd.identity.v1+json",
+    "application/hal+json",
+    "application/json"
+  ],
+  "models": {
+    "LocalUser": {
+      "id": "LocalUser",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Numeric ID of the local user"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "Unique user id of the local user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User name of the local user"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the local user"
+        },
+        "password_hash": {
+          "type": "string",
+          "description": "Password Hash of the local user"
+        },
+        "password_ntlm_hash": {
+          "type": "string",
+          "description": "Password NTLM Hash of the local user"
+        },
+        "role_name": {
+          "type": "string",
+          "description": "Role name of the local user"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Flag indicating if the account is enabled"
+        },
+        "change_pwd_next_login": {
+          "type": "boolean",
+          "description": "Flag indicating if the password change is required in next login"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Additional attributes(key/value pairs) may be stored with the local user account"
+        }
+      },
+      "required": []
+    },
+    "LocalUserList": {
+      "id": "LocalUserList",
+      "properties": {
+        "_embedded": {
+          "$ref": "LocalUserItems",
+          "description": "Object containing result"
+        },
+        "_links": {
+          "$ref": "HalLinks",
+          "description": "Object containing metadata"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Total number of items matching the filter; returned if calculate_count is true"
+        }
+      },
+      "required": ["_embedded", "_links"]
+    },
+    "LocalUserItems": {
+      "id": "LocalUserItems",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "LocalUserResult"
+          },
+          "description": "List of items matching the filter"
+        }
+      },
+      "required": ["items"]
+    },
+    "HalLinks": {
+      "id": "HalLinks",
+      "properties": {
+        "self": {
+          "type": "string",
+          "description": "URL of result"
+        },
+        "first": {
+          "type": "string",
+          "description": "URL of first page of results"
+        },
+        "last": {
+          "type": "string",
+          "description": "URL of last page of results"
+        },
+        "prev": {
+          "type": "string",
+          "description": "URL of previous page of results"
+        },
+        "next": {
+          "type": "string",
+          "description": "URL of next page of results"
+        }
+      },
+      "required": ["self", "first"]
+    },
+    "LocalUserResult": {
+      "id": "LocalUserResult",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Numeric ID of the local user"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "Unique user id of the local user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User name of the local user"
+        },
+        "password_hash": {
+          "type": "string",
+          "description": "Password Hash of the local user"
+        },
+        "password_ntlm_hash": {
+          "type": "string",
+          "description": "Password NTLM Hash of the local user"
+        },
+        "role_name": {
+          "type": "string",
+          "description": "Role name of the local user"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Flag indicating if the account is enabled"
+        },
+        "change_pwd_next_login": {
+          "type": "boolean",
+          "description": "Flag indicating if the password change is required in next login"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Additional attributes(key/value pairs) may be stored with the local user account"
+        }
+      },
+      "required": [
+        "id",
+        "user_id",
+        "username",
+        "role_name",
+        "enabled",
+        "change_pwd_next_login",
+        "attributes"
+      ]
+    },
+    "LocalUserUpdate": {
+      "id": "LocalUserUpdate",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": "Unique user id of the local user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User name of the local user"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the local user"
+        },
+        "password_hash": {
+          "type": "string",
+          "description": "Password Hash of the local user"
+        },
+        "password_ntlm_hash": {
+          "type": "string",
+          "description": "Password NTLM Hash of the local user"
+        },
+        "role_name": {
+          "type": "string",
+          "description": "Role name of the local user"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Flag indicating if the account is enabled"
+        },
+        "change_pwd_next_login": {
+          "type": "boolean",
+          "description": "Flag indicating if the password change is required in next login"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Additional attributes(key/value pairs) may be stored with the local user account"
+        }
+      },
+      "required": []
+    },
+    "LocalUserCreate": {
+      "id": "LocalUserCreate",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": "Unique user id of the local user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User name of the local user"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the local user"
+        },
+        "password_hash": {
+          "type": "string",
+          "description": "Password Hash of the local user"
+        },
+        "password_ntlm_hash": {
+          "type": "string",
+          "description": "Password NTLM Hash of the local user"
+        },
+        "role_name": {
+          "type": "string",
+          "description": "Role name of the local user"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Flag indicating if the account is enabled"
+        },
+        "change_pwd_next_login": {
+          "type": "boolean",
+          "description": "Flag indicating if the password change is required in next login"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Additional attributes(key/value pairs) may be stored with the local user account"
+        }
+      },
+      "required": ["user_id", "password", "username", "role_name"]
+    },
+    "LocalUserReplace": {
+      "id": "LocalUserReplace",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": "Unique user id of the local user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User name of the local user"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the local user"
+        },
+        "password_hash": {
+          "type": "string",
+          "description": "Password Hash of the local user"
+        },
+        "password_ntlm_hash": {
+          "type": "string",
+          "description": "Password NTLM Hash of the local user"
+        },
+        "role_name": {
+          "type": "string",
+          "description": "Role name of the local user"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Flag indicating if the account is enabled"
+        },
+        "change_pwd_next_login": {
+          "type": "boolean",
+          "description": "Flag indicating if the password change is required in next login"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Additional attributes(key/value pairs) may be stored with the local user account"
+        }
+      },
+      "required": ["user_id", "password", "username", "role_name"]
+    }
+  }
 }
