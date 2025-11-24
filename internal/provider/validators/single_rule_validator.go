@@ -18,7 +18,7 @@ type ruleValidationModel struct {
 // singleConditionMustBeOrValidator implements the validation logic.
 type singleConditionMustBeOrValidator struct{}
 
-// Description
+// Description.
 func (v singleConditionMustBeOrValidator) Description(ctx context.Context) string {
 	return "Validates that if a rule has only one condition, match_type must be 'or'."
 }
@@ -27,7 +27,7 @@ func (v singleConditionMustBeOrValidator) MarkdownDescription(ctx context.Contex
 	return "Due to a ClearPass API behavior, if a rule contains exactly **one condition**, the `match_type` is automatically normalized to `or`. To prevent permanent diffs, this validator enforces `or` when only one condition is present."
 }
 
-// ValidateList performs the validation
+// ValidateList performs the validation.
 func (v singleConditionMustBeOrValidator) ValidateList(ctx context.Context, req validator.ListRequest, resp *validator.ListResponse) {
 	// 1. If the rule list is empty, everything is okay
 	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
@@ -65,7 +65,7 @@ func (v singleConditionMustBeOrValidator) ValidateList(ctx context.Context, req 
 	}
 }
 
-// SingleRuleMustBeOr factory function (keep the name so we don't have to change provider.go)
+// SingleRuleMustBeOr factory function (keep the name so we don't have to change provider.go).
 func SingleRuleMustBeOr() validator.List {
 	return singleConditionMustBeOrValidator{}
 }

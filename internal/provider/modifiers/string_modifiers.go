@@ -30,7 +30,7 @@ func (m upperCaseModifier) PlanModifyString(ctx context.Context, req planmodifie
 	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
 		return
 	}
-	
+
 	// Wir lesen den Wert aus der Config ("and"), machen ihn groß ("AND")
 	// und schreiben ihn in den Plan.
 	val := req.ConfigValue.ValueString()

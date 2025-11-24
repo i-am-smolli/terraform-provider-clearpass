@@ -4,28 +4,27 @@ package provider
 import (
 	"context"
 	"fmt"
-	"strings"
 	"strconv"
+	"strings"
 
 	"terraform-provider-clearpass/internal/client"
-	"terraform-provider-clearpass/internal/provider/validators"
 	"terraform-provider-clearpass/internal/provider/modifiers"
+	"terraform-provider-clearpass/internal/provider/validators"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-// Ensure provider-defined types implement framework interfaces
+// Ensure provider-defined types implement framework interfaces.
 var _ resource.Resource = &roleMappingResource{}
 
 // roleMappingResource defines the resource implementation.
@@ -35,7 +34,7 @@ type roleMappingResource struct {
 
 // --- Data Models ---
 
-// These structs define the HCL shape (the "tfsdk" tags)
+// These structs define the HCL shape (the "tfsdk" tags).
 type roleMappingResourceModel struct {
 	ID              types.Int64  `tfsdk:"id"`
 	Name            types.String `tfsdk:"name"`
@@ -107,8 +106,8 @@ func (r *roleMappingResource) Schema(ctx context.Context, req resource.SchemaReq
 				Description: "List of role mapping rules.",
 				Required:    true,
 				Validators: []validator.List{
-                    validators.SingleRuleMustBeOr(),
-                },
+					validators.SingleRuleMustBeOr(),
+				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"match_type": schema.StringAttribute{
@@ -211,7 +210,7 @@ func (r *roleMappingResource) Create(ctx context.Context, req resource.CreateReq
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -248,7 +247,7 @@ func (r *roleMappingResource) Read(ctx context.Context, req resource.ReadRequest
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
@@ -279,7 +278,7 @@ func (r *roleMappingResource) Update(ctx context.Context, req resource.UpdateReq
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	
+
 	numericID := plan.ID.ValueInt64()
 	updatedRoleMap, err := r.client.UpdateRoleMapping(ctx, int(numericID), apiPayload)
 	if err != nil {
@@ -321,13 +320,13 @@ func (r *roleMappingResource) Delete(ctx context.Context, req resource.DeleteReq
 
 // --- Translation Helpers ---
 
-// expandRoleMappingRules converts Terraform List model to API client slice for Create
+// expandRoleMappingRules converts Terraform List model to API client slice for Create.
 func expandRoleMappingRules(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []*client.RulesSettingsCreate {
 	if tfList.IsNull() {
 		return nil
 	}
 	var apiRules []*client.RulesSettingsCreate
-	
+
 	// Get the elements from the Terraform list
 	var tfRules []rulesModel
 	diags.Append(tfList.ElementsAs(ctx, &tfRules, false)...)
@@ -348,12 +347,12 @@ func expandRoleMappingRules(ctx context.Context, tfList types.List, diags *diag.
 			if diags.HasError() {
 				return nil
 			}
-			
+
 			for _, tfCond := range tfConditions {
 				apiRule.Condition = append(apiRule.Condition, &client.RulesConditionSettingsCreate{
-					Type: tfCond.Type.ValueString(),
-					Name: tfCond.Name.ValueString(),
-					Oper: tfCond.Oper.ValueString(),
+					Type:  tfCond.Type.ValueString(),
+					Name:  tfCond.Name.ValueString(),
+					Oper:  tfCond.Oper.ValueString(),
 					Value: tfCond.Value.ValueString(),
 				})
 			}
@@ -363,13 +362,13 @@ func expandRoleMappingRules(ctx context.Context, tfList types.List, diags *diag.
 	return apiRules
 }
 
-// expandRoleMappingRulesUpdate converts Terraform List model to API client slice for Update
+// expandRoleMappingRulesUpdate converts Terraform List model to API client slice for Update.
 func expandRoleMappingRulesUpdate(ctx context.Context, tfList types.List, diags *diag.Diagnostics) []*client.RulesSettingsUpdate {
 	if tfList.IsNull() {
 		return nil
 	}
 	var apiRules []*client.RulesSettingsUpdate
-	
+
 	var tfRules []rulesModel
 	diags.Append(tfList.ElementsAs(ctx, &tfRules, false)...)
 	if diags.HasError() {
@@ -381,19 +380,19 @@ func expandRoleMappingRulesUpdate(ctx context.Context, tfList types.List, diags 
 			MatchType: tfRule.MatchType.ValueString(),
 			RoleName:  tfRule.RoleName.ValueString(),
 		}
-		
+
 		if !tfRule.Condition.IsNull() {
 			var tfConditions []conditionModel
 			diags.Append(tfRule.Condition.ElementsAs(ctx, &tfConditions, false)...)
 			if diags.HasError() {
 				return nil
 			}
-			
+
 			for _, tfCond := range tfConditions {
 				apiRule.Condition = append(apiRule.Condition, &client.RulesConditionSettingsUpdate{
-					Type: tfCond.Type.ValueString(),
-					Name: tfCond.Name.ValueString(),
-					Oper: tfCond.Oper.ValueString(),
+					Type:  tfCond.Type.ValueString(),
+					Name:  tfCond.Name.ValueString(),
+					Oper:  tfCond.Oper.ValueString(),
 					Value: tfCond.Value.ValueString(),
 				})
 			}
@@ -403,27 +402,26 @@ func expandRoleMappingRulesUpdate(ctx context.Context, tfList types.List, diags 
 	return apiRules
 }
 
-
-// flattenRoleMappingRules converts API client slice to Terraform List model
+// flattenRoleMappingRules converts API client slice to Terraform List model.
 func flattenRoleMappingRules(ctx context.Context, apiRules []*client.RulesSettingsResult) (types.List, diag.Diagnostics) {
 	if apiRules == nil {
 		return types.ListNull(types.ObjectType{AttrTypes: rulesModel{}.attrTypes()}), nil
 	}
-	
+
 	var tfRules []rulesModel
 	for _, apiRule := range apiRules {
-		
+
 		// Flatten inner conditions first
 		var tfConditions []conditionModel
 		for _, apiCond := range apiRule.Condition {
 			tfConditions = append(tfConditions, conditionModel{
-				Type: types.StringValue(apiCond.Type),
-				Name: types.StringValue(apiCond.Name),
-				Oper: types.StringValue(apiCond.Oper),
+				Type:  types.StringValue(apiCond.Type),
+				Name:  types.StringValue(apiCond.Name),
+				Oper:  types.StringValue(apiCond.Oper),
 				Value: types.StringValue(apiCond.Value),
 			})
 		}
-		
+
 		condList, diags := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: conditionModel{}.attrTypes()}, tfConditions)
 		if diags.HasError() {
 			return types.ListNull(types.ObjectType{AttrTypes: rulesModel{}.attrTypes()}), diags
@@ -431,21 +429,21 @@ func flattenRoleMappingRules(ctx context.Context, apiRules []*client.RulesSettin
 
 		tfRules = append(tfRules, rulesModel{
 			// We force the API value to Uppercase ("and" -> "AND", "OR" -> "OR")
-            MatchType: types.StringValue(strings.ToUpper(apiRule.MatchType)),
+			MatchType: types.StringValue(strings.ToUpper(apiRule.MatchType)),
 			RoleName:  types.StringValue(apiRule.RoleName),
 			Condition: condList,
 		})
 	}
-	
+
 	rulesList, diags := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: rulesModel{}.attrTypes()}, tfRules)
 	return rulesList, diags
 }
 
-// These are helpers for the helpers, to define the 'shape' of our nested objects
+// These are helpers for the helpers, to define the 'shape' of our nested objects.
 func (m rulesModel) attrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"match_type": types.StringType,
-		"role_name": types.StringType,
+		"role_name":  types.StringType,
 		"condition": types.ListType{
 			ElemType: types.ObjectType{
 				AttrTypes: conditionModel{}.attrTypes(),
@@ -456,9 +454,9 @@ func (m rulesModel) attrTypes() map[string]attr.Type {
 
 func (m conditionModel) attrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
-		"type": types.StringType,
-		"name": types.StringType,
-		"oper": types.StringType,
+		"type":  types.StringType,
+		"name":  types.StringType,
+		"oper":  types.StringType,
 		"value": types.StringType,
 	}
 }

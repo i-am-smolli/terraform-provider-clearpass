@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 )
 
-// (Make sure to change this import path if your go.mod module name is different)
+// (Make sure to change this import path if your go.mod module name is different).
 var (
 	version = "dev" // This will be set by CI/CD
 )

@@ -264,7 +264,7 @@ func (c *apiClient) newRequest(ctx context.Context, method, path string, body io
 	return req, nil
 }
 
-// do is a private helper to execute an HTTP request
+// do is a private helper to execute an HTTP request.
 func (c *apiClient) do(req *http.Request, v interface{}) error {
 	resp, err := c.httpClient.Do(req)
 	if err != nil {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"os"
 
-	// Import our SDK (Box 3)
-	"terraform-provider-clearpass/internal/client" 
+	// Import our SDK (Box 3).
+	"terraform-provider-clearpass/internal/client"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
@@ -25,10 +25,10 @@ type clearpassProvider struct {
 // providerModel defines the provider configuration data model.
 // This is what the user will type in the provider { ... } block.
 type providerModel struct {
-	Host       types.String `tfsdk:"host"`
-	ClientID   types.String `tfsdk:"client_id"`
+	Host         types.String `tfsdk:"host"`
+	ClientID     types.String `tfsdk:"client_id"`
 	ClientSecret types.String `tfsdk:"client_secret"`
-	Insecure   types.Bool   `tfsdk:"insecure"`
+	Insecure     types.Bool   `tfsdk:"insecure"`
 }
 
 // New is the factory function for the provider.
@@ -88,7 +88,7 @@ func (p *clearpassProvider) Configure(ctx context.Context, req provider.Configur
 		config.Host = types.StringValue(os.Getenv("CLEARPASS_HOST"))
 	}
 	// ... (add similar logic for CLEARPASS_CLIENT_ID, etc.)
-	
+
 	// Check for missing configuration
 	if config.Host.IsNull() || config.ClientID.IsNull() || config.ClientSecret.IsNull() {
 		resp.Diagnostics.AddError(
@@ -97,7 +97,7 @@ func (p *clearpassProvider) Configure(ctx context.Context, req provider.Configur
 		)
 		return
 	}
-	
+
 	// === THIS IS THE MAGIC ===
 	// 1. Get the values from the HCL config
 	host := config.Host.ValueString()
@@ -127,7 +127,7 @@ func (p *clearpassProvider) Resources(ctx context.Context) []func() resource.Res
 		NewLocalUserResource,
 		NewRoleResource,
 		NewRoleMappingResource,
-		NewEnforcementProfileResource, 
+		NewEnforcementProfileResource,
 		NewEnforcementPolicyResource,
 		NewServiceResource,
 	}
@@ -139,4 +139,3 @@ func (p *clearpassProvider) DataSources(ctx context.Context) []func() datasource
 		// (We will add data sources later)
 	}
 }
-

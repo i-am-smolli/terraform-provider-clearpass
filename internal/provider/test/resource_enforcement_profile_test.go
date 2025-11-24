@@ -55,7 +55,7 @@ func TestAccEnforcementProfileResource(t *testing.T) {
 	})
 }
 
-// HCL configuration helper function
+// HCL configuration helper function.
 func testAccEnforcementProfileConfig(name, description, vlanID string) string {
 	return `
 resource "clearpass_enforcement_profile" "test_profile" {

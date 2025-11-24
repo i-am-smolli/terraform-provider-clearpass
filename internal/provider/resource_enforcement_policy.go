@@ -8,6 +8,7 @@ import (
 	"terraform-provider-clearpass/internal/client"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -15,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
 )
 
 var _ resource.Resource = &enforcementPolicyResource{}
@@ -104,9 +104,9 @@ func (r *enforcementPolicyResource) Schema(ctx context.Context, req resource.Sch
 							Required:    true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									"type": schema.StringAttribute{Required: true},
-									"name": schema.StringAttribute{Required: true},
-									"oper": schema.StringAttribute{Required: true},
+									"type":  schema.StringAttribute{Required: true},
+									"name":  schema.StringAttribute{Required: true},
+									"oper":  schema.StringAttribute{Required: true},
 									"value": schema.StringAttribute{Required: true},
 								},
 							},
@@ -119,7 +119,9 @@ func (r *enforcementPolicyResource) Schema(ctx context.Context, req resource.Sch
 }
 
 func (r *enforcementPolicyResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if req.ProviderData == nil { return }
+	if req.ProviderData == nil {
+		return
+	}
 	client, ok := req.ProviderData.(client.ClientInterface)
 	if !ok {
 		resp.Diagnostics.AddError("Unexpected Type", fmt.Sprintf("Expected ClientInterface, got: %T", req.ProviderData))
@@ -131,7 +133,9 @@ func (r *enforcementPolicyResource) Configure(ctx context.Context, req resource.
 func (r *enforcementPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan enforcementPolicyModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
-	if resp.Diagnostics.HasError() { return }
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	apiPayload := &client.EnforcementPolicyCreate{
 		Name:                      plan.Name.ValueString(),
@@ -140,9 +144,13 @@ func (r *enforcementPolicyResource) Create(ctx context.Context, req resource.Cre
 		RuleEvalAlgo:              plan.RuleEvalAlgo.ValueString(),
 		Rules:                     expandPolicyRules(ctx, plan.Rules, &resp.Diagnostics),
 	}
-	if !plan.Description.IsNull() { apiPayload.Description = plan.Description.ValueString() }
-	
-	if resp.Diagnostics.HasError() { return }
+	if !plan.Description.IsNull() {
+		apiPayload.Description = plan.Description.ValueString()
+	}
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	created, err := r.client.CreateEnforcementPolicy(ctx, apiPayload)
 	if err != nil {
@@ -157,7 +165,7 @@ func (r *enforcementPolicyResource) Create(ctx context.Context, req resource.Cre
 	plan.EnforcementType = types.StringValue(created.EnforcementType)
 	plan.DefaultEnforcementProfile = types.StringValue(created.DefaultEnforcementProfile)
 	plan.RuleEvalAlgo = types.StringValue(created.RuleEvalAlgo)
-	
+
 	var diags diag.Diagnostics
 	plan.Rules, diags = flattenPolicyRules(ctx, created.Rules)
 	resp.Diagnostics.Append(diags...)
@@ -168,7 +176,9 @@ func (r *enforcementPolicyResource) Create(ctx context.Context, req resource.Cre
 func (r *enforcementPolicyResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state enforcementPolicyModel
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
-	if resp.Diagnostics.HasError() { return }
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	policy, err := r.client.GetEnforcementPolicy(ctx, int(state.ID.ValueInt64()))
 	if err != nil {
@@ -185,7 +195,7 @@ func (r *enforcementPolicyResource) Read(ctx context.Context, req resource.ReadR
 	state.EnforcementType = types.StringValue(policy.EnforcementType)
 	state.DefaultEnforcementProfile = types.StringValue(policy.DefaultEnforcementProfile)
 	state.RuleEvalAlgo = types.StringValue(policy.RuleEvalAlgo)
-	
+
 	var diags diag.Diagnostics
 	state.Rules, diags = flattenPolicyRules(ctx, policy.Rules)
 	resp.Diagnostics.Append(diags...)
@@ -196,32 +206,46 @@ func (r *enforcementPolicyResource) Read(ctx context.Context, req resource.ReadR
 func (r *enforcementPolicyResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan enforcementPolicyModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
-	if resp.Diagnostics.HasError() { return }
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	apiPayload := &client.EnforcementPolicyUpdate{
 		Rules: expandPolicyRulesUpdate(ctx, plan.Rules, &resp.Diagnostics),
 	}
-	if !plan.Name.IsUnknown() { apiPayload.Name = plan.Name.ValueString() }
-	if !plan.Description.IsUnknown() { apiPayload.Description = plan.Description.ValueString() }
-	if !plan.EnforcementType.IsUnknown() { apiPayload.EnforcementType = plan.EnforcementType.ValueString() }
-	if !plan.DefaultEnforcementProfile.IsUnknown() { apiPayload.DefaultEnforcementProfile = plan.DefaultEnforcementProfile.ValueString() }
-	if !plan.RuleEvalAlgo.IsUnknown() { apiPayload.RuleEvalAlgo = plan.RuleEvalAlgo.ValueString() }
+	if !plan.Name.IsUnknown() {
+		apiPayload.Name = plan.Name.ValueString()
+	}
+	if !plan.Description.IsUnknown() {
+		apiPayload.Description = plan.Description.ValueString()
+	}
+	if !plan.EnforcementType.IsUnknown() {
+		apiPayload.EnforcementType = plan.EnforcementType.ValueString()
+	}
+	if !plan.DefaultEnforcementProfile.IsUnknown() {
+		apiPayload.DefaultEnforcementProfile = plan.DefaultEnforcementProfile.ValueString()
+	}
+	if !plan.RuleEvalAlgo.IsUnknown() {
+		apiPayload.RuleEvalAlgo = plan.RuleEvalAlgo.ValueString()
+	}
 
-	if resp.Diagnostics.HasError() { return }
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	updated, err := r.client.UpdateEnforcementPolicy(ctx, int(plan.ID.ValueInt64()), apiPayload)
 	if err != nil {
 		resp.Diagnostics.AddError("API Error", err.Error())
 		return
 	}
-	
+
 	// Refresh state
 	plan.Name = types.StringValue(updated.Name)
 	plan.Description = types.StringValue(updated.Description)
 	plan.EnforcementType = types.StringValue(updated.EnforcementType)
 	plan.DefaultEnforcementProfile = types.StringValue(updated.DefaultEnforcementProfile)
 	plan.RuleEvalAlgo = types.StringValue(updated.RuleEvalAlgo)
-	
+
 	var diags diag.Diagnostics
 	plan.Rules, diags = flattenPolicyRules(ctx, updated.Rules)
 	resp.Diagnostics.Append(diags...)
@@ -232,7 +256,9 @@ func (r *enforcementPolicyResource) Update(ctx context.Context, req resource.Upd
 func (r *enforcementPolicyResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state enforcementPolicyModel
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
-	if resp.Diagnostics.HasError() { return }
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	err := r.client.DeleteEnforcementPolicy(ctx, int(state.ID.ValueInt64()))
 	if err != nil {
 		resp.Diagnostics.AddError("API Error", err.Error())
@@ -251,20 +277,24 @@ func (r *enforcementPolicyResource) ImportState(ctx context.Context, req resourc
 // --- Helpers ---
 
 func expandPolicyRules(ctx context.Context, list types.List, diags *diag.Diagnostics) []*client.EnforcementPolicyRuleCreate {
-	if list.IsNull() || list.IsUnknown() { return nil }
+	if list.IsNull() || list.IsUnknown() {
+		return nil
+	}
 	var tfRules []policyRuleModel
 	diags.Append(list.ElementsAs(ctx, &tfRules, false)...)
-	if diags.HasError() { return nil }
+	if diags.HasError() {
+		return nil
+	}
 
 	var apiRules []*client.EnforcementPolicyRuleCreate
 	for _, item := range tfRules {
 		var profiles []string
 		diags.Append(item.EnforcementProfileNames.ElementsAs(ctx, &profiles, false)...)
-		
+
 		var conditions []*client.EnforcementPolicyConditionCreate
 		var tfConds []policyConditionModel
 		diags.Append(item.Condition.ElementsAs(ctx, &tfConds, false)...)
-		
+
 		for _, c := range tfConds {
 			conditions = append(conditions, &client.EnforcementPolicyConditionCreate{
 				Type: c.Type.ValueString(), Name: c.Name.ValueString(), Oper: c.Oper.ValueString(), Value: c.Value.ValueString(),
@@ -280,22 +310,26 @@ func expandPolicyRules(ctx context.Context, list types.List, diags *diag.Diagnos
 }
 
 func expandPolicyRulesUpdate(ctx context.Context, list types.List, diags *diag.Diagnostics) []*client.EnforcementPolicyRuleUpdate {
-    // Identical logic to expandPolicyRules but returns *client.EnforcementPolicyRuleUpdate
-    // (Copy the logic from above, just change the struct types)
-	if list.IsNull() || list.IsUnknown() { return nil }
+	// Identical logic to expandPolicyRules but returns *client.EnforcementPolicyRuleUpdate
+	// (Copy the logic from above, just change the struct types)
+	if list.IsNull() || list.IsUnknown() {
+		return nil
+	}
 	var tfRules []policyRuleModel
 	diags.Append(list.ElementsAs(ctx, &tfRules, false)...)
-	if diags.HasError() { return nil }
+	if diags.HasError() {
+		return nil
+	}
 
 	var apiRules []*client.EnforcementPolicyRuleUpdate
 	for _, item := range tfRules {
 		var profiles []string
 		diags.Append(item.EnforcementProfileNames.ElementsAs(ctx, &profiles, false)...)
-		
+
 		var conditions []*client.EnforcementPolicyConditionUpdate
 		var tfConds []policyConditionModel
 		diags.Append(item.Condition.ElementsAs(ctx, &tfConds, false)...)
-		
+
 		for _, c := range tfConds {
 			conditions = append(conditions, &client.EnforcementPolicyConditionUpdate{
 				Type: c.Type.ValueString(), Name: c.Name.ValueString(), Oper: c.Oper.ValueString(), Value: c.Value.ValueString(),
@@ -317,7 +351,9 @@ func flattenPolicyRules(ctx context.Context, apiRules []*client.EnforcementPolic
 	var tfRules []policyRuleModel
 	for _, item := range apiRules {
 		profileList, diags := types.ListValueFrom(ctx, types.StringType, item.EnforcementProfileNames)
-		if diags.HasError() { return types.ListNull(types.ObjectType{AttrTypes: policyRuleModel{}.attrTypes()}), diags }
+		if diags.HasError() {
+			return types.ListNull(types.ObjectType{AttrTypes: policyRuleModel{}.attrTypes()}), diags
+		}
 
 		var tfConds []policyConditionModel
 		for _, c := range item.Condition {
@@ -326,7 +362,9 @@ func flattenPolicyRules(ctx context.Context, apiRules []*client.EnforcementPolic
 			})
 		}
 		condList, diags := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: policyConditionModel{}.attrTypes()}, tfConds)
-        if diags.HasError() { return types.ListNull(types.ObjectType{AttrTypes: policyRuleModel{}.attrTypes()}), diags }
+		if diags.HasError() {
+			return types.ListNull(types.ObjectType{AttrTypes: policyRuleModel{}.attrTypes()}), diags
+		}
 
 		tfRules = append(tfRules, policyRuleModel{
 			EnforcementProfileNames: profileList,
@@ -339,7 +377,7 @@ func flattenPolicyRules(ctx context.Context, apiRules []*client.EnforcementPolic
 func (m policyRuleModel) attrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"enforcement_profile_names": types.ListType{ElemType: types.StringType},
-		"condition": types.ListType{ElemType: types.ObjectType{AttrTypes: policyConditionModel{}.attrTypes()}},
+		"condition":                 types.ListType{ElemType: types.ObjectType{AttrTypes: policyConditionModel{}.attrTypes()}},
 	}
 }
 

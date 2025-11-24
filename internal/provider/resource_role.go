@@ -17,7 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-// Ensure provider-defined types implement framework interfaces
+// Ensure provider-defined types implement framework interfaces.
 var _ resource.Resource = &roleResource{}
 
 // roleResource defines the resource implementation.

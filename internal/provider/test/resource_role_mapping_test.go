@@ -42,7 +42,7 @@ func TestAccRoleMappingResource(t *testing.T) {
 	})
 }
 
-// Helper function simplified for clean execution (always 2 rules and correct logic)
+// Helper function simplified for clean execution (always 2 rules and correct logic).
 func testAccRoleMappingConfigClean(name, description string) string {
 	return `
 resource "clearpass_role_mapping" "test_map" {
