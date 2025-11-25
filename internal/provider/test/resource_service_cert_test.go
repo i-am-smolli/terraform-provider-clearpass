@@ -34,7 +34,7 @@ func TestAccServiceCertResource(t *testing.T) {
 }
 
 func testAccServiceCertResourceConfig(certURL, keyURL, passphrase string) string {
-	return `
+	return testAccProviderConfig() + `
 resource "clearpass_service_cert" "test" {
   certificate_url   = "` + certURL + `"
   pkcs12_file_url   = "` + keyURL + `"

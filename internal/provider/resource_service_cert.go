@@ -143,7 +143,7 @@ func (r *serviceCertResource) Configure(ctx context.Context, req resource.Config
 	r.client = client
 }
 
-// Finds the preferred outbound IP for the target
+// Finds the preferred outbound IP for the target.
 func getOutboundIP(targetHost string) (net.IP, error) {
 	// Add default port if none is present (required for Dial)
 	address := targetHost
@@ -158,7 +158,10 @@ func getOutboundIP(targetHost string) (net.IP, error) {
 	}
 	defer conn.Close()
 
-	localAddr := conn.LocalAddr().(*net.UDPAddr)
+	localAddr, ok := conn.LocalAddr().(*net.UDPAddr)
+	if !ok {
+		return nil, fmt.Errorf("failed to cast local address to UDPAddr")
+	}
 	return localAddr.IP, nil
 }
 
@@ -189,21 +192,29 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 			resp.Diagnostics.AddError("Failed to start temp server", err.Error())
 			return
 		}
-		port := listener.Addr().(*net.TCPAddr).Port
+		tcpAddr, ok := listener.Addr().(*net.TCPAddr)
+		if !ok {
+			resp.Diagnostics.AddError("Networking Error", "Failed to cast listener address to TCPAddr")
+			return
+		}
+		port := tcpAddr.Port
 
 		// 3. Define HTTP handler
 		// We serve the file under a random path or simply root
 		mux := http.NewServeMux()
 		mux.HandleFunc("/cert.pfx", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/x-pkcs12")
-			w.Write(certBytes)
+			_, _ = w.Write(certBytes) // Ignore error writing to response
 		})
 
 		server := &http.Server{Handler: mux}
 
 		// Start server in goroutine
 		go func() {
-			server.Serve(listener)
+			if err := server.Serve(listener); err != nil && err != http.ErrServerClosed {
+				// Log error if needed, but we can't do much here as it's async
+				fmt.Printf("Temp server error: %v\n", err)
+			}
 		}()
 		// IMPORTANT: Kill server at the end
 		defer server.Close()

@@ -115,13 +115,7 @@ func (r *certTrustListResource) Create(ctx context.Context, req resource.CreateR
 	// Since it's Optional+Computed, if it's null, we might send false or omit it?
 	// The struct has `bool`, so it defaults to false.
 	// Let's check if it's unknown.
-	if plan.Enabled.IsUnknown() {
-		// If unknown, we can't really send a value unless we have a default.
-		// But the API might require it. The spec says "enabled" is in the body.
-		// Let's assume false if not provided, or maybe true?
-		// For now, we use ValueBool() which is false if null/unknown.
-		// But wait, if it's unknown, ValueBool is false.
-	}
+	// If enabled is not set in config, it defaults to false via ValueBool()
 
 	cert, err := r.client.CreateCertTrustList(ctx, certCreate)
 	if err != nil {
