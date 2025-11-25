@@ -3,26 +3,25 @@
 page_title: "clearpass_role_mapping Resource - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Manages a Role Mapping Policy.
+  Manages a Role Mapping Policy. Role mappings are used to assign roles to users or devices based on attributes such as authentication method, device type, or location.
 ---
 
 # clearpass_role_mapping (Resource)
 
-Manages a Role Mapping Policy.
+Manages a Role Mapping Policy. Role mappings are used to assign roles to users or devices based on attributes such as authentication method, device type, or location.
 
 ## Example Usage
 
 ```terraform
-# Role mapping policy with first-applicable algorithm
-resource "clearpass_role_mapping" "device_mapping" {
-  name               = "Device-Based Role Mapping"
-  description        = "Assigns roles based on device type and location"
-  default_role_name  = "Guest"
-  rule_combine_algo  = "first-applicable"
+resource "clearpass_role_mapping" "device_based" {
+  name              = "Device-Based Role Assignment"
+  description       = "Assign roles based on device type"
+  default_role_name = "Guest"
+  rule_combine_algo = "first-applicable"
 
   rules = [
     {
-      match_type = "AND"
+      match_type = "OR"
       role_name  = "[Employee]"
       condition = [
         {
@@ -30,24 +29,6 @@ resource "clearpass_role_mapping" "device_mapping" {
           name  = "SSID"
           oper  = "EQUALS"
           value = "Corporate-WiFi"
-        },
-        {
-          type  = "Authentication"
-          name  = "Source"
-          oper  = "EQUALS"
-          value = "ActiveDirectory"
-        }
-      ]
-    },
-    {
-      match_type = "OR"
-      role_name  = "Guest"
-      condition = [
-        {
-          type  = "Connection"
-          name  = "SSID"
-          oper  = "EQUALS"
-          value = "Guest-WiFi"
         }
       ]
     }
@@ -60,14 +41,14 @@ resource "clearpass_role_mapping" "device_mapping" {
 
 ### Required
 
-- `default_role_name` (String) Role mapping default role name (e.g., '[Guest]').
-- `name` (String) Role mapping policy name.
-- `rule_combine_algo` (String) Rules evaluation algorithm ('first-applicable' or 'evaluate-all').
-- `rules` (Attributes List) List of role mapping rules. (see [below for nested schema](#nestedatt--rules))
+- `default_role_name` (String) The default role to assign if no rules match (e.g., '[Guest]').
+- `name` (String) The name of the role mapping policy.
+- `rule_combine_algo` (String) The algorithm used to evaluate rules. 'first-applicable' stops at the first match, while 'evaluate-all' checks all rules.
+- `rules` (Attributes List) A list of rules that define how roles are assigned. (see [below for nested schema](#nestedatt--rules))
 
 ### Optional
 
-- `description` (String) Role mapping description.
+- `description` (String) Description of the role mapping policy.
 
 ### Read-Only
 
@@ -78,8 +59,8 @@ resource "clearpass_role_mapping" "device_mapping" {
 
 Required:
 
-- `condition` (Attributes List) List of conditions for this rule. (see [below for nested schema](#nestedatt--rules--condition))
-- `match_type` (String) Matches ANY ('OR') or ALL ('ALL') of the conditions.
+- `condition` (Attributes List) A list of conditions that must be met for this rule to apply. (see [below for nested schema](#nestedatt--rules--condition))
+- `match_type` (String) Specifies whether to match ANY ('OR') or ALL ('AND') of the conditions.
 - `role_name` (String) The role to assign if the conditions match.
 
 <a id="nestedatt--rules--condition"></a>
@@ -87,10 +68,10 @@ Required:
 
 Required:
 
-- `name` (String) Condition name (e.g., 'Status', 'SSID').
-- `oper` (String) Condition operator (e.g., 'EQUALS', 'NOT_EQUALS').
-- `type` (String) Condition type (e.g., 'Authentication', 'Connection').
-- `value` (String) Condition value to match.
+- `name` (String) The name of the attribute to check (e.g., 'Status', 'SSID').
+- `oper` (String) The operator used for comparison (e.g., 'EQUALS', 'NOT_EQUALS', 'CONTAINS').
+- `type` (String) The type of attribute to check (e.g., 'Authentication', 'Connection', 'Radius:IETF').
+- `value` (String) The value to compare against.
 
 ## Import
 
@@ -99,6 +80,6 @@ Import is supported using the following syntax:
 The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
-# Role mapping can be imported by ID
-terraform import clearpass_role_mapping.device_mapping 789
+# Role Mapping can be imported by ID
+terraform import clearpass_role_mapping.device_based 789
 ```

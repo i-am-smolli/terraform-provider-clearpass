@@ -405,3 +405,44 @@ type ServiceRule struct {
 	Operator string `json:"operator"` // "EQUALS"
 	Value    string `json:"value"`    // "15"
 }
+
+// --- Service Certificate Models ---
+
+type ServiceCertCreate struct {
+	CertificateURL   string `json:"certificate_url,omitempty"`
+	PKCS12FileURL    string `json:"pkcs12_file_url,omitempty"`
+	PKCS12Passphrase string `json:"pkcs12_passphrase,omitempty"`
+}
+
+type ServiceCertResult struct {
+	ID                 int         `json:"id"`
+	Subject            string      `json:"subject"`
+	ExpiryDate         string      `json:"expiry_date"`
+	IssueDate          string      `json:"issue_date"`
+	IssueBy            string      `json:"issue_by"`
+	Validity           string      `json:"validity"`
+	RootCACert         interface{} `json:"root_ca_cert"`         // Object in spec, keeping generic
+	IntermediateCACert interface{} `json:"intermediate_ca_cert"` // Object in spec, keeping generic
+	CertFile           string      `json:"cert_file"`
+}
+
+// --- CertTrustList Models ---
+
+type CertTrustList struct {
+	ID        int      `json:"id"`
+	CertFile  string   `json:"cert_file"`
+	Enabled   bool     `json:"enabled"`
+	CertUsage []string `json:"cert_usage"`
+}
+
+type CertTrustListCreate struct {
+	CertFile  string   `json:"cert_file"`
+	Enabled   bool     `json:"enabled"`
+	CertUsage []string `json:"cert_usage"`
+}
+
+type CertTrustListUpdate struct {
+	CertFile  string   `json:"cert_file,omitempty"`
+	Enabled   bool     `json:"enabled,omitempty"`
+	CertUsage []string `json:"cert_usage,omitempty"`
+}

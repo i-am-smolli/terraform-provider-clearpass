@@ -84,7 +84,7 @@ func (r *serviceResource) Metadata(ctx context.Context, req resource.MetadataReq
 
 func (r *serviceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manages a ClearPass Service.",
+		Description: "Manages a ClearPass Service. Services are the core of ClearPass policy enforcement, processing requests based on their type and attributes.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				Description:   "Numeric ID of the service.",
@@ -92,60 +92,60 @@ func (r *serviceResource) Schema(ctx context.Context, req resource.SchemaRequest
 				PlanModifiers: []planmodifier.Int64{int64planmodifier.UseStateForUnknown()},
 			},
 			"name": schema.StringAttribute{
-				Description: "Name of the Service.",
+				Description: "The name of the service.",
 				Required:    true,
 			},
 			"template": schema.StringAttribute{
-				Description: "Service Template (e.g. '802.1X Wireless').",
+				Description: "The template used to create the service (e.g., '802.1X Wireless', 'Guest Access').",
 				Required:    true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"type": schema.StringAttribute{
-				Description:   "Service Type (e.g. 'RADIUS', 'TACACS').",
+				Description:   "The type of service (e.g., 'RADIUS', 'TACACS').",
 				Optional:      false,
 				Computed:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"description": schema.StringAttribute{
-				Description:   "Description of the Service.",
+				Description:   "Description of the service.",
 				Optional:      true,
 				Computed:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"enabled": schema.BoolAttribute{
-				Description:   "Is Service enabled? Defaults to false.",
+				Description:   "Whether the service is enabled.",
 				Optional:      true,
 				Computed:      true,
 				Default:       booldefault.StaticBool(false),
 				PlanModifiers: []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
 			},
 			"match_type": schema.StringAttribute{
-				Description: "Rules match type ('MATCHES_ALL' or 'MATCHES_ANY'). Defaults to 'MATCHES_ALL'.",
+				Description: "Specifies whether to match ALL or ANY of the service rules.",
 				Optional:    true,
 				Computed:    true,
 				Default:     stringdefault.StaticString("MATCHES_ALL"),
 			},
 			"service_rule": schema.ListNestedAttribute{
-				Description: "List of matching rules for this service.",
+				Description: "A list of rules used to classify requests into this service.",
 				Optional:    true, // Optional, because some Services are "Catch All"
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"type": schema.StringAttribute{
-							Description: "Type of the rule (e.g., 'Radius:IETF').",
+							Description: "The type of attribute to check (e.g., 'Radius:IETF', 'Connection').",
 							Required:    true,
 						},
 						"name": schema.StringAttribute{
-							Description: "Name of the rule attribute (e.g., 'NAS-Port-Type').",
+							Description: "The name of the attribute to check (e.g., 'NAS-Port-Type').",
 							Required:    true,
 						},
 						"operator": schema.StringAttribute{
-							Description: "Operator (e.g., 'EQUALS', 'NOT_EQUALS').",
+							Description: "The operator used for comparison (e.g., 'EQUALS', 'NOT_EQUALS').",
 							Required:    true,
 						},
 						"value": schema.StringAttribute{
-							Description: "Value to match.",
+							Description: "The value to compare against.",
 							Required:    true,
 						},
 					},
@@ -159,21 +159,21 @@ func (r *serviceResource) Schema(ctx context.Context, req resource.SchemaRequest
 				PlanModifiers: []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
 			},
 			"auth_methods": schema.ListAttribute{
-				Description: "List of Authentication Methods.",
+				Description: "A list of authentication methods allowed for this service.",
 				Optional:    true,
 				ElementType: types.StringType,
 			},
 			"auth_sources": schema.ListAttribute{
-				Description: "List of Authentication Sources.",
+				Description: "A list of authentication sources used to verify user credentials.",
 				Optional:    true,
 				ElementType: types.StringType,
 			},
 			"role_mapping_policy": schema.StringAttribute{
-				Description: "Name of the Role Mapping Policy.",
+				Description: "The name of the role mapping policy associated with this service.",
 				Optional:    true,
 			},
 			"enforcement_policy": schema.StringAttribute{ // Maps to 'enf_policy' in API
-				Description: "Name of the Enforcement Policy.",
+				Description: "The name of the enforcement policy associated with this service.",
 				Required:    true, // Most services need an enforcement policy
 			},
 			"default_posture_token": schema.StringAttribute{

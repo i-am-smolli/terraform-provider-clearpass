@@ -3,66 +3,39 @@
 page_title: "clearpass_enforcement_profile Resource - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Manages an Enforcement Profile.
+  Manages an Enforcement Profile. Enforcement profiles define the actions to be taken when a policy rule is matched, such as returning RADIUS attributes or redirecting a user.
 ---
 
 # clearpass_enforcement_profile (Resource)
 
-Manages an Enforcement Profile.
+Manages an Enforcement Profile. Enforcement profiles define the actions to be taken when a policy rule is matched, such as returning RADIUS attributes or redirecting a user.
 
 ## Example Usage
 
 ```terraform
-# RADIUS enforcement profile with custom attributes
-resource "clearpass_enforcement_profile" "employee_access" {
-  name        = "Employee Full Access"
-  description = "Full network access for authenticated employees"
+resource "clearpass_enforcement_profile" "radius_profile" {
+  name        = "TF RADIUS Profile"
+  description = "Created via Terraform"
   type        = "RADIUS"
   action      = "Accept"
 
   attributes = [
     {
       type  = "Radius:IETF"
-      name  = "Filter-Id"
-      value = "employee-acl"
+      name  = "Tunnel-Type"
+      value = "VLAN (13)"
     },
     {
       type  = "Radius:IETF"
-      name  = "Session-Timeout"
-      value = "28800"  # 8 hours
-    }
-  ]
-}
-
-# Guest enforcement profile with restricted access
-resource "clearpass_enforcement_profile" "guest_limited" {
-  name        = "Guest Internet Only"
-  description = "Limited access for guest users - Internet only"
-  type        = "RADIUS"
-  action      = "Accept"
-
-  device_group_list = ["Guest-Devices", "BYOD"]
-
-  attributes = [
-    {
-      type  = "Radius:IETF"
-      name  = "Filter-Id"
-      value = "guest-internet-only"
+      name  = "Tunnel-Medium-Type"
+      value = "IEEE-802 (6)"
     },
     {
       type  = "Radius:IETF"
-      name  = "Session-Timeout"
-      value = "3600"  # 1 hour
-    }
+      name  = "Tunnel-Private-Group-Id"
+      value = "450"
+    },
   ]
-}
-
-# Agent-based enforcement profile
-resource "clearpass_enforcement_profile" "posture_check" {
-  name           = "Endpoint Posture Check"
-  description    = "OnGuard agent-based posture assessment"
-  type           = "Agent"
-  agent_template = "Agent"
 }
 ```
 
@@ -71,18 +44,18 @@ resource "clearpass_enforcement_profile" "posture_check" {
 
 ### Required
 
-- `name` (String) Name of the profile.
-- `type` (String) Type (e.g. RADIUS, TACACS, Agent).
+- `name` (String) The name of the enforcement profile.
+- `type` (String) The type of enforcement profile (e.g., 'RADIUS', 'TACACS', 'Agent').
 
 ### Optional
 
-- `action` (String) Action (Accept, Reject, Drop). Mostly used for RADIUS.
-- `agent_template` (String) Agent Enforcement Profile Template (Agent, AgentScript).
-- `attributes` (Attributes List) List of attributes (Dictionary/Name/Value pairs). (see [below for nested schema](#nestedatt--attributes))
-- `description` (String) Description of the profile.
-- `device_group_list` (List of String) Device Group List.
-- `post_auth_template` (String) Post Authentication Enforcement Profile Template (EntityUpdate, SessionRestriction, SessionNotify).
-- `radius_dyn_authz_template` (String) RADIUS Dynamic Authorization Template.
+- `action` (String) The action to take (e.g., 'Accept', 'Reject', 'Drop'). Primarily used for RADIUS profiles.
+- `agent_template` (String) Template for Agent enforcement profiles (e.g., 'Agent', 'AgentScript').
+- `attributes` (Attributes List) A list of attributes to return or apply. (see [below for nested schema](#nestedatt--attributes))
+- `description` (String) Description of the enforcement profile.
+- `device_group_list` (List of String) A list of device groups associated with this profile.
+- `post_auth_template` (String) Template for Post-Authentication enforcement profiles (e.g., 'EntityUpdate', 'SessionRestriction').
+- `radius_dyn_authz_template` (String) Template for RADIUS Dynamic Authorization.
 
 ### Read-Only
 
@@ -93,9 +66,9 @@ resource "clearpass_enforcement_profile" "posture_check" {
 
 Required:
 
-- `name` (String) Name of attribute (e.g. 'Filter-Id').
-- `type` (String) Type of attribute (e.g. 'Radius:IETF').
-- `value` (String) Value of attribute.
+- `name` (String) The name of the attribute (e.g., 'Filter-Id', 'Tunnel-Type').
+- `type` (String) The type of attribute (e.g., 'Radius:IETF', 'Radius:Cisco').
+- `value` (String) The value of the attribute.
 
 ## Import
 
@@ -104,6 +77,6 @@ Import is supported using the following syntax:
 The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
-# Enforcement profile can be imported by ID
-terraform import clearpass_enforcement_profile.employee_access 101
+# Enforcement Profile can be imported by ID
+terraform import clearpass_enforcement_profile.radius_profile 101
 ```

@@ -3,50 +3,26 @@
 page_title: "clearpass_service Resource - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Manages a ClearPass Service.
+  Manages a ClearPass Service. Services are the core of ClearPass policy enforcement, processing requests based on their type and attributes.
 ---
 
 # clearpass_service (Resource)
 
-Manages a ClearPass Service.
+Manages a ClearPass Service. Services are the core of ClearPass policy enforcement, processing requests based on their type and attributes.
 
 ## Example Usage
 
 ```terraform
-# 802.1X service for wired and wireless authentication
-resource "clearpass_service" "dot1x_service" {
-  name         = "802.1X Authentication"
-  description  = "Standard 802.1X authentication service for wired and wireless networks"
+resource "clearpass_service" "dot1x" {
+  name         = "802.1X Wireless Authentication"
+  description  = "Enterprise wireless authentication"
   enabled      = true
   service_type = "802.1X"
-
-  monitor_mode    = false
-  audit_enabled   = true
-  profiler_enabled = true
-}
-
-# MAC Authentication Bypass (MAB) service
-resource "clearpass_service" "mab_service" {
-  name         = "MAC Authentication"
-  description  = "MAC Authentication Bypass for devices without 802.1X support"
-  enabled      = true
-  service_type = "MAB"
+  template     = "802.1X Wireless"
 
   monitor_mode     = false
-  audit_enabled    = false
+  audit_enabled    = true
   profiler_enabled = true
-}
-
-# Guest portal service with posture assessment
-resource "clearpass_service" "guest_portal" {
-  name         = "Guest Self-Registration"
-  description  = "Self-service guest registration portal with device posture checks"
-  enabled      = true
-  service_type = "Guest"
-
-  posture_enabled = true
-  audit_enabled   = true
-  profiler_enabled = false
 }
 ```
 
@@ -55,9 +31,9 @@ resource "clearpass_service" "guest_portal" {
 
 ### Required
 
-- `enforcement_policy` (String) Name of the Enforcement Policy.
-- `name` (String) Name of the Service.
-- `template` (String) Service Template (e.g. '802.1X Wireless').
+- `enforcement_policy` (String) The name of the enforcement policy associated with this service.
+- `name` (String) The name of the service.
+- `template` (String) The template used to create the service (e.g., '802.1X Wireless', 'Guest Access').
 
 ### Optional
 
@@ -69,13 +45,13 @@ resource "clearpass_service" "guest_portal" {
 - `audit_mac_auth_client_type` (String) Client Type For MAC authentication request Audit Trigger Condition (KNOWN, UNKNOWN, BOTH).
 - `audit_server` (String) Audit Server Name.
 - `audit_trigger_condition` (String) Audit Trigger Conditions (ALWAYS, NO_POSTURE, MAC_AUTH).
-- `auth_methods` (List of String) List of Authentication Methods.
-- `auth_sources` (List of String) List of Authentication Sources.
+- `auth_methods` (List of String) A list of authentication methods allowed for this service.
+- `auth_sources` (List of String) A list of authentication sources used to verify user credentials.
 - `authz_sources` (List of String) List of Additional authorization sources.
 - `default_posture_token` (String) Default Posture Token.
-- `description` (String) Description of the Service.
-- `enabled` (Boolean) Is Service enabled? Defaults to false.
-- `match_type` (String) Rules match type ('MATCHES_ALL' or 'MATCHES_ANY'). Defaults to 'MATCHES_ALL'.
+- `description` (String) Description of the service.
+- `enabled` (Boolean) Whether the service is enabled.
+- `match_type` (String) Specifies whether to match ALL or ANY of the service rules.
 - `monitor_mode` (Boolean) Enable to monitor network access without enforcement.
 - `posture_enabled` (Boolean) Enable Posture Compliance.
 - `posture_policies` (List of String) List of Posture Policies.
@@ -87,9 +63,9 @@ resource "clearpass_service" "guest_portal" {
 - `radius_proxy_targets` (List of String) List of Proxy Targets for RADIUS Proxy Service Type.
 - `remediate_end_hosts` (Boolean) Enable auto-remediation of non-compliant end-hosts.
 - `remediation_url` (String) Remediation URL.
-- `role_mapping_policy` (String) Name of the Role Mapping Policy.
+- `role_mapping_policy` (String) The name of the role mapping policy associated with this service.
 - `service_cert_cn` (String) Subject DN of Service Certificate.
-- `service_rule` (Attributes List) List of matching rules for this service. (see [below for nested schema](#nestedatt--service_rule))
+- `service_rule` (Attributes List) A list of rules used to classify requests into this service. (see [below for nested schema](#nestedatt--service_rule))
 - `strip_username` (Boolean) Strip Username
 - `strip_username_csv` (String) Strip Username Rule (comma-separated).
 - `use_cached_policy_results` (Boolean) Enable to use cached Roles and Posture attributes from previous sessions.
@@ -97,17 +73,17 @@ resource "clearpass_service" "guest_portal" {
 ### Read-Only
 
 - `id` (Number) Numeric ID of the service.
-- `type` (String) Service Type (e.g. 'RADIUS', 'TACACS').
+- `type` (String) The type of service (e.g., 'RADIUS', 'TACACS').
 
 <a id="nestedatt--service_rule"></a>
 ### Nested Schema for `service_rule`
 
 Required:
 
-- `name` (String) Name of the rule attribute (e.g., 'NAS-Port-Type').
-- `operator` (String) Operator (e.g., 'EQUALS', 'NOT_EQUALS').
-- `type` (String) Type of the rule (e.g., 'Radius:IETF').
-- `value` (String) Value to match.
+- `name` (String) The name of the attribute to check (e.g., 'NAS-Port-Type').
+- `operator` (String) The operator used for comparison (e.g., 'EQUALS', 'NOT_EQUALS').
+- `type` (String) The type of attribute to check (e.g., 'Radius:IETF', 'Connection').
+- `value` (String) The value to compare against.
 
 ## Import
 
@@ -117,5 +93,5 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 
 ```shell
 # Service can be imported by ID
-terraform import clearpass_service.dot1x_service 303
+terraform import clearpass_service.dot1x 303
 ```

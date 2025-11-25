@@ -60,7 +60,7 @@ func (r *enforcementPolicyResource) Metadata(ctx context.Context, req resource.M
 
 func (r *enforcementPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manages an Enforcement Policy.",
+		Description: "Manages an Enforcement Policy. Enforcement policies determine which enforcement profile to apply based on the conditions met by the request.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				Description:   "Numeric ID of the policy.",
@@ -68,39 +68,39 @@ func (r *enforcementPolicyResource) Schema(ctx context.Context, req resource.Sch
 				PlanModifiers: []planmodifier.Int64{int64planmodifier.UseStateForUnknown()},
 			},
 			"name": schema.StringAttribute{
-				Description: "Name of the policy.",
+				Description: "The name of the enforcement policy.",
 				Required:    true,
 			},
 			"description": schema.StringAttribute{
-				Description:   "Description of the policy.",
+				Description:   "Description of the enforcement policy.",
 				Optional:      true,
 				Computed:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"enforcement_type": schema.StringAttribute{
-				Description: "Type (RADIUS, TACACS, WEBAUTH, etc.).",
+				Description: "The type of enforcement policy (e.g., 'RADIUS', 'TACACS', 'WEBAUTH').",
 				Required:    true,
 			},
 			"default_enforcement_profile": schema.StringAttribute{
-				Description: "Name of the default profile to apply if no rules match.",
+				Description: "The name of the default enforcement profile to apply if no rules match.",
 				Required:    true,
 			},
 			"rule_eval_algo": schema.StringAttribute{
-				Description: "Algorithm ('first-applicable', 'evaluate-all').",
+				Description: "The algorithm used to evaluate rules. 'first-applicable' stops at the first match, while 'evaluate-all' checks all rules.",
 				Required:    true,
 			},
 			"rules": schema.ListNestedAttribute{
-				Description: "List of enforcement rules.",
+				Description: "A list of rules that define which profiles to apply.",
 				Optional:    true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"enforcement_profile_names": schema.ListAttribute{
-							Description: "List of profile names to apply.",
+							Description: "A list of enforcement profile names to apply if the condition matches.",
 							Required:    true,
 							ElementType: types.StringType,
 						},
 						"condition": schema.ListNestedAttribute{
-							Description: "List of conditions for this rule.",
+							Description: "A list of conditions that must be met for this rule to apply.",
 							Required:    true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

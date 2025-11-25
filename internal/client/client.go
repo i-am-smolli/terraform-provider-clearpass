@@ -49,6 +49,20 @@ type ClientInterface interface {
 	GetService(ctx context.Context, id int) (*ServiceResult, error)
 	UpdateService(ctx context.Context, id int, service *ServiceUpdate) (*ServiceResult, error)
 	DeleteService(ctx context.Context, id int) error
+
+	// ServiceCert
+	CreateServiceCert(ctx context.Context, cert *ServiceCertCreate) (*ServiceCertResult, error)
+	GetServiceCert(ctx context.Context, id int) (*ServiceCertResult, error)
+	DeleteServiceCert(ctx context.Context, id int) error
+
+	// CertTrustList
+	CreateCertTrustList(ctx context.Context, cert *CertTrustListCreate) (*CertTrustList, error)
+	GetCertTrustList(ctx context.Context, id int) (*CertTrustList, error)
+	UpdateCertTrustList(ctx context.Context, id int, cert *CertTrustListUpdate) (*CertTrustList, error)
+	DeleteCertTrustList(ctx context.Context, id int) error
+
+	// Helper
+	GetHost() string
 }
 
 // apiClient is the concrete implementation of our ClientInterface.
@@ -76,6 +90,10 @@ func NewClient(host, token string, insecure bool) ClientInterface {
 			Timeout:   10 * time.Second, // Always set a timeout!
 		},
 	}
+}
+
+func (c *apiClient) GetHost() string {
+	return c.host
 }
 
 // --- API Methods ---
@@ -585,6 +603,117 @@ func (c *apiClient) UpdateService(ctx context.Context, id int, service *ServiceU
 
 func (c *apiClient) DeleteService(ctx context.Context, id int) error {
 	path := fmt.Sprintf("/api/config/service/%d", id)
+	req, err := c.newRequest(ctx, "DELETE", path, nil)
+	if err != nil {
+		return err
+	}
+	return c.do(req, nil)
+}
+
+// --- ServiceCert API Methods ---
+
+func (c *apiClient) CreateServiceCert(ctx context.Context, cert *ServiceCertCreate) (*ServiceCertResult, error) {
+	payloadBytes, err := json.Marshal(cert)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal CreateServiceCert: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "POST", "/api/service-cert", bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result ServiceCertResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetServiceCert(ctx context.Context, id int) (*ServiceCertResult, error) {
+	path := fmt.Sprintf("/api/service-cert/%d", id)
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result ServiceCertResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) DeleteServiceCert(ctx context.Context, id int) error {
+	path := fmt.Sprintf("/api/service-cert/%d", id)
+	req, err := c.newRequest(ctx, "DELETE", path, nil)
+	if err != nil {
+		return err
+	}
+	return c.do(req, nil)
+}
+
+// --- CertTrustList API Methods ---
+
+func (c *apiClient) CreateCertTrustList(ctx context.Context, cert *CertTrustListCreate) (*CertTrustList, error) {
+	payloadBytes, err := json.Marshal(cert)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal CreateCertTrustList: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "POST", "/api/cert-trust-list", bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result CertTrustList
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetCertTrustList(ctx context.Context, id int) (*CertTrustList, error) {
+	path := fmt.Sprintf("/api/cert-trust-list/%d", id)
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result CertTrustList
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) UpdateCertTrustList(ctx context.Context, id int, cert *CertTrustListUpdate) (*CertTrustList, error) {
+	path := fmt.Sprintf("/api/cert-trust-list/%d", id)
+	payloadBytes, err := json.Marshal(cert)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal UpdateCertTrustList: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "PATCH", path, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result CertTrustList
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) DeleteCertTrustList(ctx context.Context, id int) error {
+	path := fmt.Sprintf("/api/cert-trust-list/%d", id)
 	req, err := c.newRequest(ctx, "DELETE", path, nil)
 	if err != nil {
 		return err

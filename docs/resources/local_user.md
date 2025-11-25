@@ -3,36 +3,27 @@
 page_title: "clearpass_local_user Resource - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Manages a local user in ClearPass.
+  Manages a local user in ClearPass. Local users are authenticated directly against the ClearPass internal database. They are often used for guest access, testing, or administrative accounts.
 ---
 
 # clearpass_local_user (Resource)
 
-Manages a local user in ClearPass.
+Manages a local user in ClearPass. Local users are authenticated directly against the ClearPass internal database. They are often used for guest access, testing, or administrative accounts.
 
 ## Example Usage
 
 ```terraform
-# Local user with basic authentication
 resource "clearpass_local_user" "john_doe" {
-  user_id  = "jdoe"
-  password = "SecurePassword123!"
-  enabled  = true
+  user_id   = "jdoe"
+  username  = "John Doe"
+  password  = "SecretPassword123!"
+  role_name = "[Employee]"
+  enabled   = true
 
-  username    = "John Doe"
-  role_name   = "Employee"
-  email       = "john.doe@example.com"
-  description = "Employee account for John Doe - IT Department"
-}
-
-# Guest user with expiration
-resource "clearpass_local_user" "guest_visitor" {
-  user_id  = "guest001"
-  password = "GuestPass2024"
-  enabled  = true
-
-  username  = "Guest Visitor"
-  role_name = "Guest"
+  attributes = {
+    "Department" = "Engineering"
+    "Location"   = "HQ"
+  }
 }
 ```
 
@@ -41,10 +32,10 @@ resource "clearpass_local_user" "guest_visitor" {
 
 ### Required
 
-- `password` (String, Sensitive) The user's password.
-- `role_name` (String) The name of the role to assign to the user (e.g., '[Employee]').
-- `user_id` (String) The unique user ID (e.g., 'tf-test-user').
-- `username` (String) The username (often the same as user_id).
+- `password` (String, Sensitive) The password for the local user account. This field is write-only and will not be returned in the state.
+- `role_name` (String) The name of the role assigned to the user. This determines the user's permissions.
+- `user_id` (String) The unique identifier for the user. This is typically the same as the username but can be distinct.
+- `username` (String) The username used for authentication.
 
 ### Optional
 
@@ -65,6 +56,6 @@ Import is supported using the following syntax:
 The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
-# Local user can be imported by ID
+# Local User can be imported by ID
 terraform import clearpass_local_user.john_doe 456
 ```

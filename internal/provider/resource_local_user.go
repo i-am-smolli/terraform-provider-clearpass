@@ -54,7 +54,8 @@ func (r *localUserResource) Metadata(ctx context.Context, req resource.MetadataR
 // Schema defines the HCL attributes for the resource.
 func (r *localUserResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manages a local user in ClearPass.",
+		Description: "Manages a local user in ClearPass. Local users are authenticated directly against the ClearPass internal database. " +
+			"They are often used for guest access, testing, or administrative accounts.",
 
 		Attributes: map[string]schema.Attribute{
 			// We use 'user_id' as the main ID for this resource.
@@ -67,20 +68,20 @@ func (r *localUserResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"user_id": schema.StringAttribute{
-				Description: "The unique user ID (e.g., 'tf-test-user').",
+				Description: "The unique identifier for the user. This is typically the same as the username but can be distinct.",
 				Required:    true,
 			},
 			"username": schema.StringAttribute{
-				Description: "The username (often the same as user_id).",
+				Description: "The username used for authentication.",
 				Required:    true,
 			},
 			"password": schema.StringAttribute{
-				Description: "The user's password.",
+				Description: "The password for the local user account. This field is write-only and will not be returned in the state.",
 				Required:    true,
 				Sensitive:   true, // Marks this as sensitive in TF state/logs
 			},
 			"role_name": schema.StringAttribute{
-				Description: "The name of the role to assign to the user (e.g., '[Employee]').",
+				Description: "The name of the role assigned to the user. This determines the user's permissions.",
 				Required:    true,
 			},
 			"enabled": schema.BoolAttribute{
