@@ -60,6 +60,9 @@ type ClientInterface interface {
 	GetCertTrustList(ctx context.Context, id int) (*CertTrustList, error)
 	UpdateCertTrustList(ctx context.Context, id int, cert *CertTrustListUpdate) (*CertTrustList, error)
 	DeleteCertTrustList(ctx context.Context, id int) error
+
+	// Helper
+	GetHost() string
 }
 
 // apiClient is the concrete implementation of our ClientInterface.
@@ -87,6 +90,10 @@ func NewClient(host, token string, insecure bool) ClientInterface {
 			Timeout:   10 * time.Second, // Always set a timeout!
 		},
 	}
+}
+
+func (c *apiClient) GetHost() string {
+	return c.host
 }
 
 // --- API Methods ---

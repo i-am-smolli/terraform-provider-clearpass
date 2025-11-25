@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"terraform-provider-clearpass/internal/client"
 
@@ -70,7 +71,7 @@ func (r *serviceCertResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"pkcs12_file_url": schema.StringAttribute{
-				Description: "The URL to the PKCS12 file to be uploaded.",
+				Description: "The URL to the PKCS12 file to be uploaded. Mutually exclusive with `pkcs12_file_base64`.",
 				Optional:    true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -80,7 +81,7 @@ func (r *serviceCertResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"pkcs12_file_base64": schema.StringAttribute{
-				Description: "Base64 encoded content of the PFX file. Use filebase64() in HCL.",
+				Description: "Base64 encoded content of the PFX file. Use filebase64() in HCL. When used, the provider spawns a temporary local HTTP server to serve the file to ClearPass. Mutually exclusive with `pkcs12_file_url`.",
 				Optional:    true,
 				Sensitive:   true,
 				PlanModifiers: []planmodifier.String{
@@ -142,11 +143,16 @@ func (r *serviceCertResource) Configure(ctx context.Context, req resource.Config
 	r.client = client
 }
 
-// Findet die bevorzugte ausgehende IP
-func getOutboundIP() (net.IP, error) {
-	// Dieser Call baut keine echte Verbindung auf, er fragt nur das Routing-System,
-	// welches Interface für diese Ziel-IP genutzt würde.
-	conn, err := net.Dial("udp", "8.8.8.8:80")
+// Finds the preferred outbound IP for the target
+func getOutboundIP(targetHost string) (net.IP, error) {
+	// Add default port if none is present (required for Dial)
+	address := targetHost
+	if _, _, err := net.SplitHostPort(address); err != nil {
+		address = net.JoinHostPort(address, "443")
+	}
+
+	// This call does not establish a real connection, it only queries the routing system
+	conn, err := net.Dial("udp", address)
 	if err != nil {
 		return nil, err
 	}
@@ -165,19 +171,19 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 
 	finalUrl := plan.PKCS12FileURL.ValueString()
 
-	// Logik: Wenn URL leer ist, aber Base64 Content da ist -> Server starten
+	// Logic: If URL is empty, but Base64 content is present -> start server
 	if finalUrl == "" && !plan.PKCS12FileBase64.IsNull() {
 
-		// 1. Base64 Content holen
+		// 1. Get Base64 content
 		b64Content := plan.PKCS12FileBase64.ValueString()
-		// Dekodieren, um sicherzugehen, dass es saubere Bytes sind (optional, aber gut für Content-Length)
+		// Decode to ensure clean bytes (optional, but good for Content-Length)
 		certBytes, err := base64.StdEncoding.DecodeString(b64Content)
 		if err != nil {
 			resp.Diagnostics.AddError("Base64 Decode Error", err.Error())
 			return
 		}
 
-		// 2. Temporären Listener auf Port 0 (Zufall) starten
+		// 2. Start temporary listener on port 0 (random)
 		listener, err := net.Listen("tcp", ":0")
 		if err != nil {
 			resp.Diagnostics.AddError("Failed to start temp server", err.Error())
@@ -185,8 +191,8 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 		}
 		port := listener.Addr().(*net.TCPAddr).Port
 
-		// 3. HTTP Handler definieren
-		// Wir servieren das File unter einem zufälligen Pfad oder einfach Root
+		// 3. Define HTTP handler
+		// We serve the file under a random path or simply root
 		mux := http.NewServeMux()
 		mux.HandleFunc("/cert.pfx", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/x-pkcs12")
@@ -195,23 +201,24 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 
 		server := &http.Server{Handler: mux}
 
-		// Server in Goroutine starten
+		// Start server in goroutine
 		go func() {
 			server.Serve(listener)
 		}()
-		// WICHTIG: Server am Ende killen
+		// IMPORTANT: Kill server at the end
 		defer server.Close()
 
-		// 4. IP ermitteln
-		myIP, err := getOutboundIP()
+		// 4. Determine IP (based on route to ClearPass Host)
+		targetHost := r.client.GetHost()
+		myIP, err := getOutboundIP(targetHost)
 		if err != nil {
 			resp.Diagnostics.AddError("Networking Error", "Could not determine local IP for ClearPass callback. "+err.Error())
 			return
 		}
 
-		// 5. URL bauen (http://<IP>:<PORT>/cert.pfx)
-		// Achtung: Wenn ClearPass HTTPS erzwingt, haben wir ein Problem.
-		// Aber meistens akzeptieren sie HTTP für den Import.
+		// 5. Build URL (http://<IP>:<PORT>/cert.pfx)
+		// Note: If ClearPass enforces HTTPS, we have a problem.
+		// But mostly they accept HTTP for import.
 		finalUrl = fmt.Sprintf("http://%s:%d/cert.pfx", myIP.String(), port)
 	}
 
@@ -228,7 +235,9 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 	}
 
 	plan.ID = types.Int64Value(int64(result.ID))
-	plan.Subject = types.StringValue(result.Subject)
+	// Normalize subject: remove spaces after commas
+	normalizedSubject := strings.ReplaceAll(result.Subject, ", ", ",")
+	plan.Subject = types.StringValue(normalizedSubject)
 	plan.ExpiryDate = types.StringValue(result.ExpiryDate)
 	plan.IssueDate = types.StringValue(result.IssueDate)
 	plan.IssueBy = types.StringValue(result.IssueBy)
@@ -258,7 +267,9 @@ func (r *serviceCertResource) Read(ctx context.Context, req resource.ReadRequest
 	}
 
 	state.ID = types.Int64Value(int64(result.ID))
-	state.Subject = types.StringValue(result.Subject)
+	// Normalize subject: remove spaces after commas
+	normalizedSubject := strings.ReplaceAll(result.Subject, ", ", ",")
+	state.Subject = types.StringValue(normalizedSubject)
 	state.ExpiryDate = types.StringValue(result.ExpiryDate)
 	state.IssueDate = types.StringValue(result.IssueDate)
 	state.IssueBy = types.StringValue(result.IssueBy)
