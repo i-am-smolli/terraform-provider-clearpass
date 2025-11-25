@@ -53,7 +53,8 @@ func (r *enforcementProfileResource) Metadata(ctx context.Context, req resource.
 
 func (r *enforcementProfileResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manages an Enforcement Profile.",
+		Description: "Manages an Enforcement Profile. Enforcement profiles define the actions to be taken when a policy rule is matched, " +
+			"such as returning RADIUS attributes or redirecting a user.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				Description:   "Numeric ID of the profile.",
@@ -61,55 +62,55 @@ func (r *enforcementProfileResource) Schema(ctx context.Context, req resource.Sc
 				PlanModifiers: []planmodifier.Int64{int64planmodifier.UseStateForUnknown()},
 			},
 			"name": schema.StringAttribute{
-				Description: "Name of the profile.",
+				Description: "The name of the enforcement profile.",
 				Required:    true,
 			},
 			"description": schema.StringAttribute{
-				Description:   "Description of the profile.",
+				Description:   "Description of the enforcement profile.",
 				Optional:      true,
 				Computed:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"type": schema.StringAttribute{
-				Description: "Type (e.g. RADIUS, TACACS, Agent).",
+				Description: "The type of enforcement profile (e.g., 'RADIUS', 'TACACS', 'Agent').",
 				Required:    true,
 			},
 			"action": schema.StringAttribute{
-				Description: "Action (Accept, Reject, Drop). Mostly used for RADIUS.",
+				Description: "The action to take (e.g., 'Accept', 'Reject', 'Drop'). Primarily used for RADIUS profiles.",
 				Optional:    true,
 			},
 			"device_group_list": schema.ListAttribute{
-				Description: "Device Group List.",
+				Description: "A list of device groups associated with this profile.",
 				Optional:    true,
 				ElementType: types.StringType,
 			},
 			"agent_template": schema.StringAttribute{
-				Description: "Agent Enforcement Profile Template (Agent, AgentScript).",
+				Description: "Template for Agent enforcement profiles (e.g., 'Agent', 'AgentScript').",
 				Optional:    true,
 			},
 			"post_auth_template": schema.StringAttribute{
-				Description: "Post Authentication Enforcement Profile Template (EntityUpdate, SessionRestriction, SessionNotify).",
+				Description: "Template for Post-Authentication enforcement profiles (e.g., 'EntityUpdate', 'SessionRestriction').",
 				Optional:    true,
 			},
 			"radius_dyn_authz_template": schema.StringAttribute{
-				Description: "RADIUS Dynamic Authorization Template.",
+				Description: "Template for RADIUS Dynamic Authorization.",
 				Optional:    true,
 			},
 			"attributes": schema.ListNestedAttribute{
-				Description: "List of attributes (Dictionary/Name/Value pairs).",
+				Description: "A list of attributes to return or apply.",
 				Optional:    true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"type": schema.StringAttribute{
-							Description: "Type of attribute (e.g. 'Radius:IETF').",
+							Description: "The type of attribute (e.g., 'Radius:IETF', 'Radius:Cisco').",
 							Required:    true,
 						},
 						"name": schema.StringAttribute{
-							Description: "Name of attribute (e.g. 'Filter-Id').",
+							Description: "The name of the attribute (e.g., 'Filter-Id', 'Tunnel-Type').",
 							Required:    true,
 						},
 						"value": schema.StringAttribute{
-							Description: "Value of attribute.",
+							Description: "The value of the attribute.",
 							Required:    true,
 						},
 					},

@@ -72,7 +72,8 @@ func (r *roleMappingResource) Metadata(ctx context.Context, req resource.Metadat
 // Schema defines the HCL attributes for the resource.
 func (r *roleMappingResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manages a Role Mapping Policy.",
+		Description: "Manages a Role Mapping Policy. Role mappings are used to assign roles to users or devices based on attributes " +
+			"such as authentication method, device type, or location.",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
@@ -83,11 +84,11 @@ func (r *roleMappingResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"name": schema.StringAttribute{
-				Description: "Role mapping policy name.",
+				Description: "The name of the role mapping policy.",
 				Required:    true,
 			},
 			"description": schema.StringAttribute{
-				Description: "Role mapping description.",
+				Description: "Description of the role mapping policy.",
 				Optional:    true,
 				Computed:    true,
 				PlanModifiers: []planmodifier.String{
@@ -95,15 +96,15 @@ func (r *roleMappingResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"default_role_name": schema.StringAttribute{
-				Description: "Role mapping default role name (e.g., '[Guest]').",
+				Description: "The default role to assign if no rules match (e.g., '[Guest]').",
 				Required:    true,
 			},
 			"rule_combine_algo": schema.StringAttribute{
-				Description: "Rules evaluation algorithm ('first-applicable' or 'evaluate-all').",
+				Description: "The algorithm used to evaluate rules. 'first-applicable' stops at the first match, while 'evaluate-all' checks all rules.",
 				Required:    true,
 			},
 			"rules": schema.ListNestedAttribute{
-				Description: "List of role mapping rules.",
+				Description: "A list of rules that define how roles are assigned.",
 				Required:    true,
 				Validators: []validator.List{
 					validators.SingleRuleMustBeOr(),
@@ -111,7 +112,7 @@ func (r *roleMappingResource) Schema(ctx context.Context, req resource.SchemaReq
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"match_type": schema.StringAttribute{
-							Description: "Matches ANY ('OR') or ALL ('ALL') of the conditions.",
+							Description: "Specifies whether to match ANY ('OR') or ALL ('AND') of the conditions.",
 							Required:    true,
 							PlanModifiers: []planmodifier.String{
 								modifiers.UpperCase(),
@@ -126,24 +127,24 @@ func (r *roleMappingResource) Schema(ctx context.Context, req resource.SchemaReq
 							Required:    true,
 						},
 						"condition": schema.ListNestedAttribute{
-							Description: "List of conditions for this rule.",
+							Description: "A list of conditions that must be met for this rule to apply.",
 							Required:    true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
-										Description: "Condition type (e.g., 'Authentication', 'Connection').",
+										Description: "The type of attribute to check (e.g., 'Authentication', 'Connection', 'Radius:IETF').",
 										Required:    true,
 									},
 									"name": schema.StringAttribute{
-										Description: "Condition name (e.g., 'Status', 'SSID').",
+										Description: "The name of the attribute to check (e.g., 'Status', 'SSID').",
 										Required:    true,
 									},
 									"oper": schema.StringAttribute{
-										Description: "Condition operator (e.g., 'EQUALS', 'NOT_EQUALS').",
+										Description: "The operator used for comparison (e.g., 'EQUALS', 'NOT_EQUALS', 'CONTAINS').",
 										Required:    true,
 									},
 									"value": schema.StringAttribute{
-										Description: "Condition value to match.",
+										Description: "The value to compare against.",
 										Required:    true,
 									},
 								},

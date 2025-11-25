@@ -1,51 +1,24 @@
-# RADIUS enforcement profile with custom attributes
-resource "clearpass_enforcement_profile" "employee_access" {
-  name        = "Employee Full Access"
-  description = "Full network access for authenticated employees"
+resource "clearpass_enforcement_profile" "radius_profile" {
+  name        = "TF RADIUS Profile"
+  description = "Created via Terraform"
   type        = "RADIUS"
   action      = "Accept"
 
   attributes = [
     {
       type  = "Radius:IETF"
-      name  = "Filter-Id"
-      value = "employee-acl"
+      name  = "Tunnel-Type"
+      value = "VLAN (13)"
     },
     {
       type  = "Radius:IETF"
-      name  = "Session-Timeout"
-      value = "28800"  # 8 hours
-    }
-  ]
-}
-
-# Guest enforcement profile with restricted access
-resource "clearpass_enforcement_profile" "guest_limited" {
-  name        = "Guest Internet Only"
-  description = "Limited access for guest users - Internet only"
-  type        = "RADIUS"
-  action      = "Accept"
-
-  device_group_list = ["Guest-Devices", "BYOD"]
-
-  attributes = [
-    {
-      type  = "Radius:IETF"
-      name  = "Filter-Id"
-      value = "guest-internet-only"
+      name  = "Tunnel-Medium-Type"
+      value = "IEEE-802 (6)"
     },
     {
       type  = "Radius:IETF"
-      name  = "Session-Timeout"
-      value = "3600"  # 1 hour
-    }
+      name  = "Tunnel-Private-Group-Id"
+      value = "450"
+    },
   ]
-}
-
-# Agent-based enforcement profile
-resource "clearpass_enforcement_profile" "posture_check" {
-  name           = "Endpoint Posture Check"
-  description    = "OnGuard agent-based posture assessment"
-  type           = "Agent"
-  agent_template = "Agent"
 }

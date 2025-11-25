@@ -1,2 +1,2 @@
-# Local user can be imported by ID
+# Local User can be imported by ID
 terraform import clearpass_local_user.john_doe 456

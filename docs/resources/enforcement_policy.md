@@ -3,55 +3,29 @@
 page_title: "clearpass_enforcement_policy Resource - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Manages an Enforcement Policy.
+  Manages an Enforcement Policy. Enforcement policies determine which enforcement profile to apply based on the conditions met by the request.
 ---
 
 # clearpass_enforcement_policy (Resource)
 
-Manages an Enforcement Policy.
+Manages an Enforcement Policy. Enforcement policies determine which enforcement profile to apply based on the conditions met by the request.
 
 ## Example Usage
 
 ```terraform
-# Enforcement policy linking roles to profiles
-resource "clearpass_enforcement_policy" "employee_policy" {
-  name        = "Employee Access Policy"
-  description = "Grant full access to employees on corporate network"
-  enabled     = true
+resource "clearpass_enforcement_policy" "example" {
+  name                      = "Example Policy"
+  description               = "Policy for example purposes"
+  enforcement_type          = "RADIUS"
+  default_enforcement_profile = "Allow Access Profile"
+  rule_eval_algo            = "first-applicable"
 
   rules = [
     {
-      match_type = "AND"
-      enforcement_profile_names = [
-        "Employee Full Access"
-      ]
+      enforcement_profile_names = ["Deny Access Profile"]
       condition = [
         {
-          type  = "Connection"
-          name  = "SSID"
-          oper  = "EQUALS"
-          value = "Corporate-WiFi"
-        }
-      ]
-    }
-  ]
-}
-
-# Guest enforcement policy
-resource "clearpass_enforcement_policy" "guest_policy" {
-  name        = "Guest Internet Access"
-  description = "Provide internet-only access for guest users"
-  enabled     = true
-
-  rules = [
-    {
-      match_type = "OR"
-      enforcement_profile_names = [
-        "Guest Internet Only"
-      ]
-      condition = [
-        {
-          type  = "UserRole"
+          type  = "Tips"
           name  = "Role"
           oper  = "EQUALS"
           value = "Guest"
@@ -67,15 +41,15 @@ resource "clearpass_enforcement_policy" "guest_policy" {
 
 ### Required
 
-- `default_enforcement_profile` (String) Name of the default profile to apply if no rules match.
-- `enforcement_type` (String) Type (RADIUS, TACACS, WEBAUTH, etc.).
-- `name` (String) Name of the policy.
-- `rule_eval_algo` (String) Algorithm ('first-applicable', 'evaluate-all').
+- `default_enforcement_profile` (String) The name of the default enforcement profile to apply if no rules match.
+- `enforcement_type` (String) The type of enforcement policy (e.g., 'RADIUS', 'TACACS', 'WEBAUTH').
+- `name` (String) The name of the enforcement policy.
+- `rule_eval_algo` (String) The algorithm used to evaluate rules. 'first-applicable' stops at the first match, while 'evaluate-all' checks all rules.
 
 ### Optional
 
-- `description` (String) Description of the policy.
-- `rules` (Attributes List) List of enforcement rules. (see [below for nested schema](#nestedatt--rules))
+- `description` (String) Description of the enforcement policy.
+- `rules` (Attributes List) A list of rules that define which profiles to apply. (see [below for nested schema](#nestedatt--rules))
 
 ### Read-Only
 
@@ -86,8 +60,8 @@ resource "clearpass_enforcement_policy" "guest_policy" {
 
 Required:
 
-- `condition` (Attributes List) List of conditions for this rule. (see [below for nested schema](#nestedatt--rules--condition))
-- `enforcement_profile_names` (List of String) List of profile names to apply.
+- `condition` (Attributes List) A list of conditions that must be met for this rule to apply. (see [below for nested schema](#nestedatt--rules--condition))
+- `enforcement_profile_names` (List of String) A list of enforcement profile names to apply if the condition matches.
 
 <a id="nestedatt--rules--condition"></a>
 ### Nested Schema for `rules.condition`
@@ -106,6 +80,6 @@ Import is supported using the following syntax:
 The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
-# Enforcement policy can be imported by ID
-terraform import clearpass_enforcement_policy.employee_policy 202
+# Enforcement Policy can be imported by ID
+terraform import clearpass_enforcement_policy.example 202
 ```
