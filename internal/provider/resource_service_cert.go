@@ -2,17 +2,22 @@ package provider
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
+	"net"
+	"net/http"
 	"strconv"
 
 	"terraform-provider-clearpass/internal/client"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -32,6 +37,7 @@ type serviceCertResourceModel struct {
 	ID               types.Int64  `tfsdk:"id"`
 	CertificateURL   types.String `tfsdk:"certificate_url"`
 	PKCS12FileURL    types.String `tfsdk:"pkcs12_file_url"`
+	PKCS12FileBase64 types.String `tfsdk:"pkcs12_file_base64"`
 	PKCS12Passphrase types.String `tfsdk:"pkcs12_passphrase"`
 	Subject          types.String `tfsdk:"subject"`
 	ExpiryDate       types.String `tfsdk:"expiry_date"`
@@ -68,6 +74,20 @@ func (r *serviceCertResource) Schema(ctx context.Context, req resource.SchemaReq
 				Optional:    true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
+				},
+				Validators: []validator.String{
+					stringvalidator.ExactlyOneOf(path.MatchRoot("pkcs12_file_base64")),
+				},
+			},
+			"pkcs12_file_base64": schema.StringAttribute{
+				Description: "Base64 encoded content of the PFX file. Use filebase64() in HCL.",
+				Optional:    true,
+				Sensitive:   true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+				Validators: []validator.String{
+					stringvalidator.ExactlyOneOf(path.MatchRoot("pkcs12_file_url")),
 				},
 			},
 			"pkcs12_passphrase": schema.StringAttribute{
@@ -122,6 +142,20 @@ func (r *serviceCertResource) Configure(ctx context.Context, req resource.Config
 	r.client = client
 }
 
+// Findet die bevorzugte ausgehende IP
+func getOutboundIP() (net.IP, error) {
+	// Dieser Call baut keine echte Verbindung auf, er fragt nur das Routing-System,
+	// welches Interface für diese Ziel-IP genutzt würde.
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+	return localAddr.IP, nil
+}
+
 func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan serviceCertResourceModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -129,9 +163,61 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 
+	finalUrl := plan.PKCS12FileURL.ValueString()
+
+	// Logik: Wenn URL leer ist, aber Base64 Content da ist -> Server starten
+	if finalUrl == "" && !plan.PKCS12FileBase64.IsNull() {
+
+		// 1. Base64 Content holen
+		b64Content := plan.PKCS12FileBase64.ValueString()
+		// Dekodieren, um sicherzugehen, dass es saubere Bytes sind (optional, aber gut für Content-Length)
+		certBytes, err := base64.StdEncoding.DecodeString(b64Content)
+		if err != nil {
+			resp.Diagnostics.AddError("Base64 Decode Error", err.Error())
+			return
+		}
+
+		// 2. Temporären Listener auf Port 0 (Zufall) starten
+		listener, err := net.Listen("tcp", ":0")
+		if err != nil {
+			resp.Diagnostics.AddError("Failed to start temp server", err.Error())
+			return
+		}
+		port := listener.Addr().(*net.TCPAddr).Port
+
+		// 3. HTTP Handler definieren
+		// Wir servieren das File unter einem zufälligen Pfad oder einfach Root
+		mux := http.NewServeMux()
+		mux.HandleFunc("/cert.pfx", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/x-pkcs12")
+			w.Write(certBytes)
+		})
+
+		server := &http.Server{Handler: mux}
+
+		// Server in Goroutine starten
+		go func() {
+			server.Serve(listener)
+		}()
+		// WICHTIG: Server am Ende killen
+		defer server.Close()
+
+		// 4. IP ermitteln
+		myIP, err := getOutboundIP()
+		if err != nil {
+			resp.Diagnostics.AddError("Networking Error", "Could not determine local IP for ClearPass callback. "+err.Error())
+			return
+		}
+
+		// 5. URL bauen (http://<IP>:<PORT>/cert.pfx)
+		// Achtung: Wenn ClearPass HTTPS erzwingt, haben wir ein Problem.
+		// Aber meistens akzeptieren sie HTTP für den Import.
+		finalUrl = fmt.Sprintf("http://%s:%d/cert.pfx", myIP.String(), port)
+	}
+
 	apiPayload := &client.ServiceCertCreate{
 		CertificateURL:   plan.CertificateURL.ValueString(),
-		PKCS12FileURL:    plan.PKCS12FileURL.ValueString(),
+		PKCS12FileURL:    finalUrl,
 		PKCS12Passphrase: plan.PKCS12Passphrase.ValueString(),
 	}
 

@@ -425,3 +425,24 @@ type ServiceCertResult struct {
 	IntermediateCACert interface{} `json:"intermediate_ca_cert"` // Object in spec, keeping generic
 	CertFile           string      `json:"cert_file"`
 }
+
+// --- CertTrustList Models ---
+
+type CertTrustList struct {
+	ID        int      `json:"id"`
+	CertFile  string   `json:"cert_file"`
+	Enabled   bool     `json:"enabled"`
+	CertUsage []string `json:"cert_usage"`
+}
+
+type CertTrustListCreate struct {
+	CertFile  string   `json:"cert_file"`
+	Enabled   bool     `json:"enabled"`
+	CertUsage []string `json:"cert_usage"`
+}
+
+type CertTrustListUpdate struct {
+	CertFile  string   `json:"cert_file,omitempty"`
+	Enabled   bool     `json:"enabled,omitempty"`
+	CertUsage []string `json:"cert_usage,omitempty"`
+}

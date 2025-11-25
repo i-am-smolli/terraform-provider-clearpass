@@ -19,7 +19,7 @@ resource "clearpass_local_user" "john_doe" {
   password  = "SecretPassword123!"
   role_name = "[Employee]"
   enabled   = true
-  
+
   attributes = {
     "Department" = "Engineering"
     "Location"   = "HQ"
