@@ -13,10 +13,15 @@ Manages a Service Certificate in ClearPass. Service certificates are used for se
 ## Example Usage
 
 ```terraform
-resource "clearpass_service_cert" "example" {
-  certificate_url   = "https://example.com/cert.pem"
+resource "clearpass_service_cert" "example_url" {
   pkcs12_file_url   = "https://example.com/key.p12"
   pkcs12_passphrase = "secret-passphrase"
+}
+
+# This will spawn a local HTTP server to serve the file to ClearPass.
+resource "clearpass_service_cert" "example_local_file" {
+  pkcs12_file_base64 = filebase64("${path.module}/cert.pfx")
+  pkcs12_passphrase  = "secret-passphrase"
 }
 ```
 
@@ -26,8 +31,8 @@ resource "clearpass_service_cert" "example" {
 ### Optional
 
 - `certificate_url` (String) The URL to the certificate file to be uploaded.
-- `pkcs12_file_base64` (String, Sensitive) Base64 encoded content of the PFX file. Use filebase64() in HCL.
-- `pkcs12_file_url` (String) The URL to the PKCS12 file to be uploaded.
+- `pkcs12_file_base64` (String, Sensitive) Base64 encoded content of the PFX file. Use filebase64() in HCL. When used, the provider spawns a temporary local HTTP server to serve the file to ClearPass. Mutually exclusive with `pkcs12_file_url`.
+- `pkcs12_file_url` (String) The URL to the PKCS12 file to be uploaded. Mutually exclusive with `pkcs12_file_base64`.
 - `pkcs12_passphrase` (String, Sensitive) The passphrase for the PKCS12 file.
 
 ### Read-Only
@@ -48,5 +53,5 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 
 ```shell
 # Service Certificate can be imported by ID
-terraform import clearpass_service_cert.example 404
+terraform import clearpass_service_cert.example 123
 ```

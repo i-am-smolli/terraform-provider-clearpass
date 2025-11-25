@@ -41,7 +41,7 @@ func (r *certTrustListResource) Metadata(ctx context.Context, req resource.Metad
 
 func (r *certTrustListResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manages a Certificate Trust List in ClearPass.",
+		Description: "Manages a Certificate Trust List in ClearPass. This resource allows you to upload and manage trusted certificates (CA) used for various purposes such as EAP authentication, database connections, and RadSec.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:            true,
@@ -52,12 +52,12 @@ func (r *certTrustListResource) Schema(ctx context.Context, req resource.SchemaR
 			},
 			"cert_file": schema.StringAttribute{
 				Required:            true,
-				MarkdownDescription: "The content of the certificate file.",
+				MarkdownDescription: "The content of the certificate file (PEM format). This is typically loaded using the `file()` function.",
 			},
 			"enabled": schema.BoolAttribute{
 				Optional:            true,
 				Computed:            true,
-				MarkdownDescription: "Whether the certificate trust list is enabled.",
+				MarkdownDescription: "Whether the certificate trust list is enabled. Defaults to `true` if not specified.",
 				PlanModifiers: []planmodifier.Bool{
 					boolplanmodifier.UseStateForUnknown(),
 				},
@@ -65,7 +65,7 @@ func (r *certTrustListResource) Schema(ctx context.Context, req resource.SchemaR
 			"cert_usage": schema.ListAttribute{
 				ElementType:         types.StringType,
 				Required:            true,
-				MarkdownDescription: "Usage of the certificate. Allowed values: `AD/LDAP Servers`, `Aruba Infrastructure`, `Aruba Services`, `Database`, `EAP`, `Endpoint Context Servers`, `RadSec`, `SAML`, `SMTP`, `EST`, `Others`.",
+				MarkdownDescription: "Usage of the certificate. Specifies how ClearPass should use this trusted certificate. Allowed values: `AD/LDAP Servers`, `Aruba Infrastructure`, `Aruba Services`, `Database`, `EAP`, `Endpoint Context Servers`, `RadSec`, `SAML`, `SMTP`, `EST`, `Others`.",
 			},
 		},
 	}
