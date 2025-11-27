@@ -100,22 +100,22 @@ func (r *AuthMethodResource) Schema(ctx context.Context, req resource.SchemaRequ
 			"description": schema.StringAttribute{
 				Optional:            true,
 				Computed:            true,
-				MarkdownDescription: "Description of the auth method",
+				MarkdownDescription: "Description of the authentication method. This helps administrators understand the purpose of the method.",
 			},
 			"method_type": schema.StringAttribute{
 				Required:            true,
-				MarkdownDescription: "Type of the auth method",
+				MarkdownDescription: "Type of the authentication method (e.g., 'EAP-TLS', 'EAP-PEAP', 'MAC-AUTH'). This determines the protocol used for authentication.",
 			},
 			"inner_methods": schema.ListAttribute{
 				ElementType:         types.StringType,
 				Optional:            true,
 				Computed:            true,
-				MarkdownDescription: "List of inner methods of the auth method",
+				MarkdownDescription: "List of inner methods for the authentication method. This is typically used for tunneled methods like EAP-PEAP or EAP-TTLS to specify the inner authentication protocol (e.g., 'EAP-MSCHAPv2').",
 			},
 		},
 		Blocks: map[string]schema.Block{
 			"details": schema.ListNestedBlock{
-				MarkdownDescription: "Details of the auth method",
+				MarkdownDescription: "Configuration details specific to the authentication method type. The available fields depend on the selected `method_type`.",
 				NestedObject: schema.NestedBlockObject{
 					Attributes: map[string]schema.Attribute{
 						"tunnel_pac_lifetime": schema.Int64Attribute{
@@ -251,7 +251,7 @@ func (r *AuthMethodResource) Schema(ctx context.Context, req resource.SchemaRequ
 						"autz_required": schema.BoolAttribute{
 							Optional:            true,
 							Computed:            true,
-							MarkdownDescription: "Authorization Required",
+							MarkdownDescription: "Authorization Required. If enabled, the user must be authorized in addition to being authenticated.",
 						},
 						"ocsp_enable": schema.StringAttribute{
 							Optional:            true,
@@ -671,6 +671,11 @@ func (r *AuthMethodResource) Update(ctx context.Context, req resource.UpdateRequ
 func (r *AuthMethodResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
 	// Skip if the plan is being destroyed
 	if req.Plan.Raw.IsNull() {
+		return
+	}
+
+	// Skip if the resource is being created (state is null)
+	if req.State.Raw.IsNull() {
 		return
 	}
 
