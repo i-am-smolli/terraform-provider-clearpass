@@ -132,6 +132,7 @@ func (p *clearpassProvider) Resources(ctx context.Context) []func() resource.Res
 		NewServiceResource,
 		NewServiceCertResource,
 		NewCertTrustListResource,
+		NewAuthMethodResource,
 	}
 }
 

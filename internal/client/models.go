@@ -446,3 +446,67 @@ type CertTrustListUpdate struct {
 	Enabled   bool     `json:"enabled,omitempty"`
 	CertUsage []string `json:"cert_usage,omitempty"`
 }
+
+// --- AuthMethod Models ---
+
+type AuthMethodDetails struct {
+	TunnelPACLifetime                 int64  `json:"tunnel_pac_lifetime,omitempty"`
+	TunnelPACLifetimeUnits            string `json:"tunnel_pac_lifetime_units,omitempty"`
+	UserAuthPACEnable                 bool   `json:"user_auth_pac_enable,omitempty"`
+	UserAuthPACLifetime               int64  `json:"user_auth_pac_lifetime,omitempty"`
+	UserAuthPACLifetimeUnits          string `json:"user_auth_pac_lifetime_units,omitempty"`
+	MachinePACEnable                  bool   `json:"machine_pac_enable,omitempty"`
+	MachinePACLifetime                int64  `json:"machine_pac_lifetime,omitempty"`
+	MachinePACLifetimeUnits           string `json:"machine_pac_lifetime_units,omitempty"`
+	PosturePACEnable                  bool   `json:"posture_pac_enable,omitempty"`
+	PosturePACLifetime                int64  `json:"posture_pac_lifetime,omitempty"`
+	PosturePACLifetimeUnits           string `json:"posture_pac_lifetime_units,omitempty"`
+	AllowAnonymousProvisioning        bool   `json:"allow_anonymous_provisioning,omitempty"`
+	AuthProvisioningRequireClientCert bool   `json:"auth_provisioning_require_client_cert,omitempty"`
+	ClientCertificateAuth             bool   `json:"client_certificate_auth,omitempty"`
+	AllowAuthenticatedProvisioning    bool   `json:"allow_authenticated_provisioning,omitempty"`
+	CertificateComparison             string `json:"certificate_comparison,omitempty"`
+	SessionTimeout                    int64  `json:"session_timeout,omitempty"`
+	SessionCacheEnable                bool   `json:"session_cache_enable,omitempty"`
+	Challenge                         string `json:"challenge,omitempty"`
+	AllowFastReconnect                bool   `json:"allow_fast_reconnect,omitempty"`
+	NAPSupportEnable                  bool   `json:"nap_support_enable,omitempty"`
+	EnforceCryptoBinding              string `json:"enforce_crypto_binding,omitempty"`
+	PublicPassword                    string `json:"public_password,omitempty"`
+	PublicUsername                    string `json:"public_username,omitempty"`
+	GroupName                         string `json:"group_name,omitempty"`
+	ServerID                          string `json:"server_id,omitempty"`
+	AutzRequired                      bool   `json:"autz_required,omitempty"`
+	OCSPEnable                        string `json:"ocsp_enable,omitempty"`
+	OCSPURL                           string `json:"ocsp_url,omitempty"`
+	OverrideCertURL                   bool   `json:"override_cert_url,omitempty"`
+	EncryptionScheme                  string `json:"encryption_scheme,omitempty"`
+	AllowUnknownClients               bool   `json:"allow_unknown_clients,omitempty"`
+	PassResetFlow                     string `json:"pass_reset_flow,omitempty"` // Spec says boolean but enum strings. Using string.
+	NoOfRetries                       int    `json:"no_of_retries,omitempty"`   // Spec says boolean but description "Number of retries". Using int.
+}
+
+type AuthMethodCreate struct {
+	Name         string             `json:"name"`
+	Description  string             `json:"description,omitempty"`
+	MethodType   string             `json:"method_type"`
+	Details      *AuthMethodDetails `json:"details,omitempty"`
+	InnerMethods []string           `json:"inner_methods,omitempty"`
+}
+
+type AuthMethodUpdate struct {
+	Name         string             `json:"name,omitempty"`
+	Description  string             `json:"description,omitempty"`
+	MethodType   string             `json:"method_type,omitempty"`
+	Details      *AuthMethodDetails `json:"details,omitempty"`
+	InnerMethods []string           `json:"inner_methods,omitempty"`
+}
+
+type AuthMethodResult struct {
+	ID           int                `json:"id"`
+	Name         string             `json:"name"`
+	Description  string             `json:"description"`
+	MethodType   string             `json:"method_type"`
+	Details      *AuthMethodDetails `json:"details"`
+	InnerMethods []string           `json:"inner_methods"`
+}

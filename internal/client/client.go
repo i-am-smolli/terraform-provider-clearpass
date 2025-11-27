@@ -61,6 +61,12 @@ type ClientInterface interface {
 	UpdateCertTrustList(ctx context.Context, id int, cert *CertTrustListUpdate) (*CertTrustList, error)
 	DeleteCertTrustList(ctx context.Context, id int) error
 
+	// AuthMethod
+	CreateAuthMethod(ctx context.Context, authMethod *AuthMethodCreate) (*AuthMethodResult, error)
+	GetAuthMethod(ctx context.Context, id int) (*AuthMethodResult, error)
+	UpdateAuthMethod(ctx context.Context, id int, authMethod *AuthMethodUpdate) (*AuthMethodResult, error)
+	DeleteAuthMethod(ctx context.Context, id int) error
+
 	// Helper
 	GetHost() string
 }
@@ -714,6 +720,71 @@ func (c *apiClient) UpdateCertTrustList(ctx context.Context, id int, cert *CertT
 
 func (c *apiClient) DeleteCertTrustList(ctx context.Context, id int) error {
 	path := fmt.Sprintf("/api/cert-trust-list/%d", id)
+	req, err := c.newRequest(ctx, "DELETE", path, nil)
+	if err != nil {
+		return err
+	}
+	return c.do(req, nil)
+}
+
+// --- AuthMethod API Methods ---
+
+func (c *apiClient) CreateAuthMethod(ctx context.Context, authMethod *AuthMethodCreate) (*AuthMethodResult, error) {
+	payloadBytes, err := json.Marshal(authMethod)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal CreateAuthMethod: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "POST", "/api/auth-method", bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result AuthMethodResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetAuthMethod(ctx context.Context, id int) (*AuthMethodResult, error) {
+	path := fmt.Sprintf("/api/auth-method/%d", id)
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result AuthMethodResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) UpdateAuthMethod(ctx context.Context, id int, authMethod *AuthMethodUpdate) (*AuthMethodResult, error) {
+	path := fmt.Sprintf("/api/auth-method/%d", id)
+	payloadBytes, err := json.Marshal(authMethod)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal UpdateAuthMethod: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "PATCH", path, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result AuthMethodResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) DeleteAuthMethod(ctx context.Context, id int) error {
+	path := fmt.Sprintf("/api/auth-method/%d", id)
 	req, err := c.newRequest(ctx, "DELETE", path, nil)
 	if err != nil {
 		return err
