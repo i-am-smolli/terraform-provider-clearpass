@@ -1,6 +1,10 @@
 package client
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"strconv"
+)
 
 // AuthRequest defines the structure for the OAuth2 token request body.
 type AuthRequest struct {
@@ -449,41 +453,85 @@ type CertTrustListUpdate struct {
 
 // --- AuthMethod Models ---
 
+type FlexBool bool
+
+func (b *FlexBool) UnmarshalJSON(data []byte) error {
+	var txt string
+	if err := json.Unmarshal(data, &txt); err == nil {
+		*b = FlexBool(txt == "true")
+		return nil
+	}
+	var boolean bool
+	if err := json.Unmarshal(data, &boolean); err == nil {
+		*b = FlexBool(boolean)
+		return nil
+	}
+	return fmt.Errorf("cannot unmarshal %s into FlexBool", string(data))
+}
+
+func (b FlexBool) MarshalJSON() ([]byte, error) {
+	return json.Marshal(bool(b))
+}
+
+type FlexInt int64
+
+func (i *FlexInt) UnmarshalJSON(data []byte) error {
+	var txt string
+	if err := json.Unmarshal(data, &txt); err == nil {
+		val, err := strconv.ParseInt(txt, 10, 64)
+		if err != nil {
+			return err
+		}
+		*i = FlexInt(val)
+		return nil
+	}
+	var num int64
+	if err := json.Unmarshal(data, &num); err == nil {
+		*i = FlexInt(num)
+		return nil
+	}
+	return fmt.Errorf("cannot unmarshal %s into FlexInt", string(data))
+}
+
+func (i FlexInt) MarshalJSON() ([]byte, error) {
+	return json.Marshal(int64(i))
+}
+
 type AuthMethodDetails struct {
-	TunnelPACLifetime                 int64  `json:"tunnel_pac_lifetime,omitempty"`
-	TunnelPACLifetimeUnits            string `json:"tunnel_pac_lifetime_units,omitempty"`
-	UserAuthPACEnable                 bool   `json:"user_auth_pac_enable,omitempty"`
-	UserAuthPACLifetime               int64  `json:"user_auth_pac_lifetime,omitempty"`
-	UserAuthPACLifetimeUnits          string `json:"user_auth_pac_lifetime_units,omitempty"`
-	MachinePACEnable                  bool   `json:"machine_pac_enable,omitempty"`
-	MachinePACLifetime                int64  `json:"machine_pac_lifetime,omitempty"`
-	MachinePACLifetimeUnits           string `json:"machine_pac_lifetime_units,omitempty"`
-	PosturePACEnable                  bool   `json:"posture_pac_enable,omitempty"`
-	PosturePACLifetime                int64  `json:"posture_pac_lifetime,omitempty"`
-	PosturePACLifetimeUnits           string `json:"posture_pac_lifetime_units,omitempty"`
-	AllowAnonymousProvisioning        bool   `json:"allow_anonymous_provisioning,omitempty"`
-	AuthProvisioningRequireClientCert bool   `json:"auth_provisioning_require_client_cert,omitempty"`
-	ClientCertificateAuth             bool   `json:"client_certificate_auth,omitempty"`
-	AllowAuthenticatedProvisioning    bool   `json:"allow_authenticated_provisioning,omitempty"`
-	CertificateComparison             string `json:"certificate_comparison,omitempty"`
-	SessionTimeout                    int64  `json:"session_timeout,omitempty"`
-	SessionCacheEnable                bool   `json:"session_cache_enable,omitempty"`
-	Challenge                         string `json:"challenge,omitempty"`
-	AllowFastReconnect                bool   `json:"allow_fast_reconnect,omitempty"`
-	NAPSupportEnable                  bool   `json:"nap_support_enable,omitempty"`
-	EnforceCryptoBinding              string `json:"enforce_crypto_binding,omitempty"`
-	PublicPassword                    string `json:"public_password,omitempty"`
-	PublicUsername                    string `json:"public_username,omitempty"`
-	GroupName                         string `json:"group_name,omitempty"`
-	ServerID                          string `json:"server_id,omitempty"`
-	AutzRequired                      bool   `json:"autz_required,omitempty"`
-	OCSPEnable                        string `json:"ocsp_enable,omitempty"`
-	OCSPURL                           string `json:"ocsp_url,omitempty"`
-	OverrideCertURL                   bool   `json:"override_cert_url,omitempty"`
-	EncryptionScheme                  string `json:"encryption_scheme,omitempty"`
-	AllowUnknownClients               bool   `json:"allow_unknown_clients,omitempty"`
-	PassResetFlow                     string `json:"pass_reset_flow,omitempty"` // Spec says boolean but enum strings. Using string.
-	NoOfRetries                       int    `json:"no_of_retries,omitempty"`   // Spec says boolean but description "Number of retries". Using int.
+	TunnelPACLifetime                 FlexInt  `json:"tunnel_pac_lifetime,omitempty"`
+	TunnelPACLifetimeUnits            string   `json:"tunnel_pac_lifetime_units,omitempty"`
+	UserAuthPACEnable                 FlexBool `json:"user_auth_pac_enable,omitempty"`
+	UserAuthPACLifetime               FlexInt  `json:"user_auth_pac_lifetime,omitempty"`
+	UserAuthPACLifetimeUnits          string   `json:"user_auth_pac_lifetime_units,omitempty"`
+	MachinePACEnable                  FlexBool `json:"machine_pac_enable,omitempty"`
+	MachinePACLifetime                FlexInt  `json:"machine_pac_lifetime,omitempty"`
+	MachinePACLifetimeUnits           string   `json:"machine_pac_lifetime_units,omitempty"`
+	PosturePACEnable                  FlexBool `json:"posture_pac_enable,omitempty"`
+	PosturePACLifetime                FlexInt  `json:"posture_pac_lifetime,omitempty"`
+	PosturePACLifetimeUnits           string   `json:"posture_pac_lifetime_units,omitempty"`
+	AllowAnonymousProvisioning        FlexBool `json:"allow_anonymous_provisioning,omitempty"`
+	AuthProvisioningRequireClientCert FlexBool `json:"auth_provisioning_require_client_cert,omitempty"`
+	ClientCertificateAuth             FlexBool `json:"client_certificate_auth,omitempty"`
+	AllowAuthenticatedProvisioning    FlexBool `json:"allow_authenticated_provisioning,omitempty"`
+	CertificateComparison             string   `json:"certificate_comparison,omitempty"`
+	SessionTimeout                    FlexInt  `json:"session_timeout,omitempty"`
+	SessionCacheEnable                FlexBool `json:"session_cache_enable,omitempty"`
+	Challenge                         string   `json:"challenge,omitempty"`
+	AllowFastReconnect                FlexBool `json:"allow_fast_reconnect,omitempty"`
+	NAPSupportEnable                  FlexBool `json:"nap_support_enable,omitempty"`
+	EnforceCryptoBinding              string   `json:"enforce_crypto_binding,omitempty"`
+	PublicPassword                    string   `json:"public_password,omitempty"`
+	PublicUsername                    string   `json:"public_username,omitempty"`
+	GroupName                         string   `json:"group_name,omitempty"`
+	ServerID                          string   `json:"server_id,omitempty"`
+	AutzRequired                      FlexBool `json:"autz_required,omitempty"`
+	OCSPEnable                        string   `json:"ocsp_enable,omitempty"`
+	OCSPURL                           string   `json:"ocsp_url,omitempty"`
+	OverrideCertURL                   FlexBool `json:"override_cert_url,omitempty"`
+	EncryptionScheme                  string   `json:"encryption_scheme,omitempty"`
+	AllowUnknownClients               FlexBool `json:"allow_unknown_clients,omitempty"`
+	PassResetFlow                     string   `json:"pass_reset_flow,omitempty"`
+	NoOfRetries                       FlexInt  `json:"no_of_retries,omitempty"`
 }
 
 type AuthMethodCreate struct {
