@@ -524,7 +524,7 @@ type AuthMethodDetails struct {
 	PublicUsername                    string   `json:"public_username,omitempty"`
 	GroupName                         string   `json:"group_name,omitempty"`
 	ServerID                          string   `json:"server_id,omitempty"`
-	AutzRequired                      FlexBool `json:"autz_required,omitempty"`
+	AutzRequired                      FlexBool `json:"autz_required"`
 	OCSPEnable                        string   `json:"ocsp_enable,omitempty"`
 	OCSPURL                           string   `json:"ocsp_url,omitempty"`
 	OverrideCertURL                   FlexBool `json:"override_cert_url,omitempty"`

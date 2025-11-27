@@ -13,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -395,42 +396,51 @@ func (r *AuthMethodResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 
 	if result.Details != nil {
-		details := AuthMethodDetailsModel{
-			TunnelPACLifetime:                 types.Int64Value(int64(result.Details.TunnelPACLifetime)),
-			TunnelPACLifetimeUnits:            types.StringValue(result.Details.TunnelPACLifetimeUnits),
-			UserAuthPACEnable:                 types.BoolValue(bool(result.Details.UserAuthPACEnable)),
-			UserAuthPACLifetime:               types.Int64Value(int64(result.Details.UserAuthPACLifetime)),
-			UserAuthPACLifetimeUnits:          types.StringValue(result.Details.UserAuthPACLifetimeUnits),
-			MachinePACEnable:                  types.BoolValue(bool(result.Details.MachinePACEnable)),
-			MachinePACLifetime:                types.Int64Value(int64(result.Details.MachinePACLifetime)),
-			MachinePACLifetimeUnits:           types.StringValue(result.Details.MachinePACLifetimeUnits),
-			PosturePACEnable:                  types.BoolValue(bool(result.Details.PosturePACEnable)),
-			PosturePACLifetime:                types.Int64Value(int64(result.Details.PosturePACLifetime)),
-			PosturePACLifetimeUnits:           types.StringValue(result.Details.PosturePACLifetimeUnits),
-			AllowAnonymousProvisioning:        types.BoolValue(bool(result.Details.AllowAnonymousProvisioning)),
-			AuthProvisioningRequireClientCert: types.BoolValue(bool(result.Details.AuthProvisioningRequireClientCert)),
-			ClientCertificateAuth:             types.BoolValue(bool(result.Details.ClientCertificateAuth)),
-			AllowAuthenticatedProvisioning:    types.BoolValue(bool(result.Details.AllowAuthenticatedProvisioning)),
-			CertificateComparison:             types.StringValue(result.Details.CertificateComparison),
-			SessionTimeout:                    types.Int64Value(int64(result.Details.SessionTimeout)),
-			SessionCacheEnable:                types.BoolValue(bool(result.Details.SessionCacheEnable)),
-			Challenge:                         types.StringValue(result.Details.Challenge),
-			AllowFastReconnect:                types.BoolValue(bool(result.Details.AllowFastReconnect)),
-			NAPSupportEnable:                  types.BoolValue(bool(result.Details.NAPSupportEnable)),
-			EnforceCryptoBinding:              types.StringValue(result.Details.EnforceCryptoBinding),
-			PublicPassword:                    types.StringValue(result.Details.PublicPassword),
-			PublicUsername:                    types.StringValue(result.Details.PublicUsername),
-			GroupName:                         types.StringValue(result.Details.GroupName),
-			ServerID:                          types.StringValue(result.Details.ServerID),
-			AutzRequired:                      types.BoolValue(bool(result.Details.AutzRequired)),
-			OCSPEnable:                        types.StringValue(result.Details.OCSPEnable),
-			OCSPURL:                           types.StringValue(result.Details.OCSPURL),
-			OverrideCertURL:                   types.BoolValue(bool(result.Details.OverrideCertURL)),
-			EncryptionScheme:                  types.StringValue(result.Details.EncryptionScheme),
-			AllowUnknownClients:               types.BoolValue(bool(result.Details.AllowUnknownClients)),
-			PassResetFlow:                     types.StringValue(result.Details.PassResetFlow),
-			NoOfRetries:                       types.Int64Value(int64(result.Details.NoOfRetries)),
+		var planDetails AuthMethodDetailsModel
+		if len(data.Details) > 0 {
+			planDetails = data.Details[0]
 		}
+
+		tflog.Debug(ctx, "DEBUG: AutzRequired Plan Value", map[string]interface{}{"value": planDetails.AutzRequired.ValueBool()})
+		tflog.Debug(ctx, "DEBUG: AutzRequired API Value", map[string]interface{}{"value": bool(result.Details.AutzRequired)})
+
+		details := AuthMethodDetailsModel{
+			TunnelPACLifetime:                 getValueInt64(planDetails.TunnelPACLifetime, int64(result.Details.TunnelPACLifetime)),
+			TunnelPACLifetimeUnits:            getValueString(planDetails.TunnelPACLifetimeUnits, result.Details.TunnelPACLifetimeUnits),
+			UserAuthPACEnable:                 getValueBool(planDetails.UserAuthPACEnable, bool(result.Details.UserAuthPACEnable)),
+			UserAuthPACLifetime:               getValueInt64(planDetails.UserAuthPACLifetime, int64(result.Details.UserAuthPACLifetime)),
+			UserAuthPACLifetimeUnits:          getValueString(planDetails.UserAuthPACLifetimeUnits, result.Details.UserAuthPACLifetimeUnits),
+			MachinePACEnable:                  getValueBool(planDetails.MachinePACEnable, bool(result.Details.MachinePACEnable)),
+			MachinePACLifetime:                getValueInt64(planDetails.MachinePACLifetime, int64(result.Details.MachinePACLifetime)),
+			MachinePACLifetimeUnits:           getValueString(planDetails.MachinePACLifetimeUnits, result.Details.MachinePACLifetimeUnits),
+			PosturePACEnable:                  getValueBool(planDetails.PosturePACEnable, bool(result.Details.PosturePACEnable)),
+			PosturePACLifetime:                getValueInt64(planDetails.PosturePACLifetime, int64(result.Details.PosturePACLifetime)),
+			PosturePACLifetimeUnits:           getValueString(planDetails.PosturePACLifetimeUnits, result.Details.PosturePACLifetimeUnits),
+			AllowAnonymousProvisioning:        getValueBool(planDetails.AllowAnonymousProvisioning, bool(result.Details.AllowAnonymousProvisioning)),
+			AuthProvisioningRequireClientCert: getValueBool(planDetails.AuthProvisioningRequireClientCert, bool(result.Details.AuthProvisioningRequireClientCert)),
+			ClientCertificateAuth:             getValueBool(planDetails.ClientCertificateAuth, bool(result.Details.ClientCertificateAuth)),
+			AllowAuthenticatedProvisioning:    getValueBool(planDetails.AllowAuthenticatedProvisioning, bool(result.Details.AllowAuthenticatedProvisioning)),
+			CertificateComparison:             getValueString(planDetails.CertificateComparison, result.Details.CertificateComparison),
+			SessionTimeout:                    getValueInt64(planDetails.SessionTimeout, int64(result.Details.SessionTimeout)),
+			SessionCacheEnable:                getValueBool(planDetails.SessionCacheEnable, bool(result.Details.SessionCacheEnable)),
+			Challenge:                         getValueString(planDetails.Challenge, result.Details.Challenge),
+			AllowFastReconnect:                getValueBool(planDetails.AllowFastReconnect, bool(result.Details.AllowFastReconnect)),
+			NAPSupportEnable:                  getValueBool(planDetails.NAPSupportEnable, bool(result.Details.NAPSupportEnable)),
+			EnforceCryptoBinding:              getValueString(planDetails.EnforceCryptoBinding, result.Details.EnforceCryptoBinding),
+			PublicPassword:                    getValueString(planDetails.PublicPassword, result.Details.PublicPassword),
+			PublicUsername:                    getValueString(planDetails.PublicUsername, result.Details.PublicUsername),
+			GroupName:                         getValueString(planDetails.GroupName, result.Details.GroupName),
+			ServerID:                          getValueString(planDetails.ServerID, result.Details.ServerID),
+			AutzRequired:                      getValueBool(planDetails.AutzRequired, bool(result.Details.AutzRequired)),
+			OCSPEnable:                        getValueString(planDetails.OCSPEnable, result.Details.OCSPEnable),
+			OCSPURL:                           getValueString(planDetails.OCSPURL, result.Details.OCSPURL),
+			OverrideCertURL:                   getValueBool(planDetails.OverrideCertURL, bool(result.Details.OverrideCertURL)),
+			EncryptionScheme:                  getValueString(planDetails.EncryptionScheme, result.Details.EncryptionScheme),
+			AllowUnknownClients:               getValueBool(planDetails.AllowUnknownClients, bool(result.Details.AllowUnknownClients)),
+			PassResetFlow:                     getValueString(planDetails.PassResetFlow, result.Details.PassResetFlow),
+			NoOfRetries:                       getValueInt64(planDetails.NoOfRetries, int64(result.Details.NoOfRetries)),
+		}
+
 		data.Details = []AuthMethodDetailsModel{details}
 	} else {
 		data.Details = nil
@@ -530,6 +540,11 @@ func (r *AuthMethodResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 
+	var planDetails AuthMethodDetailsModel
+	if len(data.Details) > 0 {
+		planDetails = data.Details[0]
+	}
+
 	id, _ := strconv.Atoi(data.ID.ValueString())
 
 	// Convert model to API client struct
@@ -588,11 +603,14 @@ func (r *AuthMethodResource) Update(ctx context.Context, req resource.UpdateRequ
 	// Call API
 	result, err := r.client.UpdateAuthMethod(ctx, id, authMethodUpdate)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update auth method, got error: %s", err))
+		resp.Diagnostics.AddError(
+			"Error updating Auth Method",
+			"Could not update Auth Method, unexpected error: "+err.Error(),
+		)
 		return
 	}
 
-	// Update state with result
+	// Update state with refreshed data
 	data.Name = types.StringValue(result.Name)
 	data.Description = types.StringValue(result.Description)
 	data.MethodType = types.StringValue(result.MethodType)
@@ -606,40 +624,40 @@ func (r *AuthMethodResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	if result.Details != nil {
 		details := AuthMethodDetailsModel{
-			TunnelPACLifetime:                 types.Int64Value(int64(result.Details.TunnelPACLifetime)),
-			TunnelPACLifetimeUnits:            types.StringValue(result.Details.TunnelPACLifetimeUnits),
-			UserAuthPACEnable:                 types.BoolValue(bool(result.Details.UserAuthPACEnable)),
-			UserAuthPACLifetime:               types.Int64Value(int64(result.Details.UserAuthPACLifetime)),
-			UserAuthPACLifetimeUnits:          types.StringValue(result.Details.UserAuthPACLifetimeUnits),
-			MachinePACEnable:                  types.BoolValue(bool(result.Details.MachinePACEnable)),
-			MachinePACLifetime:                types.Int64Value(int64(result.Details.MachinePACLifetime)),
-			MachinePACLifetimeUnits:           types.StringValue(result.Details.MachinePACLifetimeUnits),
-			PosturePACEnable:                  types.BoolValue(bool(result.Details.PosturePACEnable)),
-			PosturePACLifetime:                types.Int64Value(int64(result.Details.PosturePACLifetime)),
-			PosturePACLifetimeUnits:           types.StringValue(result.Details.PosturePACLifetimeUnits),
-			AllowAnonymousProvisioning:        types.BoolValue(bool(result.Details.AllowAnonymousProvisioning)),
-			AuthProvisioningRequireClientCert: types.BoolValue(bool(result.Details.AuthProvisioningRequireClientCert)),
-			ClientCertificateAuth:             types.BoolValue(bool(result.Details.ClientCertificateAuth)),
-			AllowAuthenticatedProvisioning:    types.BoolValue(bool(result.Details.AllowAuthenticatedProvisioning)),
-			CertificateComparison:             types.StringValue(result.Details.CertificateComparison),
-			SessionTimeout:                    types.Int64Value(int64(result.Details.SessionTimeout)),
-			SessionCacheEnable:                types.BoolValue(bool(result.Details.SessionCacheEnable)),
-			Challenge:                         types.StringValue(result.Details.Challenge),
-			AllowFastReconnect:                types.BoolValue(bool(result.Details.AllowFastReconnect)),
-			NAPSupportEnable:                  types.BoolValue(bool(result.Details.NAPSupportEnable)),
-			EnforceCryptoBinding:              types.StringValue(result.Details.EnforceCryptoBinding),
-			PublicPassword:                    types.StringValue(result.Details.PublicPassword),
-			PublicUsername:                    types.StringValue(result.Details.PublicUsername),
-			GroupName:                         types.StringValue(result.Details.GroupName),
-			ServerID:                          types.StringValue(result.Details.ServerID),
-			AutzRequired:                      types.BoolValue(bool(result.Details.AutzRequired)),
-			OCSPEnable:                        types.StringValue(result.Details.OCSPEnable),
-			OCSPURL:                           types.StringValue(result.Details.OCSPURL),
-			OverrideCertURL:                   types.BoolValue(bool(result.Details.OverrideCertURL)),
-			EncryptionScheme:                  types.StringValue(result.Details.EncryptionScheme),
-			AllowUnknownClients:               types.BoolValue(bool(result.Details.AllowUnknownClients)),
-			PassResetFlow:                     types.StringValue(result.Details.PassResetFlow),
-			NoOfRetries:                       types.Int64Value(int64(result.Details.NoOfRetries)),
+			TunnelPACLifetime:                 getValueInt64(planDetails.TunnelPACLifetime, int64(result.Details.TunnelPACLifetime)),
+			TunnelPACLifetimeUnits:            getValueString(planDetails.TunnelPACLifetimeUnits, result.Details.TunnelPACLifetimeUnits),
+			UserAuthPACEnable:                 getValueBool(planDetails.UserAuthPACEnable, bool(result.Details.UserAuthPACEnable)),
+			UserAuthPACLifetime:               getValueInt64(planDetails.UserAuthPACLifetime, int64(result.Details.UserAuthPACLifetime)),
+			UserAuthPACLifetimeUnits:          getValueString(planDetails.UserAuthPACLifetimeUnits, result.Details.UserAuthPACLifetimeUnits),
+			MachinePACEnable:                  getValueBool(planDetails.MachinePACEnable, bool(result.Details.MachinePACEnable)),
+			MachinePACLifetime:                getValueInt64(planDetails.MachinePACLifetime, int64(result.Details.MachinePACLifetime)),
+			MachinePACLifetimeUnits:           getValueString(planDetails.MachinePACLifetimeUnits, result.Details.MachinePACLifetimeUnits),
+			PosturePACEnable:                  getValueBool(planDetails.PosturePACEnable, bool(result.Details.PosturePACEnable)),
+			PosturePACLifetime:                getValueInt64(planDetails.PosturePACLifetime, int64(result.Details.PosturePACLifetime)),
+			PosturePACLifetimeUnits:           getValueString(planDetails.PosturePACLifetimeUnits, result.Details.PosturePACLifetimeUnits),
+			AllowAnonymousProvisioning:        getValueBool(planDetails.AllowAnonymousProvisioning, bool(result.Details.AllowAnonymousProvisioning)),
+			AuthProvisioningRequireClientCert: getValueBool(planDetails.AuthProvisioningRequireClientCert, bool(result.Details.AuthProvisioningRequireClientCert)),
+			ClientCertificateAuth:             getValueBool(planDetails.ClientCertificateAuth, bool(result.Details.ClientCertificateAuth)),
+			AllowAuthenticatedProvisioning:    getValueBool(planDetails.AllowAuthenticatedProvisioning, bool(result.Details.AllowAuthenticatedProvisioning)),
+			CertificateComparison:             getValueString(planDetails.CertificateComparison, result.Details.CertificateComparison),
+			SessionTimeout:                    getValueInt64(planDetails.SessionTimeout, int64(result.Details.SessionTimeout)),
+			SessionCacheEnable:                getValueBool(planDetails.SessionCacheEnable, bool(result.Details.SessionCacheEnable)),
+			Challenge:                         getValueString(planDetails.Challenge, result.Details.Challenge),
+			AllowFastReconnect:                getValueBool(planDetails.AllowFastReconnect, bool(result.Details.AllowFastReconnect)),
+			NAPSupportEnable:                  getValueBool(planDetails.NAPSupportEnable, bool(result.Details.NAPSupportEnable)),
+			EnforceCryptoBinding:              getValueString(planDetails.EnforceCryptoBinding, result.Details.EnforceCryptoBinding),
+			PublicPassword:                    getValueString(planDetails.PublicPassword, result.Details.PublicPassword),
+			PublicUsername:                    getValueString(planDetails.PublicUsername, result.Details.PublicUsername),
+			GroupName:                         getValueString(planDetails.GroupName, result.Details.GroupName),
+			ServerID:                          getValueString(planDetails.ServerID, result.Details.ServerID),
+			AutzRequired:                      getValueBool(planDetails.AutzRequired, bool(result.Details.AutzRequired)),
+			OCSPEnable:                        getValueString(planDetails.OCSPEnable, result.Details.OCSPEnable),
+			OCSPURL:                           getValueString(planDetails.OCSPURL, result.Details.OCSPURL),
+			OverrideCertURL:                   getValueBool(planDetails.OverrideCertURL, bool(result.Details.OverrideCertURL)),
+			EncryptionScheme:                  getValueString(planDetails.EncryptionScheme, result.Details.EncryptionScheme),
+			AllowUnknownClients:               getValueBool(planDetails.AllowUnknownClients, bool(result.Details.AllowUnknownClients)),
+			PassResetFlow:                     getValueString(planDetails.PassResetFlow, result.Details.PassResetFlow),
+			NoOfRetries:                       getValueInt64(planDetails.NoOfRetries, int64(result.Details.NoOfRetries)),
 		}
 		data.Details = []AuthMethodDetailsModel{details}
 	} else {
@@ -648,6 +666,106 @@ func (r *AuthMethodResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+func (r *AuthMethodResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	// Skip if the plan is being destroyed
+	if req.Plan.Raw.IsNull() {
+		return
+	}
+
+	var plan, state AuthMethodResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// If details block exists in both plan and state
+	if len(plan.Details) > 0 && len(state.Details) > 0 {
+		planDetails := plan.Details[0]
+		stateDetails := state.Details[0]
+
+		// Helper to copy state to plan if plan is unknown and state is known
+		copyIfUnknown := func(planVal, stateVal interface{}) interface{} {
+			switch p := planVal.(type) {
+			case types.String:
+				if p.IsUnknown() && !stateVal.(types.String).IsNull() && !stateVal.(types.String).IsUnknown() {
+					return stateVal
+				}
+			case types.Bool:
+				if p.IsUnknown() && !stateVal.(types.Bool).IsNull() && !stateVal.(types.Bool).IsUnknown() {
+					return stateVal
+				}
+			case types.Int64:
+				if p.IsUnknown() && !stateVal.(types.Int64).IsNull() && !stateVal.(types.Int64).IsUnknown() {
+					return stateVal
+				}
+			}
+			return planVal
+		}
+
+		planDetails.TunnelPACLifetime = copyIfUnknown(planDetails.TunnelPACLifetime, stateDetails.TunnelPACLifetime).(types.Int64)
+		planDetails.TunnelPACLifetimeUnits = copyIfUnknown(planDetails.TunnelPACLifetimeUnits, stateDetails.TunnelPACLifetimeUnits).(types.String)
+		planDetails.UserAuthPACEnable = copyIfUnknown(planDetails.UserAuthPACEnable, stateDetails.UserAuthPACEnable).(types.Bool)
+		planDetails.UserAuthPACLifetime = copyIfUnknown(planDetails.UserAuthPACLifetime, stateDetails.UserAuthPACLifetime).(types.Int64)
+		planDetails.UserAuthPACLifetimeUnits = copyIfUnknown(planDetails.UserAuthPACLifetimeUnits, stateDetails.UserAuthPACLifetimeUnits).(types.String)
+		planDetails.MachinePACEnable = copyIfUnknown(planDetails.MachinePACEnable, stateDetails.MachinePACEnable).(types.Bool)
+		planDetails.MachinePACLifetime = copyIfUnknown(planDetails.MachinePACLifetime, stateDetails.MachinePACLifetime).(types.Int64)
+		planDetails.MachinePACLifetimeUnits = copyIfUnknown(planDetails.MachinePACLifetimeUnits, stateDetails.MachinePACLifetimeUnits).(types.String)
+		planDetails.PosturePACEnable = copyIfUnknown(planDetails.PosturePACEnable, stateDetails.PosturePACEnable).(types.Bool)
+		planDetails.PosturePACLifetime = copyIfUnknown(planDetails.PosturePACLifetime, stateDetails.PosturePACLifetime).(types.Int64)
+		planDetails.PosturePACLifetimeUnits = copyIfUnknown(planDetails.PosturePACLifetimeUnits, stateDetails.PosturePACLifetimeUnits).(types.String)
+		planDetails.AllowAnonymousProvisioning = copyIfUnknown(planDetails.AllowAnonymousProvisioning, stateDetails.AllowAnonymousProvisioning).(types.Bool)
+		planDetails.AuthProvisioningRequireClientCert = copyIfUnknown(planDetails.AuthProvisioningRequireClientCert, stateDetails.AuthProvisioningRequireClientCert).(types.Bool)
+		planDetails.ClientCertificateAuth = copyIfUnknown(planDetails.ClientCertificateAuth, stateDetails.ClientCertificateAuth).(types.Bool)
+		planDetails.AllowAuthenticatedProvisioning = copyIfUnknown(planDetails.AllowAuthenticatedProvisioning, stateDetails.AllowAuthenticatedProvisioning).(types.Bool)
+		planDetails.CertificateComparison = copyIfUnknown(planDetails.CertificateComparison, stateDetails.CertificateComparison).(types.String)
+		planDetails.SessionTimeout = copyIfUnknown(planDetails.SessionTimeout, stateDetails.SessionTimeout).(types.Int64)
+		planDetails.SessionCacheEnable = copyIfUnknown(planDetails.SessionCacheEnable, stateDetails.SessionCacheEnable).(types.Bool)
+		planDetails.Challenge = copyIfUnknown(planDetails.Challenge, stateDetails.Challenge).(types.String)
+		planDetails.AllowFastReconnect = copyIfUnknown(planDetails.AllowFastReconnect, stateDetails.AllowFastReconnect).(types.Bool)
+		planDetails.NAPSupportEnable = copyIfUnknown(planDetails.NAPSupportEnable, stateDetails.NAPSupportEnable).(types.Bool)
+		planDetails.EnforceCryptoBinding = copyIfUnknown(planDetails.EnforceCryptoBinding, stateDetails.EnforceCryptoBinding).(types.String)
+		planDetails.PublicPassword = copyIfUnknown(planDetails.PublicPassword, stateDetails.PublicPassword).(types.String)
+		planDetails.PublicUsername = copyIfUnknown(planDetails.PublicUsername, stateDetails.PublicUsername).(types.String)
+		planDetails.GroupName = copyIfUnknown(planDetails.GroupName, stateDetails.GroupName).(types.String)
+		planDetails.ServerID = copyIfUnknown(planDetails.ServerID, stateDetails.ServerID).(types.String)
+		planDetails.AutzRequired = copyIfUnknown(planDetails.AutzRequired, stateDetails.AutzRequired).(types.Bool)
+		planDetails.OCSPEnable = copyIfUnknown(planDetails.OCSPEnable, stateDetails.OCSPEnable).(types.String)
+		planDetails.OCSPURL = copyIfUnknown(planDetails.OCSPURL, stateDetails.OCSPURL).(types.String)
+		planDetails.OverrideCertURL = copyIfUnknown(planDetails.OverrideCertURL, stateDetails.OverrideCertURL).(types.Bool)
+		planDetails.EncryptionScheme = copyIfUnknown(planDetails.EncryptionScheme, stateDetails.EncryptionScheme).(types.String)
+		planDetails.AllowUnknownClients = copyIfUnknown(planDetails.AllowUnknownClients, stateDetails.AllowUnknownClients).(types.Bool)
+		planDetails.PassResetFlow = copyIfUnknown(planDetails.PassResetFlow, stateDetails.PassResetFlow).(types.String)
+		planDetails.NoOfRetries = copyIfUnknown(planDetails.NoOfRetries, stateDetails.NoOfRetries).(types.Int64)
+
+		plan.Details = []AuthMethodDetailsModel{planDetails}
+	}
+
+	resp.Diagnostics.Append(resp.Plan.Set(ctx, &plan)...)
+}
+
+func getValueString(plan types.String, apiVal string) types.String {
+	if !plan.IsNull() && !plan.IsUnknown() {
+		return plan
+	}
+	return types.StringValue(apiVal)
+}
+
+func getValueBool(plan types.Bool, apiVal bool) types.Bool {
+	if !plan.IsNull() && !plan.IsUnknown() {
+		return plan
+	}
+	return types.BoolValue(apiVal)
+}
+
+func getValueInt64(plan types.Int64, apiVal int64) types.Int64 {
+	if !plan.IsNull() && !plan.IsUnknown() {
+		return plan
+	}
+	return types.Int64Value(apiVal)
 }
 
 func (r *AuthMethodResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
