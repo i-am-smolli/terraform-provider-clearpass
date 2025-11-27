@@ -3,46 +3,27 @@
 page_title: "clearpass_auth_method Resource - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Authentication Method Resource
+  Authentication Method Resource. Attention: The only tested auth method is EAP-TLS like in the example. Test against Dev/Lab environment first!
 ---
 
 # clearpass_auth_method (Resource)
 
-Authentication Method Resource
+Authentication Method Resource. Attention: The only tested auth method is EAP-TLS like in the example. Test against Dev/Lab environment first!
 
 ## Example Usage
 
 ```terraform
 resource "clearpass_auth_method" "eap_tls" {
-  name        = "EAP-TLS-Method"
+  name = "EAP-TLS-Method"
   description = "EAP-TLS Authentication Method for Corporate Devices"
   method_type = "EAP-TLS"
 
   details {
-    session_timeout                       = 6
-    session_cache_enable                  = true
-    allow_fast_reconnect                  = false
-    allow_anonymous_provisioning          = false
-    auth_provisioning_require_client_cert = false
-    client_certificate_auth               = true
-    allow_authenticated_provisioning      = false
-    certificate_comparison                = "CompareSubjectAndSAN"
-    ocsp_enable                           = "None"
-    authorization_required                = false
-  }
-}
-
-resource "clearpass_auth_method" "eap_peap" {
-  name        = "EAP-PEAP-Method"
-  description = "EAP-PEAP Authentication Method for Users"
-  method_type = "EAP-PEAP"
-
-  inner_methods = ["EAP-MSCHAPv2"]
-
-  details {
-    session_timeout      = 6
+    autz_required = true
     session_cache_enable = true
-    allow_fast_reconnect = true
+    session_timeout = 5
+    certificate_comparison = "none"
+    ocsp_enable = "optional"
   }
 }
 ```
@@ -76,18 +57,18 @@ Optional:
 - `allow_unknown_clients` (Boolean) Allow Unknown End-Hosts
 - `auth_provisioning_require_client_cert` (Boolean) Require end-host certificate for provisioning
 - `autz_required` (Boolean) Authorization Required. If enabled, the user must be authorized in addition to being authenticated.
-- `certificate_comparison` (String) Certificate Comparison
+- `certificate_comparison` (String) Certificate Comparison. One of: none, dn, cn, san, cn_or_san, binary
 - `challenge` (String) Challenge
 - `client_certificate_auth` (Boolean) End-Host Authentication
 - `encryption_scheme` (String) Enable Aruba-SSO
-- `enforce_crypto_binding` (String) Cryptobinding
+- `enforce_crypto_binding` (String) Cryptobinding. One of: none, optional, required
 - `group_name` (String) Group
 - `machine_pac_enable` (Boolean) Machine PAC
 - `machine_pac_lifetime` (Number) Machine PAC Expire Time
 - `machine_pac_lifetime_units` (String) Machine PAC Expire Time Units
 - `nap_support_enable` (Boolean) Microsoft NAP Support
 - `no_of_retries` (Number) Number of retries
-- `ocsp_enable` (String) Verify Certificate using OCSP
+- `ocsp_enable` (String) Verify Certificate using OCSP. One of: none, optional, required
 - `ocsp_url` (String) OCSP URL
 - `override_cert_url` (Boolean) Override OCSP URL from Client
 - `pass_reset_flow` (String) Password reset sends in

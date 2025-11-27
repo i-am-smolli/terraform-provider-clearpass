@@ -7,11 +7,13 @@ import (
 
 	"terraform-provider-clearpass/internal/client"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -83,7 +85,7 @@ func (r *AuthMethodResource) Metadata(ctx context.Context, req resource.Metadata
 func (r *AuthMethodResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "Authentication Method Resource",
+		MarkdownDescription: "Authentication Method Resource. Attention: The only tested auth method is EAP-TLS like in the example. Test against Dev/Lab environment first!",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -196,7 +198,10 @@ func (r *AuthMethodResource) Schema(ctx context.Context, req resource.SchemaRequ
 						"certificate_comparison": schema.StringAttribute{
 							Optional:            true,
 							Computed:            true,
-							MarkdownDescription: "Certificate Comparison",
+							MarkdownDescription: "Certificate Comparison. One of: none, dn, cn, san, cn_or_san, binary",
+							Validators: []validator.String{
+								stringvalidator.OneOf("none", "dn", "cn", "san", "cn_or_san", "binary"),
+							},
 						},
 						"session_timeout": schema.Int64Attribute{
 							Optional:            true,
@@ -226,7 +231,10 @@ func (r *AuthMethodResource) Schema(ctx context.Context, req resource.SchemaRequ
 						"enforce_crypto_binding": schema.StringAttribute{
 							Optional:            true,
 							Computed:            true,
-							MarkdownDescription: "Cryptobinding",
+							MarkdownDescription: "Cryptobinding. One of: none, optional, required",
+							Validators: []validator.String{
+								stringvalidator.OneOf("none", "optional", "required"),
+							},
 						},
 						"public_password": schema.StringAttribute{
 							Optional:            true,
@@ -256,7 +264,10 @@ func (r *AuthMethodResource) Schema(ctx context.Context, req resource.SchemaRequ
 						"ocsp_enable": schema.StringAttribute{
 							Optional:            true,
 							Computed:            true,
-							MarkdownDescription: "Verify Certificate using OCSP",
+							MarkdownDescription: "Verify Certificate using OCSP. One of: none, optional, required",
+							Validators: []validator.String{
+								stringvalidator.OneOf("none", "optional", "required"),
+							},
 						},
 						"ocsp_url": schema.StringAttribute{
 							Optional:            true,

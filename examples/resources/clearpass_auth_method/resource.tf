@@ -7,7 +7,7 @@ resource "clearpass_auth_method" "eap_tls" {
     autz_required = true
     session_cache_enable = true
     session_timeout = 5
-    certificate_comparison = "Do not compare"
-    ocsp_enable = "None"
+    certificate_comparison = "none"
+    ocsp_enable = "optional"
   }
 }
