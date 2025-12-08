@@ -40,3 +40,4 @@ provider "clearpass" {
 ### Optional
 
 - `insecure` (Boolean) Allow insecure HTTPS connections (self-signed certs).
+- `suppress_version_warning` (Boolean) Suppress warning when ClearPass version does not match the tested version.

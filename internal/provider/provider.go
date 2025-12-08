@@ -25,10 +25,11 @@ type clearpassProvider struct {
 // providerModel defines the provider configuration data model.
 // This is what the user will type in the provider { ... } block.
 type providerModel struct {
-	Host         types.String `tfsdk:"host"`
-	ClientID     types.String `tfsdk:"client_id"`
-	ClientSecret types.String `tfsdk:"client_secret"`
-	Insecure     types.Bool   `tfsdk:"insecure"`
+	Host                   types.String `tfsdk:"host"`
+	ClientID               types.String `tfsdk:"client_id"`
+	ClientSecret           types.String `tfsdk:"client_secret"`
+	Insecure               types.Bool   `tfsdk:"insecure"`
+	SuppressVersionWarning types.Bool   `tfsdk:"suppress_version_warning"`
 }
 
 // New is the factory function for the provider.
@@ -66,6 +67,10 @@ func (p *clearpassProvider) Schema(ctx context.Context, req provider.SchemaReque
 			},
 			"insecure": schema.BoolAttribute{
 				Description: "Allow insecure HTTPS connections (self-signed certs).",
+				Optional:    true,
+			},
+			"suppress_version_warning": schema.BoolAttribute{
+				Description: "Suppress warning when ClearPass version does not match the tested version.",
 				Optional:    true,
 			},
 		},
@@ -114,6 +119,28 @@ func (p *clearpassProvider) Configure(ctx context.Context, req provider.Configur
 
 	// 3. Create our API client with the new token
 	apiClient := client.NewClient(host, authResp.AccessToken, insecure)
+
+	// --- Check Server Version ---
+	if !config.SuppressVersionWarning.ValueBool() {
+		verRes, err := apiClient.GetServerVersion(ctx)
+		if err != nil {
+			// Don't fail the provider config just because we can't check version, but warn the user
+			resp.Diagnostics.AddWarning(
+				"Version Check Failed",
+				"Unknown ClearPass version. Failed to retrieve version from server: "+err.Error(),
+			)
+		} else {
+			wantedVersion := "6.12.4.305024"
+			if verRes.PlatformVersion != wantedVersion {
+				resp.Diagnostics.AddWarning(
+					"Untested ClearPass Version",
+					"This provider was tested against ClearPass version "+wantedVersion+
+						", but the server version is "+verRes.PlatformVersion+". "+
+						"Unexpected behavior may occur. You can suppress this warning by setting 'suppress_version_warning = true' in the provider configuration.",
+				)
+			}
+		}
+	}
 
 	// 4. Pass the configured client to all resources
 	// The client is stored in the 'resp' object for resources to retrieve.

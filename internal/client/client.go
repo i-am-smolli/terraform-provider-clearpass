@@ -69,6 +69,7 @@ type ClientInterface interface {
 
 	// Helper
 	GetHost() string
+	GetServerVersion(ctx context.Context) (*ServerVersionResult, error)
 }
 
 // apiClient is the concrete implementation of our ClientInterface.
@@ -100,6 +101,24 @@ func NewClient(host, token string, insecure bool) ClientInterface {
 
 func (c *apiClient) GetHost() string {
 	return c.host
+}
+
+// GetServerVersion retrieves the ClearPass server version.
+func (c *apiClient) GetServerVersion(ctx context.Context) (*ServerVersionResult, error) {
+	// Endpoint based on standard ClearPass API structure
+	path := "/api/server/version"
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result ServerVersionResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
 
 // --- API Methods ---

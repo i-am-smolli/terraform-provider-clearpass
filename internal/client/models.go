@@ -33,6 +33,11 @@ func (e *ApiError) Error() string {
 	return fmt.Sprintf("API Error (Status %d): %s - %s", e.StatusCode, e.Title, e.Detail)
 }
 
+// ServerVersionResult defines the structure for the server version response.
+type ServerVersionResult struct {
+	PlatformVersion string `json:"cppm_version"`
+}
+
 // --- Local User Models (from cppm Swagger 1.2 JSON) ---
 
 // LocalUserCreate defines the payload for creating a new local user.
