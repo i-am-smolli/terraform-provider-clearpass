@@ -46,6 +46,7 @@ type serviceCertResourceModel struct {
 	IssueBy          types.String `tfsdk:"issue_by"`
 	Validity         types.String `tfsdk:"validity"`
 	CertFile         types.String `tfsdk:"cert_file"`
+	Port             types.Int64  `tfsdk:"port"`
 }
 
 func (r *serviceCertResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -97,6 +98,13 @@ func (r *serviceCertResource) Schema(ctx context.Context, req resource.SchemaReq
 				Sensitive:   true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"port": schema.Int64Attribute{
+				Description: "The port to use for the temporary HTTP server. If not specified, a random port is used.",
+				Optional:    true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.RequiresReplace(),
 				},
 			},
 			"subject": schema.StringAttribute{
@@ -186,8 +194,12 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 			return
 		}
 
-		// 2. Start temporary listener on port 0 (random)
-		listener, err := net.Listen("tcp", ":0")
+		// 2. Start temporary listener
+		listenAddr := ":0"
+		if !plan.Port.IsNull() && plan.Port.ValueInt64() > 0 {
+			listenAddr = fmt.Sprintf(":%d", plan.Port.ValueInt64())
+		}
+		listener, err := net.Listen("tcp", listenAddr)
 		if err != nil {
 			resp.Diagnostics.AddError("Failed to start temp server", err.Error())
 			return

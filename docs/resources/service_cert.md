@@ -34,6 +34,7 @@ resource "clearpass_service_cert" "example_local_file" {
 - `pkcs12_file_base64` (String, Sensitive) Base64 encoded content of the PFX file. Use filebase64() in HCL. When used, the provider spawns a temporary local HTTP server to serve the file to ClearPass. Mutually exclusive with `pkcs12_file_url`.
 - `pkcs12_file_url` (String) The URL to the PKCS12 file to be uploaded. Mutually exclusive with `pkcs12_file_base64`.
 - `pkcs12_passphrase` (String, Sensitive) The passphrase for the PKCS12 file.
+- `port` (Number) The port to use for the temporary HTTP server. If not specified, a random port is used.
 
 ### Read-Only
 
