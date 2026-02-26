@@ -335,11 +335,17 @@ func (c *apiClient) do(req *http.Request, v interface{}) error {
 		var apiErr ApiError
 		// Wir nutzen json.Unmarshal statt Decoder, weil wir die Bytes schon haben
 		if err = json.Unmarshal(bodyBytes, &apiErr); err != nil {
-			// Wenn kein JSON, geben wir den Raw Body im Fehler zurück!
+			// Wenn kein JSON, geben wir einen generischen Fehler zurück!
+			// We avoid dumping the raw body Bytes directly to prevent leaking
+			// sensitive data like session tokens that might appear in HTML error pages.
+			snippet := string(bodyBytes)
+			if len(snippet) > 200 {
+				snippet = snippet[:200] + "... (truncated)"
+			}
 			return &ApiError{
 				StatusCode: resp.StatusCode,
 				Title:      "Unknown API Error (Non-JSON)",
-				Detail:     string(bodyBytes), // <--- HIER SEHEN WIR DEN HTML INHALT
+				Detail:     snippet,
 			}
 		}
 		apiErr.StatusCode = resp.StatusCode
@@ -352,9 +358,11 @@ func (c *apiClient) do(req *http.Request, v interface{}) error {
 	}
 
 	if err = json.Unmarshal(bodyBytes, v); err != nil {
-		// HIER ist Ihr aktueller Fehler aufgetreten.
-		// Jetzt geben wir den HTML-Inhalt in der Fehlermeldung aus.
-		return fmt.Errorf("failed to decode successful response. Body was: %s. Error: %w", string(bodyBytes), err)
+		snippet := string(bodyBytes)
+		if len(snippet) > 200 {
+			snippet = snippet[:200] + "... (truncated)"
+		}
+		return fmt.Errorf("failed to decode successful response. Body snippet: %s. Error: %w", snippet, err)
 	}
 
 	return nil

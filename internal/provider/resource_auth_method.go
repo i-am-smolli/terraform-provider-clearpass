@@ -239,6 +239,7 @@ func (r *AuthMethodResource) Schema(ctx context.Context, req resource.SchemaRequ
 						"public_password": schema.StringAttribute{
 							Optional:            true,
 							Computed:            true,
+							Sensitive:           true,
 							MarkdownDescription: "Public Password",
 						},
 						"public_username": schema.StringAttribute{
