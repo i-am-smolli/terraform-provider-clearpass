@@ -215,7 +215,14 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 		// 3. Define HTTP handler
 		// We serve the file under a random path or simply root
 		mux := http.NewServeMux()
+		downloadChan := make(chan bool, 1)
 		mux.HandleFunc("/cert.pfx", func(w http.ResponseWriter, r *http.Request) {
+			// Notify that ClearPass hit the endpoint
+			select {
+			case downloadChan <- true:
+			default:
+			}
+
 			w.Header().Set("Content-Type", "application/x-pkcs12")
 			w.Header().Set("Content-Length", strconv.Itoa(len(certBytes)))
 			_, _ = w.Write(certBytes) // Ignore error writing to response
@@ -230,8 +237,16 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 				fmt.Printf("Temp server error: %v\n", err)
 			}
 		}()
-		// IMPORTANT: Gracefully shut down server at the end so active downloads aren't interrupted
+		// IMPORTANT: Gracefully shut down server at the end so active downloads aren't interrupted.
+		// We wait for the endpoint to be hit first (up to 15 seconds) because ClearPass might fetch it asynchronously.
 		defer func() {
+			select {
+			case <-downloadChan:
+				// Download initiated, now we let graceful shutdown wait for the client to finish downloading
+			case <-time.After(15 * time.Second):
+				// Timeout waiting for ClearPass to fetch the cert. Proceed to shutdown to prevent hanging forever.
+			}
+
 			ctxShutdown, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
 			_ = server.Shutdown(ctxShutdown)
