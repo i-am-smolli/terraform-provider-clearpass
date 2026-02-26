@@ -348,6 +348,14 @@ func (c *apiClient) do(req *http.Request, v interface{}) error {
 				Detail:     snippet,
 			}
 		}
+
+		// Some ClearPass API endpoints return errors in unexpected formats.
+		// Append the raw body to the detail so we can always see it during debugging.
+		snippet := string(bodyBytes)
+		if len(snippet) > 500 {
+			snippet = snippet[:500] + "... (truncated)"
+		}
+		apiErr.Detail = apiErr.Detail + "\nRaw Response: " + snippet
 		apiErr.StatusCode = resp.StatusCode
 		return &apiErr
 	}

@@ -20,7 +20,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	out := "---\npage_title: \"Changelog\"\nsubcategory: \"\"\ndescription: |-\n  Changelog for the ClearPass Terraform provider.\n---\n\n" + string(changelog)
+	out := "---\npage_title: \"Changelog\"\nsubcategory: \"Release Notes\"\ndescription: |-\n  Changelog for the ClearPass Terraform provider.\n---\n\n" + string(changelog)
 
 	err = os.WriteFile("docs/guides/changelog.md", []byte(out), 0644)
 	if err != nil {

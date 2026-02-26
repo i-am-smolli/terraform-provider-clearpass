@@ -1,6 +1,6 @@
 ---
 page_title: "Changelog"
-subcategory: ""
+subcategory: "Release Notes"
 description: |-
   Changelog for the ClearPass Terraform provider.
 ---
@@ -12,7 +12,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v0.0.6]
+## [v0.0.7] - 26-02-2026 (dd-mm-yyyy)
+
+### Added
+- Added more verbose error messages to api client.
+
+### Fixed
+- Sometimes `clearpass_service_cert` resource failed to import certificates from a local file.
+
+### Changed
+- Changed subcategory of changelog to "Release Notes" for better organization.
+
+## [v0.0.6] - 26-02-2026 (dd-mm-yyyy)
 
 ### Security
 - Marked `public_password` as sensitive in `clearpass_auth_method` resource to prevent credential leakage in Terraform state and logs.

@@ -226,6 +226,10 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 			w.Header().Set("Content-Type", "application/x-pkcs12")
 			w.Header().Set("Content-Length", strconv.Itoa(len(certBytes)))
 			_, _ = w.Write(certBytes) // Ignore error writing to response
+
+			// Small delay to ensure the client finishes reading the response
+			// before the connection is potentially closed by Server.Shutdown
+			time.Sleep(500 * time.Millisecond)
 		})
 
 		server := &http.Server{Handler: mux}
@@ -238,16 +242,16 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 			}
 		}()
 		// IMPORTANT: Gracefully shut down server at the end so active downloads aren't interrupted.
-		// We wait for the endpoint to be hit first (up to 15 seconds) because ClearPass might fetch it asynchronously.
+		// We wait for the endpoint to be hit first (up to 30 seconds) because ClearPass might fetch it asynchronously.
 		defer func() {
 			select {
 			case <-downloadChan:
 				// Download initiated, now we let graceful shutdown wait for the client to finish downloading
-			case <-time.After(15 * time.Second):
+			case <-time.After(30 * time.Second):
 				// Timeout waiting for ClearPass to fetch the cert. Proceed to shutdown to prevent hanging forever.
 			}
 
-			ctxShutdown, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			ctxShutdown, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 			defer cancel()
 			_ = server.Shutdown(ctxShutdown)
 		}()
@@ -272,9 +276,28 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 		PKCS12Passphrase: plan.PKCS12Passphrase.ValueString(),
 	}
 
-	result, err := r.client.CreateServiceCert(ctx, apiPayload)
+	var result *client.ServiceCertResult
+	var err error
+	maxRetries := 3
+	for i := 0; i < maxRetries; i++ {
+		result, err = r.client.CreateServiceCert(ctx, apiPayload)
+		if err == nil {
+			break // Success
+		}
+
+		// If it's a 422 Unprocessable Entity, ClearPass might just need a moment
+		if strings.Contains(err.Error(), "422") || strings.Contains(strings.ToLower(err.Error()), "unprocessable") {
+			fmt.Printf("ClearPass returned 422, retrying %d/%d...\n", i+1, maxRetries)
+			time.Sleep(2 * time.Second)
+			continue
+		}
+
+		// For other errors, break and fail immediately
+		break
+	}
+
 	if err != nil {
-		resp.Diagnostics.AddError("ClearPass API Error", fmt.Sprintf("Failed to create service cert: %s", err))
+		resp.Diagnostics.AddError("ClearPass API Error", fmt.Sprintf("Failed to create service cert after %d attempts: %s", maxRetries, err))
 		return
 	}
 
