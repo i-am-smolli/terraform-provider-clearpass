@@ -3,11 +3,14 @@
 page_title: "clearpass Provider"
 description: |-
   A Terraform provider for managing Aruba ClearPass Policy Manager.
+  -> Note: We can only officially test against the version currently running on our local Dev-ClearPass (6.12.7.308288). If your server runs a different version, unexpected behavior may occur. You can suppress the version mismatch warning in the provider configuration.
 ---
 
 # clearpass Provider
 
 A Terraform provider for managing Aruba ClearPass Policy Manager.
+
+-> **Note:** We can only officially test against the version currently running on our local Dev-ClearPass (`6.12.7.308288`). If your server runs a different version, unexpected behavior may occur. You can suppress the version mismatch warning in the provider configuration.
 
 ## Example Usage
 

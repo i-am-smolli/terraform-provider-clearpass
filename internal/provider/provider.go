@@ -22,6 +22,8 @@ type clearpassProvider struct {
 	version string
 }
 
+const testedClearPassVersion = "6.12.7.308288"
+
 // providerModel defines the provider configuration data model.
 // This is what the user will type in the provider { ... } block.
 type providerModel struct {
@@ -50,7 +52,8 @@ func (p *clearpassProvider) Metadata(ctx context.Context, req provider.MetadataR
 // Schema defines the provider's configuration HCL.
 func (p *clearpassProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "A Terraform provider for managing Aruba ClearPass Policy Manager.",
+		MarkdownDescription: "A Terraform provider for managing Aruba ClearPass Policy Manager.\n\n" +
+			"-> **Note:** We can only officially test against the version currently running on our local Dev-ClearPass (`" + testedClearPassVersion + "`). If your server runs a different version, unexpected behavior may occur. You can suppress the version mismatch warning in the provider configuration.",
 		Attributes: map[string]schema.Attribute{
 			"host": schema.StringAttribute{
 				Description: "ClearPass host (IP or FQDN).",
@@ -130,11 +133,10 @@ func (p *clearpassProvider) Configure(ctx context.Context, req provider.Configur
 				"Unknown ClearPass version. Failed to retrieve version from server: "+err.Error(),
 			)
 		} else {
-			wantedVersion := "6.12.4.305024"
-			if verRes.PlatformVersion != wantedVersion {
+			if verRes.PlatformVersion != testedClearPassVersion {
 				resp.Diagnostics.AddWarning(
 					"Untested ClearPass Version",
-					"This provider was tested against ClearPass version "+wantedVersion+
+					"This provider was tested against ClearPass version "+testedClearPassVersion+
 						", but the server version is "+verRes.PlatformVersion+". "+
 						"Unexpected behavior may occur. You can suppress this warning by setting 'suppress_version_warning = true' in the provider configuration.",
 				)

@@ -75,7 +75,7 @@ Optional:
 - `posture_pac_enable` (Boolean) Posture PAC
 - `posture_pac_lifetime` (Number) Posture PAC Expire Time
 - `posture_pac_lifetime_units` (String) Posture PAC Expire Time Units
-- `public_password` (String) Public Password
+- `public_password` (String, Sensitive) Public Password
 - `public_username` (String) Public Username
 - `server_id` (String) Server Id
 - `session_cache_enable` (Boolean) Session Resumption

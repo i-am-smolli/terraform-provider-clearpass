@@ -10,6 +10,7 @@ A community-built Terraform provider for managing [Aruba ClearPass Policy Manage
 - **No Official Support**: Community-maintained, use at your own risk.
 - **Always Test First**: Test against dev/lab instances. Never go straight to production.
 - **Not Aruba-Endorsed**: This is not an official Aruba product. A community effort to simplify ClearPass automation.
+- **Tested Version**: 🧪 We can only test against the version currently running on our local dev ClearPass (see provider documentation for the exact version). If your server runs a different version, your mileage may vary! You can suppress the version warning in the provider configuration.
 
 ## What This Provider Does
 
