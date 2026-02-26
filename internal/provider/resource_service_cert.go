@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"terraform-provider-clearpass/internal/client"
 
@@ -216,6 +217,7 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 		mux := http.NewServeMux()
 		mux.HandleFunc("/cert.pfx", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/x-pkcs12")
+			w.Header().Set("Content-Length", strconv.Itoa(len(certBytes)))
 			_, _ = w.Write(certBytes) // Ignore error writing to response
 		})
 
@@ -228,8 +230,12 @@ func (r *serviceCertResource) Create(ctx context.Context, req resource.CreateReq
 				fmt.Printf("Temp server error: %v\n", err)
 			}
 		}()
-		// IMPORTANT: Kill server at the end
-		defer server.Close()
+		// IMPORTANT: Gracefully shut down server at the end so active downloads aren't interrupted
+		defer func() {
+			ctxShutdown, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
+			_ = server.Shutdown(ctxShutdown)
+		}()
 
 		// 4. Determine IP (based on route to ClearPass Host)
 		targetHost := r.client.GetHost()
