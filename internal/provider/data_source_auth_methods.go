@@ -33,12 +33,12 @@ func (d *AuthMethodsDataSource) Metadata(ctx context.Context, req datasource.Met
 
 func (d *AuthMethodsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "List of Authentication Methods Data Source.",
+		MarkdownDescription: "Retrieves a list of authentication methods configured in ClearPass. This data source is useful for discovering available authentication methods or dynamically referring to them in your configuration.",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:            true,
-				MarkdownDescription: "Placeholder identifier",
+				MarkdownDescription: "Placeholder identifier used by Terraform for this data source.",
 			},
 		},
 		Blocks: map[string]schema.Block{

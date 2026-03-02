@@ -40,12 +40,12 @@ func (d *AuthMethodDataSource) Metadata(ctx context.Context, req datasource.Meta
 
 func (d *AuthMethodDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Authentication Method Data Source.",
+		MarkdownDescription: "Retrieves the details of a specific authentication method in ClearPass by its ID.",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Required:            true,
-				MarkdownDescription: "Numeric ID of the auth method",
+				MarkdownDescription: "The numeric ID of the authentication method to retrieve.",
 			},
 			"name": schema.StringAttribute{
 				Computed:            true,
