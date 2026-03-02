@@ -20,9 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Sometimes `clearpass_service_cert` resource failed to import certificates from a local file.
 
-### Changed
-- Changed subcategory of changelog to "Release Notes" for better organization.
-
 ## [v0.0.6] - 26-02-2026 (dd-mm-yyyy)
 
 ### Security

@@ -64,6 +64,7 @@ type ClientInterface interface {
 	// AuthMethod
 	CreateAuthMethod(ctx context.Context, authMethod *AuthMethodCreate) (*AuthMethodResult, error)
 	GetAuthMethod(ctx context.Context, id int) (*AuthMethodResult, error)
+	GetAuthMethods(ctx context.Context) (*AuthMethodList, error)
 	UpdateAuthMethod(ctx context.Context, id int, authMethod *AuthMethodUpdate) (*AuthMethodResult, error)
 	DeleteAuthMethod(ctx context.Context, id int) error
 
@@ -794,6 +795,20 @@ func (c *apiClient) GetAuthMethod(ctx context.Context, id int) (*AuthMethodResul
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil
 		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetAuthMethods(ctx context.Context) (*AuthMethodList, error) {
+	path := "/api/auth-method"
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result AuthMethodList
+	if err := c.do(req, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil

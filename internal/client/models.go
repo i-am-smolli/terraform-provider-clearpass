@@ -563,3 +563,13 @@ type AuthMethodResult struct {
 	Details      *AuthMethodDetails `json:"details"`
 	InnerMethods []string           `json:"inner_methods"`
 }
+
+type AuthMethodItems struct {
+	Items []AuthMethodResult `json:"items"`
+}
+
+type AuthMethodList struct {
+	Embedded AuthMethodItems        `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
