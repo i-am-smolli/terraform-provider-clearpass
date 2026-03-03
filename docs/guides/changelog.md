@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added data sources for Authentication Methods.
 - Added data sources for Certificate Trust Lists.
 - Added data sources for Enforcement Policies.
+- Added data sources for Enforcement Profiles.
 
 ## [v0.0.7] - 26-02-2026
 

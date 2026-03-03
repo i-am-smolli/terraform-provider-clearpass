@@ -17,6 +17,7 @@ type ClientInterface interface {
 	// Local User
 	CreateLocalUser(ctx context.Context, user *LocalUserCreate) (*LocalUserResult, error)
 	GetLocalUser(ctx context.Context, id int) (*LocalUserResult, error)
+	GetLocalUsers(ctx context.Context) (*LocalUserList, error)
 	UpdateLocalUser(ctx context.Context, id int, user *LocalUserUpdate) (*LocalUserResult, error)
 	DeleteLocalUser(ctx context.Context, id int) error
 
@@ -167,6 +168,23 @@ func (c *apiClient) GetLocalUser(ctx context.Context, id int) (*LocalUserResult,
 			return nil, nil // Return nil, nil to indicate "not found"
 		}
 		return nil, err // Other errors
+	}
+
+	return &result, nil
+}
+
+// GetLocalUsers retrieves a list of local users.
+func (c *apiClient) GetLocalUsers(ctx context.Context) (*LocalUserList, error) {
+	path := "/api/local-user"
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result LocalUserList
+	if err := c.do(req, &result); err != nil {
+		return nil, err
 	}
 
 	return &result, nil

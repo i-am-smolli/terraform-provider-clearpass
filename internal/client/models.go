@@ -72,9 +72,23 @@ type LocalUserResult struct {
 	Username           string            `json:"username"`
 	RoleName           string            `json:"role_name"`
 	Enabled            bool              `json:"enabled"`
+	PasswordHash       string            `json:"password_hash,omitempty"`
+	PasswordNTLMHash   string            `json:"password_ntlm_hash,omitempty"`
 	ChangePwdNextLogin bool              `json:"change_pwd_next_login"`
 	Attributes         map[string]string `json:"attributes"`
 	// Add other fields from the "LocalUserResult" model here
+}
+
+// LocalUserList defines the payload returned for a list of local users.
+type LocalUserList struct {
+	Embedded LocalUserItems         `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
+// LocalUserItems contains the list of LocalUserResult items.
+type LocalUserItems struct {
+	Items []LocalUserResult `json:"items"`
 }
 
 // --- Role Models (from Swagger 1.2) ---
