@@ -282,6 +282,16 @@ type EnforcementPolicyRuleResult struct {
 	Condition               []*EnforcementPolicyConditionResult `json:"condition"`
 }
 
+type EnforcementPolicyItems struct {
+	Items []EnforcementPolicyResult `json:"items"`
+}
+
+type EnforcementPolicyList struct {
+	Embedded EnforcementPolicyItems `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
 type EnforcementPolicyConditionResult struct {
 	Type  string `json:"type"`
 	Name  string `json:"name"`

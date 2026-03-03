@@ -41,6 +41,7 @@ type ClientInterface interface {
 	// EnforcementPolicy
 	CreateEnforcementPolicy(ctx context.Context, policy *EnforcementPolicyCreate) (*EnforcementPolicyResult, error)
 	GetEnforcementPolicy(ctx context.Context, id int) (*EnforcementPolicyResult, error)
+	GetEnforcementPolicies(ctx context.Context) (*EnforcementPolicyList, error)
 	UpdateEnforcementPolicy(ctx context.Context, id int, policy *EnforcementPolicyUpdate) (*EnforcementPolicyResult, error)
 	DeleteEnforcementPolicy(ctx context.Context, id int) error
 
@@ -555,6 +556,20 @@ func (c *apiClient) GetEnforcementPolicy(ctx context.Context, id int) (*Enforcem
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil
 		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetEnforcementPolicies(ctx context.Context) (*EnforcementPolicyList, error) {
+	path := "/api/enforcement-policy"
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result EnforcementPolicyList
+	if err := c.do(req, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil
