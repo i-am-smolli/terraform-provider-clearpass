@@ -170,5 +170,7 @@ func (p *clearpassProvider) DataSources(ctx context.Context) []func() datasource
 	return []func() datasource.DataSource{
 		NewAuthMethodDataSource,
 		NewAuthMethodsDataSource,
+		NewCertTrustListDataSource,
+		NewCertTrustListsDataSource,
 	}
 }

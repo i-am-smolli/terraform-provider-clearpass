@@ -58,6 +58,7 @@ type ClientInterface interface {
 	// CertTrustList
 	CreateCertTrustList(ctx context.Context, cert *CertTrustListCreate) (*CertTrustList, error)
 	GetCertTrustList(ctx context.Context, id int) (*CertTrustList, error)
+	GetCertTrustLists(ctx context.Context) (*CertTrustListList, error)
 	UpdateCertTrustList(ctx context.Context, id int, cert *CertTrustListUpdate) (*CertTrustList, error)
 	DeleteCertTrustList(ctx context.Context, id int) error
 
@@ -730,6 +731,20 @@ func (c *apiClient) GetCertTrustList(ctx context.Context, id int) (*CertTrustLis
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil
 		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetCertTrustLists(ctx context.Context) (*CertTrustListList, error) {
+	path := "/api/cert-trust-list"
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result CertTrustListList
+	if err := c.do(req, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil

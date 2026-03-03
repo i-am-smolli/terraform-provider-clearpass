@@ -7,12 +7,18 @@ description: |-
 
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. All dates are in dd-mm-yyyy format.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v0.0.7] - 26-02-2026 (dd-mm-yyyy)
+## [v0.0.next] - xx-xx-2026
+
+### Added
+- Added data sources for Authentication Methods.
+- Added data sources for Certificate Trust Lists.
+
+## [v0.0.7] - 26-02-2026
 
 ### Added
 - Added more verbose error messages to api client.
@@ -20,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Sometimes `clearpass_service_cert` resource failed to import certificates from a local file.
 
-## [v0.0.6] - 26-02-2026 (dd-mm-yyyy)
+## [v0.0.6] - 26-02-2026
 
 ### Security
 - Marked `public_password` as sensitive in `clearpass_auth_method` resource to prevent credential leakage in Terraform state and logs.

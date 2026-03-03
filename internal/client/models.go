@@ -456,6 +456,16 @@ type CertTrustListUpdate struct {
 	CertUsage []string `json:"cert_usage,omitempty"`
 }
 
+type CertTrustListItems struct {
+	Items []CertTrustList `json:"items"`
+}
+
+type CertTrustListList struct {
+	Embedded CertTrustListItems     `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
 // --- AuthMethod Models ---
 
 type FlexBool bool
