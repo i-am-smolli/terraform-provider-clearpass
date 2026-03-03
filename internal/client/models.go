@@ -216,6 +216,16 @@ type EnforcementProfileResult struct {
 	DurConfig              interface{}         `json:"dur_config"`
 }
 
+type EnforcementProfileItems struct {
+	Items []EnforcementProfileResult `json:"items"`
+}
+
+type EnforcementProfileList struct {
+	Embedded EnforcementProfileItems `json:"_embedded"`
+	Links    map[string]interface{}  `json:"_links"`
+	Count    *int                    `json:"count,omitempty"`
+}
+
 // ProfileAttribute is the generic key-value pair used for RADIUS, etc.
 type ProfileAttribute struct {
 	Type  string `json:"type"`  // e.g., "Radius:IETF"

@@ -35,6 +35,8 @@ type ClientInterface interface {
 	// EnforcementProfile
 	CreateEnforcementProfile(ctx context.Context, profile *EnforcementProfileCreate) (*EnforcementProfileResult, error)
 	GetEnforcementProfile(ctx context.Context, id int) (*EnforcementProfileResult, error)
+	GetEnforcementProfileByName(ctx context.Context, name string) (*EnforcementProfileResult, error)
+	GetEnforcementProfiles(ctx context.Context) (*EnforcementProfileList, error)
 	UpdateEnforcementProfile(ctx context.Context, id int, profile *EnforcementProfileUpdate) (*EnforcementProfileResult, error)
 	DeleteEnforcementProfile(ctx context.Context, id int) error
 
@@ -491,6 +493,37 @@ func (c *apiClient) GetEnforcementProfile(ctx context.Context, id int) (*Enforce
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil
 		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetEnforcementProfileByName(ctx context.Context, name string) (*EnforcementProfileResult, error) {
+	path := fmt.Sprintf("/api/enforcement-profile/name/%s", name)
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result EnforcementProfileResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetEnforcementProfiles(ctx context.Context) (*EnforcementProfileList, error) {
+	path := "/api/enforcement-profile"
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result EnforcementProfileList
+	if err := c.do(req, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil
