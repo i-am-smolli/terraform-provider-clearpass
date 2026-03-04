@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added data sources for Local Users.
 - Added data sources for Roles.
 - Added data sources for Role Mappings.
+- Added data sources for Services.
 
 ## [v0.0.7] - 26-02-2026
 

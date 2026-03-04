@@ -55,6 +55,8 @@ type ClientInterface interface {
 	//Service
 	CreateService(ctx context.Context, service *ServiceCreate) (*ServiceResult, error)
 	GetService(ctx context.Context, id int) (*ServiceResult, error)
+	GetServiceByName(ctx context.Context, name string) (*ServiceResult, error)
+	GetServices(ctx context.Context, filter, sort *string, offset, limit *int, calcCount *bool) (*ServiceList, error)
 	UpdateService(ctx context.Context, id int, service *ServiceUpdate) (*ServiceResult, error)
 	DeleteService(ctx context.Context, id int) error
 
@@ -795,6 +797,55 @@ func (c *apiClient) GetService(ctx context.Context, id int) (*ServiceResult, err
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil
 		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetServiceByName(ctx context.Context, name string) (*ServiceResult, error) {
+	path := fmt.Sprintf("/api/config/service/name/%s", name)
+	req, err := c.newRequest(ctx, http.MethodGet, path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result ServiceResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetServices(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*ServiceList, error) {
+	req, err := c.newRequest(ctx, http.MethodGet, "/api/config/service", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calcCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calcCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result ServiceList
+	err = c.do(req, &result)
+	if err != nil {
 		return nil, err
 	}
 	return &result, nil

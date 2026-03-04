@@ -464,6 +464,16 @@ type ServiceResult struct {
 	RadiusProxyEnableForAcct       bool           `json:"radius_proxy_enable_for_acct"`
 }
 
+type ServiceItems struct {
+	Items []ServiceResult `json:"items"`
+}
+
+type ServiceList struct {
+	Embedded ServiceItems           `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
 type ServiceRule struct {
 	Type     string `json:"type"`     // "Radius:IETF"
 	Name     string `json:"name"`     // "NAS-Port-Type"
