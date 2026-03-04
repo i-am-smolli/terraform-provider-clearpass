@@ -24,6 +24,8 @@ type ClientInterface interface {
 	// Role
 	CreateRole(ctx context.Context, role *RoleCreate) (*RoleResult, error)
 	GetRole(ctx context.Context, id int) (*RoleResult, error)
+	GetRoleByName(ctx context.Context, name string) (*RoleResult, error)
+	GetRoles(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*RoleList, error)
 	UpdateRole(ctx context.Context, id int, role *RoleUpdate) (*RoleResult, error)
 	DeleteRole(ctx context.Context, id int) error
 
@@ -268,6 +270,62 @@ func (c *apiClient) GetRole(ctx context.Context, id int) (*RoleResult, error) {
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil // Not found
 		}
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// GetRoleByName retrieves a role by its unique name.
+func (c *apiClient) GetRoleByName(ctx context.Context, name string) (*RoleResult, error) {
+	path := fmt.Sprintf("/api/role/name/%s", name)
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result RoleResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil // Not found
+		}
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// GetRoles retrieves a list of roles based on filter query.
+func (c *apiClient) GetRoles(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*RoleList, error) {
+	path := "/api/role"
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Add query parameters
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calculateCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calculateCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result RoleList
+	if err := c.do(req, &result); err != nil {
 		return nil, err
 	}
 

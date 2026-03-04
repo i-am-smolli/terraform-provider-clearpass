@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added data sources for Enforcement Policies.
 - Added data sources for Enforcement Profiles.
 - Added data sources for Local Users.
+- Added data sources for Roles.
 
 ## [v0.0.7] - 26-02-2026
 

@@ -112,6 +112,18 @@ type RoleResult struct {
 	Description string `json:"description"`
 }
 
+// RoleItems contains the list of RoleResult items.
+type RoleItems struct {
+	Items []RoleResult `json:"items"`
+}
+
+// RoleList defines the payload returned for a list of roles.
+type RoleList struct {
+	Embedded RoleItems              `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
 // RoleMappingCreate defines the payload for creating a new role mapping.
 type RoleMappingCreate struct {
 	Name            string                 `json:"name"`
