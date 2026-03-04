@@ -30,8 +30,10 @@ type ClientInterface interface {
 	DeleteRole(ctx context.Context, id int) error
 
 	// RoleMapping
+	GetRoleMappings(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*RoleMappingList, error)
 	CreateRoleMapping(ctx context.Context, roleMap *RoleMappingCreate) (*RoleMappingResult, error)
 	GetRoleMapping(ctx context.Context, id int) (*RoleMappingResult, error)
+	GetRoleMappingByName(ctx context.Context, name string) (*RoleMappingResult, error)
 	UpdateRoleMapping(ctx context.Context, id int, roleMap *RoleMappingUpdate) (*RoleMappingResult, error)
 	DeleteRoleMapping(ctx context.Context, id int) error
 
@@ -459,6 +461,39 @@ func (c *apiClient) do(req *http.Request, v interface{}) error {
 
 // --- Role Mapping API Methods ---
 
+// GetRoleMappings retrieves a list of role mappings.
+func (c *apiClient) GetRoleMappings(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*RoleMappingList, error) {
+	req, err := c.newRequest(ctx, http.MethodGet, "/api/role-mapping", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calcCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calcCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result RoleMappingList
+	err = c.do(req, &result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
 // CreateRoleMapping creates a new role mapping policy.
 func (c *apiClient) CreateRoleMapping(ctx context.Context, roleMap *RoleMappingCreate) (*RoleMappingResult, error) {
 	payloadBytes, err := json.Marshal(roleMap)
@@ -496,6 +531,22 @@ func (c *apiClient) GetRoleMapping(ctx context.Context, id int) (*RoleMappingRes
 		return nil, err
 	}
 
+	return &result, nil
+}
+
+// GetRoleMappingByName retrieves a role mapping by its name.
+func (c *apiClient) GetRoleMappingByName(ctx context.Context, name string) (*RoleMappingResult, error) {
+	path := fmt.Sprintf("/api/role-mapping/name/%s", name)
+	req, err := c.newRequest(ctx, http.MethodGet, path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result RoleMappingResult
+	err = c.do(req, &result)
+	if err != nil {
+		return nil, err
+	}
 	return &result, nil
 }
 

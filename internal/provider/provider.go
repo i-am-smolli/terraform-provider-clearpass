@@ -180,5 +180,7 @@ func (p *clearpassProvider) DataSources(ctx context.Context) []func() datasource
 		NewLocalUsersDataSource,
 		NewRoleDataSource,
 		NewRolesDataSource,
+		NewRoleMappingDataSource,
+		NewRoleMappingsDataSource,
 	}
 }

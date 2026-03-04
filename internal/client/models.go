@@ -198,6 +198,16 @@ type RulesConditionSettingsResult struct {
 	ValueDispName string `json:"value_disp_name"`
 }
 
+type RoleMappingItems struct {
+	Items []RoleMappingResult `json:"items"`
+}
+
+type RoleMappingList struct {
+	Embedded RoleMappingItems       `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
 type EnforcementProfileCreate struct {
 	Name                   string              `json:"name"`
 	Description            string              `json:"description,omitempty"`
