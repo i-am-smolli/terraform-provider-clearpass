@@ -3,12 +3,12 @@
 page_title: "clearpass_roles Data Source - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Data source for a list of ClearPass roles. Use this to query multiple roles, optionally using a JSON filter.
+  Retrieves a list of ClearPass roles, optionally filtered using a JSON filter expression. Use this data source to discover available roles or reference them dynamically in your configuration.
 ---
 
 # clearpass_roles (Data Source)
 
-Data source for a list of ClearPass roles. Use this to query multiple roles, optionally using a JSON filter.
+Retrieves a list of ClearPass roles, optionally filtered using a JSON filter expression. Use this data source to discover available roles or reference them dynamically in your configuration.
 
 ## Example Usage
 
@@ -36,7 +36,7 @@ output "admin_roles" {
 
 ### Optional
 
-- `filter` (String) JSON filter expression specifying the items to return (e.g., `{"name":{"$contains":"Admin"}}`).
+- `filter` (String) JSON filter expression to narrow results (e.g., `{"name":{"$contains":"Admin"}}`).
 
 ### Read-Only
 

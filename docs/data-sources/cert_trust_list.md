@@ -3,12 +3,12 @@
 page_title: "clearpass_cert_trust_list Data Source - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Data source for retrieving a single Certificate Trust List.
+  Retrieves the details of a specific Certificate Trust List entry in ClearPass by its numeric ID. Certificate Trust Lists define which CA certificates are trusted for EAP-TLS and other certificate-based authentication.
 ---
 
 # clearpass_cert_trust_list (Data Source)
 
-Data source for retrieving a single Certificate Trust List.
+Retrieves the details of a specific Certificate Trust List entry in ClearPass by its numeric ID. Certificate Trust Lists define which CA certificates are trusted for EAP-TLS and other certificate-based authentication.
 
 ## Example Usage
 
@@ -29,10 +29,10 @@ output "certificate_details" {
 
 ### Required
 
-- `id` (Number) ID of the certificate trust list.
+- `id` (Number) Numeric ID of the certificate trust list entry to retrieve.
 
 ### Read-Only
 
-- `cert_file` (String) Certificate trust list file name.
-- `cert_usage` (List of String) Usage of the certificate (e.g., Radius, WebUI).
-- `enabled` (Boolean) Whether the certificate trust list is enabled.
+- `cert_file` (String) The file name of the trusted CA certificate.
+- `cert_usage` (List of String) The services this CA certificate is trusted for (e.g., `EAP`, `RadSec`, `Database`, `Web`).
+- `enabled` (Boolean) Whether this certificate trust list entry is enabled for use.

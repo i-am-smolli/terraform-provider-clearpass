@@ -48,29 +48,29 @@ func (d *rolesDataSource) Metadata(_ context.Context, req datasource.MetadataReq
 // Schema defines the schema for the data source.
 func (d *rolesDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Data source for a list of ClearPass roles. " +
-			"Use this to query multiple roles, optionally using a JSON filter.",
+		MarkdownDescription: "Retrieves a list of ClearPass roles, optionally filtered using a JSON filter expression. " +
+			"Use this data source to discover available roles or reference them dynamically in your configuration.",
 		Attributes: map[string]schema.Attribute{
 			"filter": schema.StringAttribute{
-				Description: "JSON filter expression specifying the items to return (e.g., `{\"name\":{\"$contains\":\"Admin\"}}`).",
-				Optional:    true,
+				MarkdownDescription: "JSON filter expression to narrow results (e.g., `{\"name\":{\"$contains\":\"Admin\"}}`).",
+				Optional:            true,
 			},
 			"roles": schema.ListNestedAttribute{
-				Description: "List of roles matching the filter.",
-				Computed:    true,
+				MarkdownDescription: "List of roles matching the filter.",
+				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							Description: "Numeric ID of the role.",
-							Computed:    true,
+							MarkdownDescription: "Numeric ID of the role.",
+							Computed:            true,
 						},
 						"name": schema.StringAttribute{
-							Description: "Name of the role.",
-							Computed:    true,
+							MarkdownDescription: "Name of the role.",
+							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							Description: "Description of the role.",
-							Computed:    true,
+							MarkdownDescription: "Description of the role.",
+							Computed:            true,
 						},
 					},
 				},

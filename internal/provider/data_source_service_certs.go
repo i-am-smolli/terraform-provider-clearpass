@@ -34,40 +34,41 @@ func (d *serviceCertsDataSource) Metadata(_ context.Context, req datasource.Meta
 
 func (d *serviceCertsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Fetches a list of service certificates from ClearPass.",
+		MarkdownDescription: "Retrieves a list of all service certificates configured in ClearPass. " +
+			"Service certificates are used for RADIUS, HTTPS, and other TLS-based services.",
 		Attributes: map[string]schema.Attribute{
 			"service_certs": schema.ListNestedAttribute{
-				Description: "List of service certificates.",
-				Computed:    true,
+				MarkdownDescription: "List of service certificates.",
+				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							Description: "Numeric ID of the service certificate.",
-							Computed:    true,
+							MarkdownDescription: "Numeric ID of the service certificate.",
+							Computed:            true,
 						},
 						"subject": schema.StringAttribute{
-							Description: "Subject of the service certificate.",
-							Computed:    true,
+							MarkdownDescription: "The Subject Distinguished Name (DN) of the certificate.",
+							Computed:            true,
 						},
 						"expiry_date": schema.StringAttribute{
-							Description: "Expiry date of the service certificate.",
-							Computed:    true,
+							MarkdownDescription: "The expiration date of the certificate.",
+							Computed:            true,
 						},
 						"issue_date": schema.StringAttribute{
-							Description: "Issue date of the service certificate.",
-							Computed:    true,
+							MarkdownDescription: "The date the certificate was issued.",
+							Computed:            true,
 						},
 						"issue_by": schema.StringAttribute{
-							Description: "Service certificate issued by.",
-							Computed:    true,
+							MarkdownDescription: "The Certificate Authority (CA) or issuer that signed the certificate.",
+							Computed:            true,
 						},
 						"validity": schema.StringAttribute{
-							Description: "Validity of the service certificate.",
-							Computed:    true,
+							MarkdownDescription: "The validity status of the certificate (e.g., `Valid`, `Expired`).",
+							Computed:            true,
 						},
 						"cert_file": schema.StringAttribute{
-							Description: "Certificate File.",
-							Computed:    true,
+							MarkdownDescription: "The certificate file name as stored in ClearPass.",
+							Computed:            true,
 						},
 					},
 				},

@@ -3,12 +3,12 @@
 page_title: "clearpass_cert_trust_lists Data Source - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Data source for retrieving all Certificate Trust Lists.
+  Retrieves all Certificate Trust List entries configured in ClearPass. Certificate Trust Lists define which CA certificates are trusted for EAP-TLS and other certificate-based authentication.
 ---
 
 # clearpass_cert_trust_lists (Data Source)
 
-Data source for retrieving all Certificate Trust Lists.
+Retrieves all Certificate Trust List entries configured in ClearPass. Certificate Trust Lists define which CA certificates are trusted for EAP-TLS and other certificate-based authentication.
 
 ## Example Usage
 
@@ -27,14 +27,14 @@ output "all_certificates" {
 
 ### Read-Only
 
-- `lists` (Attributes List) List of Certificate Trust Lists. (see [below for nested schema](#nestedatt--lists))
+- `lists` (Attributes List) List of Certificate Trust List entries. (see [below for nested schema](#nestedatt--lists))
 
 <a id="nestedatt--lists"></a>
 ### Nested Schema for `lists`
 
 Read-Only:
 
-- `cert_file` (String) Certificate trust list file name.
-- `cert_usage` (List of String) Usage of the certificate (e.g., Radius, WebUI).
-- `enabled` (Boolean) Whether the certificate trust list is enabled.
-- `id` (Number) ID of the certificate trust list.
+- `cert_file` (String) The file name of the trusted CA certificate.
+- `cert_usage` (List of String) The services this CA certificate is trusted for (e.g., `EAP`, `RadSec`, `Database`, `Web`).
+- `enabled` (Boolean) Whether this certificate trust list entry is enabled for use.
+- `id` (Number) Numeric ID of the certificate trust list entry.

@@ -40,35 +40,36 @@ func (d *serviceCertDataSource) Metadata(_ context.Context, req datasource.Metad
 
 func (d *serviceCertDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manages a service certificate in ClearPass.",
+		MarkdownDescription: "Retrieves the details of a specific service certificate in ClearPass by its numeric ID. " +
+			"Service certificates are used for RADIUS, HTTPS, and other TLS-based services.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
-				Description: "Numeric ID of the service certificate.",
-				Required:    true,
+				MarkdownDescription: "Numeric ID of the service certificate to retrieve.",
+				Required:            true,
 			},
 			"subject": schema.StringAttribute{
-				Description: "Subject of the service certificate.",
-				Computed:    true,
+				MarkdownDescription: "The Subject Distinguished Name (DN) of the certificate (e.g., `CN=clearpass.example.com`).",
+				Computed:            true,
 			},
 			"expiry_date": schema.StringAttribute{
-				Description: "Expiry date of the service certificate.",
-				Computed:    true,
+				MarkdownDescription: "The expiration date of the certificate.",
+				Computed:            true,
 			},
 			"issue_date": schema.StringAttribute{
-				Description: "Issue date of the service certificate.",
-				Computed:    true,
+				MarkdownDescription: "The date the certificate was issued.",
+				Computed:            true,
 			},
 			"issue_by": schema.StringAttribute{
-				Description: "Service certificate issued by.",
-				Computed:    true,
+				MarkdownDescription: "The Certificate Authority (CA) or issuer that signed the certificate.",
+				Computed:            true,
 			},
 			"validity": schema.StringAttribute{
-				Description: "Validity of the service certificate.",
-				Computed:    true,
+				MarkdownDescription: "The validity status of the certificate (e.g., `Valid`, `Expired`).",
+				Computed:            true,
 			},
 			"cert_file": schema.StringAttribute{
-				Description: "Certificate File.",
-				Computed:    true,
+				MarkdownDescription: "The certificate file name as stored in ClearPass.",
+				Computed:            true,
 			},
 		},
 	}

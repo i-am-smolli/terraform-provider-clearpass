@@ -3,12 +3,12 @@
 page_title: "clearpass_role_mappings Data Source - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Data source for a list of ClearPass role mappings. Use this to query multiple role mappings.
+  Retrieves a list of ClearPass Role Mapping policies, optionally filtered using a JSON filter expression. Role Mapping policies assign roles to users based on attribute conditions evaluated during authentication.
 ---
 
 # clearpass_role_mappings (Data Source)
 
-Data source for a list of ClearPass role mappings. Use this to query multiple role mappings.
+Retrieves a list of ClearPass Role Mapping policies, optionally filtered using a JSON filter expression. Role Mapping policies assign roles to users based on attribute conditions evaluated during authentication.
 
 ## Example Usage
 
@@ -32,40 +32,40 @@ output "clearpass_role_by_name" {
 
 ### Optional
 
-- `filter` (String) JSON filter expression specifying the items to return (e.g., `{"name":{"$contains":"Admin"}}`).
+- `filter` (String) JSON filter expression to narrow results (e.g., `{"name":{"$contains":"Guest"}}`).
 
 ### Read-Only
 
-- `role_mappings` (Attributes List) List of role mappings. (see [below for nested schema](#nestedatt--role_mappings))
+- `role_mappings` (Attributes List) List of role mapping policies matching the filter. (see [below for nested schema](#nestedatt--role_mappings))
 
 <a id="nestedatt--role_mappings"></a>
 ### Nested Schema for `role_mappings`
 
 Read-Only:
 
-- `default_role_name` (String) Role mapping default role name.
-- `description` (String) Role mapping description.
+- `default_role_name` (String) The default role assigned when no rules match.
+- `description` (String) A human-readable description of the role mapping policy.
 - `id` (Number) Numeric ID of the role mapping.
 - `name` (String) The unique name of the role mapping policy.
-- `rule_combine_algo` (String) Role mapping rules evaluation algorithm.
-- `rules` (Attributes List) List of role mapping rules. (see [below for nested schema](#nestedatt--role_mappings--rules))
+- `rule_combine_algo` (String) The algorithm used to combine rule results (e.g., `first-applicable`, `evaluate-all`).
+- `rules` (Attributes List) Ordered list of rules evaluated to assign roles. (see [below for nested schema](#nestedatt--role_mappings--rules))
 
 <a id="nestedatt--role_mappings--rules"></a>
 ### Nested Schema for `role_mappings.rules`
 
 Read-Only:
 
-- `condition` (Attributes List) Conditions of role mapping rules. (see [below for nested schema](#nestedatt--role_mappings--rules--condition))
-- `match_type` (String) Matches ANY/ALL the conditions specified in the rule.
-- `role_name` (String) Role name.
+- `condition` (Attributes List) The set of conditions evaluated for this rule. (see [below for nested schema](#nestedatt--role_mappings--rules--condition))
+- `match_type` (String) Whether the rule matches `ANY` or `ALL` of its conditions.
+- `role_name` (String) The role assigned when this rule's conditions are met.
 
 <a id="nestedatt--role_mappings--rules--condition"></a>
 ### Nested Schema for `role_mappings.rules.condition`
 
 Read-Only:
 
-- `name` (String) Condition name.
-- `oper` (String) Condition operator.
-- `type` (String) Condition type.
-- `value` (String) Condition value.
-- `value_disp_name` (String) Display value name.
+- `name` (String) The specific attribute name within the condition type (e.g., `Calling-Station-Id`, `Role`).
+- `oper` (String) The operator used for comparison (e.g., `EQUALS`, `CONTAINS`, `BELONGS_TO`).
+- `type` (String) The namespace or category of the condition (e.g., `Radius:IETF`, `Tips`, `Connection`).
+- `value` (String) The value against which the attribute is compared.
+- `value_disp_name` (String) Human-readable display name of the condition value.

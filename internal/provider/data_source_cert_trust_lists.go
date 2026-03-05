@@ -29,29 +29,30 @@ func (d *certTrustListsDataSource) Metadata(_ context.Context, req datasource.Me
 
 func (d *certTrustListsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Data source for retrieving all Certificate Trust Lists.",
+		MarkdownDescription: "Retrieves all Certificate Trust List entries configured in ClearPass. " +
+			"Certificate Trust Lists define which CA certificates are trusted for EAP-TLS and other certificate-based authentication.",
 		Attributes: map[string]schema.Attribute{
 			"lists": schema.ListNestedAttribute{
-				Description: "List of Certificate Trust Lists.",
-				Computed:    true,
+				MarkdownDescription: "List of Certificate Trust List entries.",
+				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							Description: "ID of the certificate trust list.",
-							Computed:    true,
+							MarkdownDescription: "Numeric ID of the certificate trust list entry.",
+							Computed:            true,
 						},
 						"cert_file": schema.StringAttribute{
-							Description: "Certificate trust list file name.",
-							Computed:    true,
+							MarkdownDescription: "The file name of the trusted CA certificate.",
+							Computed:            true,
 						},
 						"enabled": schema.BoolAttribute{
-							Description: "Whether the certificate trust list is enabled.",
-							Computed:    true,
+							MarkdownDescription: "Whether this certificate trust list entry is enabled for use.",
+							Computed:            true,
 						},
 						"cert_usage": schema.ListAttribute{
-							Description: "Usage of the certificate (e.g., Radius, WebUI).",
-							ElementType: types.StringType,
-							Computed:    true,
+							MarkdownDescription: "The services this CA certificate is trusted for (e.g., `EAP`, `RadSec`, `Database`, `Web`).",
+							ElementType:         types.StringType,
+							Computed:            true,
 						},
 					},
 				},

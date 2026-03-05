@@ -3,19 +3,20 @@
 page_title: "clearpass_service_certs Data Source - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Fetches a list of service certificates from ClearPass.
+  Retrieves a list of all service certificates configured in ClearPass. Service certificates are used for RADIUS, HTTPS, and other TLS-based services.
 ---
 
 # clearpass_service_certs (Data Source)
 
-Fetches a list of service certificates from ClearPass.
+Retrieves a list of all service certificates configured in ClearPass. Service certificates are used for RADIUS, HTTPS, and other TLS-based services.
 
 ## Example Usage
 
 ```terraform
-data "clearpass_service_certs" "all" {
-}
+# Retrieve all service certificates from ClearPass
+data "clearpass_service_certs" "all" {}
 
+# Output the list of service certificates
 output "service_certs" {
   value = data.clearpass_service_certs.all.service_certs
 }
@@ -33,10 +34,10 @@ output "service_certs" {
 
 Read-Only:
 
-- `cert_file` (String) Certificate File.
-- `expiry_date` (String) Expiry date of the service certificate.
+- `cert_file` (String) The certificate file name as stored in ClearPass.
+- `expiry_date` (String) The expiration date of the certificate.
 - `id` (Number) Numeric ID of the service certificate.
-- `issue_by` (String) Service certificate issued by.
-- `issue_date` (String) Issue date of the service certificate.
-- `subject` (String) Subject of the service certificate.
-- `validity` (String) Validity of the service certificate.
+- `issue_by` (String) The Certificate Authority (CA) or issuer that signed the certificate.
+- `issue_date` (String) The date the certificate was issued.
+- `subject` (String) The Subject Distinguished Name (DN) of the certificate.
+- `validity` (String) The validity status of the certificate (e.g., `Valid`, `Expired`).

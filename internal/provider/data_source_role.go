@@ -42,24 +42,24 @@ func (d *roleDataSource) Metadata(_ context.Context, req datasource.MetadataRequ
 // Schema defines the schema for the data source.
 func (d *roleDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manages a user role in ClearPass. Roles are used to define access levels " +
-			"and permissions for authenticated users. Common roles include [Employee], " +
-			"Guest, and custom roles for specific access requirements.",
+		MarkdownDescription: "Retrieves the details of a specific role in ClearPass by its numeric ID or name. " +
+			"Roles define access levels and permissions for authenticated users. " +
+			"Common roles include `[Employee]`, `Guest`, and custom roles for specific access requirements.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
-				Description: "Numeric ID of the role.",
-				Optional:    true,
-				Computed:    true,
+				MarkdownDescription: "Numeric ID of the role. Specify either `id` or `name` to look up a role.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				Description: "The unique name of the role (e.g., 'Guest', '[Employee]', '[Contractor]'). " +
-					"Note: System roles typically use square brackets.",
+				MarkdownDescription: "The unique name of the role (e.g., `Guest`, `[Employee]`, `[Contractor]`). " +
+					"System roles typically use square brackets. Specify either `id` or `name` to look up a role.",
 				Optional: true,
 				Computed: true,
 			},
 			"description": schema.StringAttribute{
-				Description: "Human-readable description of the role's purpose and intended use.",
-				Computed:    true,
+				MarkdownDescription: "Human-readable description of the role's purpose and intended use.",
+				Computed:            true,
 			},
 		},
 	}

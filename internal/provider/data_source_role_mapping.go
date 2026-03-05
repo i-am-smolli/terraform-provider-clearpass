@@ -53,67 +53,68 @@ func (d *roleMappingDataSource) Metadata(_ context.Context, req datasource.Metad
 
 func (d *roleMappingDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Data source for a ClearPass role mapping. Use this data source to query a single role mapping by ID or Name.",
+		MarkdownDescription: "Retrieves the details of a specific Role Mapping policy in ClearPass by its ID or name. " +
+			"Role Mapping policies assign roles to users based on attribute conditions evaluated during authentication.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
-				Description: "Numeric ID of the role mapping.",
-				Optional:    true,
-				Computed:    true,
+				MarkdownDescription: "Numeric ID of the role mapping. Specify either `id` or `name` to look up a role mapping.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				Description: "The unique name of the role mapping policy.",
-				Optional:    true,
-				Computed:    true,
+				MarkdownDescription: "The unique name of the role mapping policy. Specify either `id` or `name` to look up a role mapping.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				Description: "Role mapping description.",
-				Computed:    true,
+				MarkdownDescription: "A human-readable description of the role mapping policy.",
+				Computed:            true,
 			},
 			"default_role_name": schema.StringAttribute{
-				Description: "Role mapping default role name.",
-				Computed:    true,
+				MarkdownDescription: "The default role assigned when no rules match the session conditions.",
+				Computed:            true,
 			},
 			"rule_combine_algo": schema.StringAttribute{
-				Description: "Role mapping rules evaluation algorithm.",
-				Computed:    true,
+				MarkdownDescription: "The algorithm used to combine rule results (e.g., `first-applicable`, `evaluate-all`).",
+				Computed:            true,
 			},
 			"rules": schema.ListNestedAttribute{
-				Description: "List of role mapping rules.",
-				Computed:    true,
+				MarkdownDescription: "Ordered list of rules evaluated to assign roles.",
+				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"match_type": schema.StringAttribute{
-							Description: "Matches ANY/ALL the conditions specified in the rule.",
-							Computed:    true,
+							MarkdownDescription: "Whether the rule matches `ANY` or `ALL` of its conditions.",
+							Computed:            true,
 						},
 						"role_name": schema.StringAttribute{
-							Description: "Role name.",
-							Computed:    true,
+							MarkdownDescription: "The role assigned when this rule's conditions are met.",
+							Computed:            true,
 						},
 						"condition": schema.ListNestedAttribute{
-							Description: "Conditions of role mapping rules.",
-							Computed:    true,
+							MarkdownDescription: "The set of conditions that must be evaluated for this rule.",
+							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
-										Description: "Condition type.",
-										Computed:    true,
+										MarkdownDescription: "The namespace or category of the condition (e.g., `Radius:IETF`, `Tips`, `Connection`).",
+										Computed:            true,
 									},
 									"name": schema.StringAttribute{
-										Description: "Condition name.",
-										Computed:    true,
+										MarkdownDescription: "The specific attribute name within the condition type (e.g., `Calling-Station-Id`, `Role`).",
+										Computed:            true,
 									},
 									"oper": schema.StringAttribute{
-										Description: "Condition operator.",
-										Computed:    true,
+										MarkdownDescription: "The operator used for comparison (e.g., `EQUALS`, `CONTAINS`, `BELONGS_TO`).",
+										Computed:            true,
 									},
 									"value": schema.StringAttribute{
-										Description: "Condition value.",
-										Computed:    true,
+										MarkdownDescription: "The value against which the attribute is compared.",
+										Computed:            true,
 									},
 									"value_disp_name": schema.StringAttribute{
-										Description: "Display value name.",
-										Computed:    true,
+										MarkdownDescription: "Human-readable display name of the condition value.",
+										Computed:            true,
 									},
 								},
 							},

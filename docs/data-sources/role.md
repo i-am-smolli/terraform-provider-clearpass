@@ -3,12 +3,12 @@
 page_title: "clearpass_role Data Source - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Manages a user role in ClearPass. Roles are used to define access levels and permissions for authenticated users. Common roles include [Employee], Guest, and custom roles for specific access requirements.
+  Retrieves the details of a specific role in ClearPass by its numeric ID or name. Roles define access levels and permissions for authenticated users. Common roles include [Employee], Guest, and custom roles for specific access requirements.
 ---
 
 # clearpass_role (Data Source)
 
-Manages a user role in ClearPass. Roles are used to define access levels and permissions for authenticated users. Common roles include [Employee], Guest, and custom roles for specific access requirements.
+Retrieves the details of a specific role in ClearPass by its numeric ID or name. Roles define access levels and permissions for authenticated users. Common roles include `[Employee]`, `Guest`, and custom roles for specific access requirements.
 
 ## Example Usage
 
@@ -37,8 +37,8 @@ output "clearpass_role_by_name" {
 
 ### Optional
 
-- `id` (Number) Numeric ID of the role.
-- `name` (String) The unique name of the role (e.g., 'Guest', '[Employee]', '[Contractor]'). Note: System roles typically use square brackets.
+- `id` (Number) Numeric ID of the role. Specify either `id` or `name` to look up a role.
+- `name` (String) The unique name of the role (e.g., `Guest`, `[Employee]`, `[Contractor]`). System roles typically use square brackets. Specify either `id` or `name` to look up a role.
 
 ### Read-Only
 

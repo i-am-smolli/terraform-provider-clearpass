@@ -32,64 +32,64 @@ func (d *enforcementPolicyDataSource) Metadata(_ context.Context, req datasource
 
 func (d *enforcementPolicyDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Data source for retrieving a single Enforcement Policy from ClearPass. " +
+		MarkdownDescription: "Data source for retrieving a single Enforcement Policy from ClearPass. " +
 			"Enforcement Policies evaluate conditions to determine which Enforcement Profiles " +
 			"should be applied to a session.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
-				Description: "The numeric ID of the Enforcement Policy in ClearPass.",
-				Required:    true,
+				MarkdownDescription: "The numeric ID of the Enforcement Policy in ClearPass.",
+				Required:            true,
 			},
 			"name": schema.StringAttribute{
-				Description: "The unique name of the Enforcement Policy.",
-				Computed:    true,
+				MarkdownDescription: "The unique name of the Enforcement Policy.",
+				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				Description: "A human-readable description of the Enforcement Policy.",
-				Computed:    true,
+				MarkdownDescription: "A human-readable description of the Enforcement Policy.",
+				Computed:            true,
 			},
 			"enforcement_type": schema.StringAttribute{
-				Description: "The type of the Enforcement Policy indicating its application context (e.g., RADIUS, TACACS, WEBAUTH, Application, Event).",
-				Computed:    true,
+				MarkdownDescription: "The type of the Enforcement Policy indicating its application context (e.g., RADIUS, TACACS, WEBAUTH, Application, Event).",
+				Computed:            true,
 			},
 			"default_enforcement_profile": schema.StringAttribute{
-				Description: "The profile applied as a fallback if none of the policy rules match the session conditions.",
-				Computed:    true,
+				MarkdownDescription: "The profile applied as a fallback if none of the policy rules match the session conditions.",
+				Computed:            true,
 			},
 			"rule_eval_algo": schema.StringAttribute{
-				Description: "The logic used to evaluate the rules. Typically 'first-applicable' (stops after the first match) or 'evaluate-all' (processes all rules).",
-				Computed:    true,
+				MarkdownDescription: "The logic used to evaluate the rules. Typically 'first-applicable' (stops after the first match) or 'evaluate-all' (processes all rules).",
+				Computed:            true,
 			},
 			"rules": schema.ListNestedAttribute{
-				Description: "The ordered list of conditional rules configured for the Enforcement Policy.",
-				Computed:    true,
+				MarkdownDescription: "The ordered list of conditional rules configured for the Enforcement Policy.",
+				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"enforcement_profile_names": schema.ListAttribute{
-							Description: "List of Enforcement Profile names that are applied when this rule's conditions are met.",
-							ElementType: types.StringType,
-							Computed:    true,
+							MarkdownDescription: "List of Enforcement Profile names that are applied when this rule's conditions are met.",
+							ElementType:         types.StringType,
+							Computed:            true,
 						},
 						"condition": schema.ListNestedAttribute{
-							Description: "The set of conditions that must be evaluated for this rule.",
-							Computed:    true,
+							MarkdownDescription: "The set of conditions that must be evaluated for this rule.",
+							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
-										Description: "The namespace or category of the condition (e.g., 'Radius:IETF', 'Tips', 'Connection').",
-										Computed:    true,
+										MarkdownDescription: "The namespace or category of the condition (e.g., 'Radius:IETF', 'Tips', 'Connection').",
+										Computed:            true,
 									},
 									"name": schema.StringAttribute{
-										Description: "The specific attribute name within the condition type (e.g., 'Calling-Station-Id', 'Role').",
-										Computed:    true,
+										MarkdownDescription: "The specific attribute name within the condition type (e.g., 'Calling-Station-Id', 'Role').",
+										Computed:            true,
 									},
 									"oper": schema.StringAttribute{
-										Description: "The operator used for comparison (e.g., 'EQUALS', 'CONTAINS', 'BELONGS_TO', 'MATCHES_REGEX').",
-										Computed:    true,
+										MarkdownDescription: "The operator used for comparison (e.g., 'EQUALS', 'CONTAINS', 'BELONGS_TO', 'MATCHES_REGEX').",
+										Computed:            true,
 									},
 									"value": schema.StringAttribute{
-										Description: "The value against which the attribute is compared.",
-										Computed:    true,
+										MarkdownDescription: "The value against which the attribute is compared.",
+										Computed:            true,
 									},
 								},
 							},

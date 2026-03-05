@@ -3,20 +3,22 @@
 page_title: "clearpass_service_cert Data Source - terraform-provider-clearpass"
 subcategory: ""
 description: |-
-  Manages a service certificate in ClearPass.
+  Retrieves the details of a specific service certificate in ClearPass by its numeric ID. Service certificates are used for RADIUS, HTTPS, and other TLS-based services.
 ---
 
 # clearpass_service_cert (Data Source)
 
-Manages a service certificate in ClearPass.
+Retrieves the details of a specific service certificate in ClearPass by its numeric ID. Service certificates are used for RADIUS, HTTPS, and other TLS-based services.
 
 ## Example Usage
 
 ```terraform
+# Retrieve a specific service certificate by its numeric ID
 data "clearpass_service_cert" "example" {
-  id = 123
+  id = 3000
 }
 
+# Output the certificate details (subject, validity, expiry, etc.)
 output "service_cert" {
   value = data.clearpass_service_cert.example
 }
@@ -27,13 +29,13 @@ output "service_cert" {
 
 ### Required
 
-- `id` (Number) Numeric ID of the service certificate.
+- `id` (Number) Numeric ID of the service certificate to retrieve.
 
 ### Read-Only
 
-- `cert_file` (String) Certificate File.
-- `expiry_date` (String) Expiry date of the service certificate.
-- `issue_by` (String) Service certificate issued by.
-- `issue_date` (String) Issue date of the service certificate.
-- `subject` (String) Subject of the service certificate.
-- `validity` (String) Validity of the service certificate.
+- `cert_file` (String) The certificate file name as stored in ClearPass.
+- `expiry_date` (String) The expiration date of the certificate.
+- `issue_by` (String) The Certificate Authority (CA) or issuer that signed the certificate.
+- `issue_date` (String) The date the certificate was issued.
+- `subject` (String) The Subject Distinguished Name (DN) of the certificate (e.g., `CN=clearpass.example.com`).
+- `validity` (String) The validity status of the certificate (e.g., `Valid`, `Expired`).
