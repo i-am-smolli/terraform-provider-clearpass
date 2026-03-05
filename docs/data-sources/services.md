@@ -26,7 +26,7 @@ data "clearpass_services" "filtered" {
 }
 
 output "all_services_count" {
-  value = data.clearpass_services.all.services.#
+  value = data.clearpass_services.all.services
 }
 
 output "filtered_services_first_name" {

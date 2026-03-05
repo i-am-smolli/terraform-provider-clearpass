@@ -501,6 +501,16 @@ type ServiceCertResult struct {
 	CertFile           string      `json:"cert_file"`
 }
 
+type ServiceCertItems struct {
+	Items []ServiceCertResult `json:"items"`
+}
+
+type ServiceCertList struct {
+	Embedded ServiceCertItems       `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
 // --- CertTrustList Models ---
 
 type CertTrustList struct {

@@ -63,6 +63,7 @@ type ClientInterface interface {
 	// ServiceCert
 	CreateServiceCert(ctx context.Context, cert *ServiceCertCreate) (*ServiceCertResult, error)
 	GetServiceCert(ctx context.Context, id int) (*ServiceCertResult, error)
+	GetServiceCerts(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*ServiceCertList, error)
 	DeleteServiceCert(ctx context.Context, id int) error
 
 	// CertTrustList
@@ -911,6 +912,38 @@ func (c *apiClient) GetServiceCert(ctx context.Context, id int) (*ServiceCertRes
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil
 		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetServiceCerts(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*ServiceCertList, error) {
+	req, err := c.newRequest(ctx, http.MethodGet, "/api/service-cert", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calcCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calcCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result ServiceCertList
+	err = c.do(req, &result)
+	if err != nil {
 		return nil, err
 	}
 	return &result, nil
