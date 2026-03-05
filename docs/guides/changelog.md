@@ -7,12 +7,30 @@ description: |-
 
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. All dates are in dd-mm-yyyy format.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v0.0.7] - 26-02-2026 (dd-mm-yyyy)
+## [v0.0.8] - 05-03-2026
+
+### Added
+- Added data sources for Authentication Methods.
+- Added data sources for Certificate Trust Lists.
+- Added data sources for Enforcement Policies.
+- Added data sources for Enforcement Profiles.
+- Added data sources for Local Users.
+- Added data sources for Roles.
+- Added data sources for Role Mappings.
+- Added data sources for Services.
+
+### Changed
+- Updated Go module dependencies.
+
+### Fixed
+- Fixed Acceptance Tests for the entire provider.
+
+## [v0.0.7] - 26-02-2026
 
 ### Added
 - Added more verbose error messages to api client.
@@ -20,10 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Sometimes `clearpass_service_cert` resource failed to import certificates from a local file.
 
-### Changed
-- Changed subcategory of changelog to "Release Notes" for better organization.
-
-## [v0.0.6] - 26-02-2026 (dd-mm-yyyy)
+## [v0.0.6] - 26-02-2026
 
 ### Security
 - Marked `public_password` as sensitive in `clearpass_auth_method` resource to prevent credential leakage in Terraform state and logs.

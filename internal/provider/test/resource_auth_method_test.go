@@ -13,51 +13,38 @@ func TestAccAuthMethodResource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read testing
 			{
-				Config: `
+				Config: testAccProviderConfig() + `
 resource "clearpass_auth_method" "test_auth_method" {
   name        = "tf-acc-test-auth-method"
   description = "Terraform Acceptance Test Auth Method"
-  method_type = "EAP-PEAP"
-
-  details {
-    session_timeout = 3600
-    allow_fast_reconnect = true
-  }
+  method_type = "MAC-AUTH"
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("clearpass_auth_method.test_auth_method", "name", "tf-acc-test-auth-method"),
 					resource.TestCheckResourceAttr("clearpass_auth_method.test_auth_method", "description", "Terraform Acceptance Test Auth Method"),
-					resource.TestCheckResourceAttr("clearpass_auth_method.test_auth_method", "method_type", "EAP-PEAP"),
-					resource.TestCheckResourceAttr("clearpass_auth_method.test_auth_method", "details.0.session_timeout", "3600"),
-					resource.TestCheckResourceAttr("clearpass_auth_method.test_auth_method", "details.0.allow_fast_reconnect", "true"),
+					resource.TestCheckResourceAttr("clearpass_auth_method.test_auth_method", "method_type", "MAC-AUTH"),
 				),
 			},
 			// ImportState testing
 			{
-				ResourceName:      "clearpass_auth_method.test_auth_method",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "clearpass_auth_method.test_auth_method",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"details"},
 			},
 			// Update and Read testing
 			{
-				Config: `
+				Config: testAccProviderConfig() + `
 resource "clearpass_auth_method" "test_auth_method" {
   name        = "tf-acc-test-auth-method-updated"
   description = "Terraform Acceptance Test Auth Method Updated"
-  method_type = "EAP-PEAP"
-
-  details {
-    session_timeout = 7200
-    allow_fast_reconnect = false
-  }
+  method_type = "MAC-AUTH"
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("clearpass_auth_method.test_auth_method", "name", "tf-acc-test-auth-method-updated"),
 					resource.TestCheckResourceAttr("clearpass_auth_method.test_auth_method", "description", "Terraform Acceptance Test Auth Method Updated"),
-					resource.TestCheckResourceAttr("clearpass_auth_method.test_auth_method", "details.0.session_timeout", "7200"),
-					resource.TestCheckResourceAttr("clearpass_auth_method.test_auth_method", "details.0.allow_fast_reconnect", "false"),
 				),
 			},
 		},

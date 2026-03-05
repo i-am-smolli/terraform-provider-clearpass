@@ -17,53 +17,66 @@ type ClientInterface interface {
 	// Local User
 	CreateLocalUser(ctx context.Context, user *LocalUserCreate) (*LocalUserResult, error)
 	GetLocalUser(ctx context.Context, id int) (*LocalUserResult, error)
+	GetLocalUsers(ctx context.Context) (*LocalUserList, error)
 	UpdateLocalUser(ctx context.Context, id int, user *LocalUserUpdate) (*LocalUserResult, error)
 	DeleteLocalUser(ctx context.Context, id int) error
 
 	// Role
 	CreateRole(ctx context.Context, role *RoleCreate) (*RoleResult, error)
 	GetRole(ctx context.Context, id int) (*RoleResult, error)
+	GetRoleByName(ctx context.Context, name string) (*RoleResult, error)
+	GetRoles(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*RoleList, error)
 	UpdateRole(ctx context.Context, id int, role *RoleUpdate) (*RoleResult, error)
 	DeleteRole(ctx context.Context, id int) error
 
 	// RoleMapping
+	GetRoleMappings(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*RoleMappingList, error)
 	CreateRoleMapping(ctx context.Context, roleMap *RoleMappingCreate) (*RoleMappingResult, error)
 	GetRoleMapping(ctx context.Context, id int) (*RoleMappingResult, error)
+	GetRoleMappingByName(ctx context.Context, name string) (*RoleMappingResult, error)
 	UpdateRoleMapping(ctx context.Context, id int, roleMap *RoleMappingUpdate) (*RoleMappingResult, error)
 	DeleteRoleMapping(ctx context.Context, id int) error
 
 	// EnforcementProfile
 	CreateEnforcementProfile(ctx context.Context, profile *EnforcementProfileCreate) (*EnforcementProfileResult, error)
 	GetEnforcementProfile(ctx context.Context, id int) (*EnforcementProfileResult, error)
+	GetEnforcementProfileByName(ctx context.Context, name string) (*EnforcementProfileResult, error)
+	GetEnforcementProfiles(ctx context.Context) (*EnforcementProfileList, error)
 	UpdateEnforcementProfile(ctx context.Context, id int, profile *EnforcementProfileUpdate) (*EnforcementProfileResult, error)
 	DeleteEnforcementProfile(ctx context.Context, id int) error
 
 	// EnforcementPolicy
 	CreateEnforcementPolicy(ctx context.Context, policy *EnforcementPolicyCreate) (*EnforcementPolicyResult, error)
 	GetEnforcementPolicy(ctx context.Context, id int) (*EnforcementPolicyResult, error)
+	GetEnforcementPolicies(ctx context.Context) (*EnforcementPolicyList, error)
 	UpdateEnforcementPolicy(ctx context.Context, id int, policy *EnforcementPolicyUpdate) (*EnforcementPolicyResult, error)
 	DeleteEnforcementPolicy(ctx context.Context, id int) error
 
 	//Service
 	CreateService(ctx context.Context, service *ServiceCreate) (*ServiceResult, error)
 	GetService(ctx context.Context, id int) (*ServiceResult, error)
+	GetServiceByName(ctx context.Context, name string) (*ServiceResult, error)
+	GetServices(ctx context.Context, filter, sort *string, offset, limit *int, calcCount *bool) (*ServiceList, error)
 	UpdateService(ctx context.Context, id int, service *ServiceUpdate) (*ServiceResult, error)
 	DeleteService(ctx context.Context, id int) error
 
 	// ServiceCert
 	CreateServiceCert(ctx context.Context, cert *ServiceCertCreate) (*ServiceCertResult, error)
 	GetServiceCert(ctx context.Context, id int) (*ServiceCertResult, error)
+	GetServiceCerts(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*ServiceCertList, error)
 	DeleteServiceCert(ctx context.Context, id int) error
 
 	// CertTrustList
 	CreateCertTrustList(ctx context.Context, cert *CertTrustListCreate) (*CertTrustList, error)
 	GetCertTrustList(ctx context.Context, id int) (*CertTrustList, error)
+	GetCertTrustLists(ctx context.Context) (*CertTrustListList, error)
 	UpdateCertTrustList(ctx context.Context, id int, cert *CertTrustListUpdate) (*CertTrustList, error)
 	DeleteCertTrustList(ctx context.Context, id int) error
 
 	// AuthMethod
 	CreateAuthMethod(ctx context.Context, authMethod *AuthMethodCreate) (*AuthMethodResult, error)
 	GetAuthMethod(ctx context.Context, id int) (*AuthMethodResult, error)
+	GetAuthMethods(ctx context.Context) (*AuthMethodList, error)
 	UpdateAuthMethod(ctx context.Context, id int, authMethod *AuthMethodUpdate) (*AuthMethodResult, error)
 	DeleteAuthMethod(ctx context.Context, id int) error
 
@@ -167,6 +180,23 @@ func (c *apiClient) GetLocalUser(ctx context.Context, id int) (*LocalUserResult,
 	return &result, nil
 }
 
+// GetLocalUsers retrieves a list of local users.
+func (c *apiClient) GetLocalUsers(ctx context.Context) (*LocalUserList, error) {
+	path := "/api/local-user"
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result LocalUserList
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
 // UpdateLocalUser updates an existing local user using PATCH.
 func (c *apiClient) UpdateLocalUser(ctx context.Context, id int, user *LocalUserUpdate) (*LocalUserResult, error) {
 	path := fmt.Sprintf("/api/local-user/%d", id)
@@ -245,6 +275,62 @@ func (c *apiClient) GetRole(ctx context.Context, id int) (*RoleResult, error) {
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil // Not found
 		}
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// GetRoleByName retrieves a role by its unique name.
+func (c *apiClient) GetRoleByName(ctx context.Context, name string) (*RoleResult, error) {
+	path := fmt.Sprintf("/api/role/name/%s", name)
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result RoleResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil // Not found
+		}
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// GetRoles retrieves a list of roles based on filter query.
+func (c *apiClient) GetRoles(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*RoleList, error) {
+	path := "/api/role"
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Add query parameters
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calculateCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calculateCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result RoleList
+	if err := c.do(req, &result); err != nil {
 		return nil, err
 	}
 
@@ -378,6 +464,39 @@ func (c *apiClient) do(req *http.Request, v interface{}) error {
 
 // --- Role Mapping API Methods ---
 
+// GetRoleMappings retrieves a list of role mappings.
+func (c *apiClient) GetRoleMappings(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*RoleMappingList, error) {
+	req, err := c.newRequest(ctx, http.MethodGet, "/api/role-mapping", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calcCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calcCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result RoleMappingList
+	err = c.do(req, &result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
 // CreateRoleMapping creates a new role mapping policy.
 func (c *apiClient) CreateRoleMapping(ctx context.Context, roleMap *RoleMappingCreate) (*RoleMappingResult, error) {
 	payloadBytes, err := json.Marshal(roleMap)
@@ -415,6 +534,22 @@ func (c *apiClient) GetRoleMapping(ctx context.Context, id int) (*RoleMappingRes
 		return nil, err
 	}
 
+	return &result, nil
+}
+
+// GetRoleMappingByName retrieves a role mapping by its name.
+func (c *apiClient) GetRoleMappingByName(ctx context.Context, name string) (*RoleMappingResult, error) {
+	path := fmt.Sprintf("/api/role-mapping/name/%s", name)
+	req, err := c.newRequest(ctx, http.MethodGet, path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result RoleMappingResult
+	err = c.do(req, &result)
+	if err != nil {
+		return nil, err
+	}
 	return &result, nil
 }
 
@@ -493,6 +628,37 @@ func (c *apiClient) GetEnforcementProfile(ctx context.Context, id int) (*Enforce
 	return &result, nil
 }
 
+func (c *apiClient) GetEnforcementProfileByName(ctx context.Context, name string) (*EnforcementProfileResult, error) {
+	path := fmt.Sprintf("/api/enforcement-profile/name/%s", name)
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result EnforcementProfileResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetEnforcementProfiles(ctx context.Context) (*EnforcementProfileList, error) {
+	path := "/api/enforcement-profile"
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result EnforcementProfileList
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
 func (c *apiClient) UpdateEnforcementProfile(ctx context.Context, id int, profile *EnforcementProfileUpdate) (*EnforcementProfileResult, error) {
 	path := fmt.Sprintf("/api/enforcement-profile/%d", id)
 	payloadBytes, err := json.Marshal(profile)
@@ -553,6 +719,20 @@ func (c *apiClient) GetEnforcementPolicy(ctx context.Context, id int) (*Enforcem
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil
 		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetEnforcementPolicies(ctx context.Context) (*EnforcementPolicyList, error) {
+	path := "/api/enforcement-policy"
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result EnforcementPolicyList
+	if err := c.do(req, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil
@@ -623,6 +803,55 @@ func (c *apiClient) GetService(ctx context.Context, id int) (*ServiceResult, err
 	return &result, nil
 }
 
+func (c *apiClient) GetServiceByName(ctx context.Context, name string) (*ServiceResult, error) {
+	path := fmt.Sprintf("/api/config/service/name/%s", name)
+	req, err := c.newRequest(ctx, http.MethodGet, path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result ServiceResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetServices(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*ServiceList, error) {
+	req, err := c.newRequest(ctx, http.MethodGet, "/api/config/service", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calcCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calcCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result ServiceList
+	err = c.do(req, &result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
 func (c *apiClient) UpdateService(ctx context.Context, id int, service *ServiceUpdate) (*ServiceResult, error) {
 	path := fmt.Sprintf("/api/config/service/%d", id)
 	payloadBytes, err := json.Marshal(service)
@@ -688,6 +917,38 @@ func (c *apiClient) GetServiceCert(ctx context.Context, id int) (*ServiceCertRes
 	return &result, nil
 }
 
+func (c *apiClient) GetServiceCerts(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*ServiceCertList, error) {
+	req, err := c.newRequest(ctx, http.MethodGet, "/api/service-cert", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calcCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calcCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result ServiceCertList
+	err = c.do(req, &result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
 func (c *apiClient) DeleteServiceCert(ctx context.Context, id int) error {
 	path := fmt.Sprintf("/api/service-cert/%d", id)
 	req, err := c.newRequest(ctx, "DELETE", path, nil)
@@ -729,6 +990,20 @@ func (c *apiClient) GetCertTrustList(ctx context.Context, id int) (*CertTrustLis
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil
 		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetCertTrustLists(ctx context.Context) (*CertTrustListList, error) {
+	path := "/api/cert-trust-list"
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result CertTrustListList
+	if err := c.do(req, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil
@@ -794,6 +1069,20 @@ func (c *apiClient) GetAuthMethod(ctx context.Context, id int) (*AuthMethodResul
 		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
 			return nil, nil
 		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetAuthMethods(ctx context.Context) (*AuthMethodList, error) {
+	path := "/api/auth-method"
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result AuthMethodList
+	if err := c.do(req, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil

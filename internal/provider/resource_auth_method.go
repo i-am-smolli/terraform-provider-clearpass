@@ -394,6 +394,9 @@ func (r *AuthMethodResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 
+	// Remember whether the plan originally had a details block
+	planHadDetails := len(data.Details) > 0
+
 	// Update state with result
 	data.ID = types.StringValue(strconv.Itoa(result.ID))
 	data.Name = types.StringValue(result.Name)
@@ -407,7 +410,10 @@ func (r *AuthMethodResource) Create(ctx context.Context, req resource.CreateRequ
 		data.InnerMethods = types.ListNull(types.StringType)
 	}
 
-	if result.Details != nil {
+	// Only populate Details in state if the plan originally had a details block.
+	// The API always returns details, but if the user didn't specify one in HCL,
+	// setting it in state would cause "block count changed from 0 to 1" error.
+	if result.Details != nil && planHadDetails {
 		var planDetails AuthMethodDetailsModel
 		if len(data.Details) > 0 {
 			planDetails = data.Details[0]
@@ -497,7 +503,12 @@ func (r *AuthMethodResource) Read(ctx context.Context, req resource.ReadRequest,
 		data.InnerMethods = types.ListNull(types.StringType)
 	}
 
-	if result.Details != nil {
+	// Only populate Details in state if it was already present in prior state.
+	// The API always returns details, but if the state didn't have one,
+	// adding it would cause unwanted plan diffs.
+	stateHadDetails := len(data.Details) > 0
+
+	if result.Details != nil && stateHadDetails {
 		details := AuthMethodDetailsModel{
 			TunnelPACLifetime:                 types.Int64Value(int64(result.Details.TunnelPACLifetime)),
 			TunnelPACLifetimeUnits:            types.StringValue(result.Details.TunnelPACLifetimeUnits),
@@ -535,7 +546,7 @@ func (r *AuthMethodResource) Read(ctx context.Context, req resource.ReadRequest,
 			NoOfRetries:                       types.Int64Value(int64(result.Details.NoOfRetries)),
 		}
 		data.Details = []AuthMethodDetailsModel{details}
-	} else {
+	} else if !stateHadDetails {
 		data.Details = nil
 	}
 
@@ -634,7 +645,10 @@ func (r *AuthMethodResource) Update(ctx context.Context, req resource.UpdateRequ
 		data.InnerMethods = types.ListNull(types.StringType)
 	}
 
-	if result.Details != nil {
+	// Remember whether the plan originally had a details block
+	planHadDetails := len(data.Details) > 0
+
+	if result.Details != nil && planHadDetails {
 		details := AuthMethodDetailsModel{
 			TunnelPACLifetime:                 getValueInt64(planDetails.TunnelPACLifetime, int64(result.Details.TunnelPACLifetime)),
 			TunnelPACLifetimeUnits:            getValueString(planDetails.TunnelPACLifetimeUnits, result.Details.TunnelPACLifetimeUnits),
@@ -672,7 +686,7 @@ func (r *AuthMethodResource) Update(ctx context.Context, req resource.UpdateRequ
 			NoOfRetries:                       getValueInt64(planDetails.NoOfRetries, int64(result.Details.NoOfRetries)),
 		}
 		data.Details = []AuthMethodDetailsModel{details}
-	} else {
+	} else if !planHadDetails {
 		data.Details = nil
 	}
 

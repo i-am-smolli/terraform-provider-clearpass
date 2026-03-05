@@ -168,6 +168,23 @@ func (p *clearpassProvider) Resources(ctx context.Context) []func() resource.Res
 // DataSources defines the list of data sources managed by the provider.
 func (p *clearpassProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		// (We will add data sources later)
+		NewAuthMethodDataSource,
+		NewAuthMethodsDataSource,
+		NewCertTrustListDataSource,
+		NewCertTrustListsDataSource,
+		NewEnforcementPolicyDataSource,
+		NewEnforcementPoliciesDataSource,
+		NewServiceDataSource,
+		NewServicesDataSource,
+		NewEnforcementProfileDataSource,
+		NewEnforcementProfilesDataSource,
+		NewLocalUserDataSource,
+		NewLocalUsersDataSource,
+		NewRoleDataSource,
+		NewRolesDataSource,
+		NewRoleMappingDataSource,
+		NewRoleMappingsDataSource,
+		NewServiceCertDataSource,
+		NewServiceCertsDataSource,
 	}
 }

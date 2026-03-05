@@ -72,9 +72,23 @@ type LocalUserResult struct {
 	Username           string            `json:"username"`
 	RoleName           string            `json:"role_name"`
 	Enabled            bool              `json:"enabled"`
+	PasswordHash       string            `json:"password_hash,omitempty"`
+	PasswordNTLMHash   string            `json:"password_ntlm_hash,omitempty"`
 	ChangePwdNextLogin bool              `json:"change_pwd_next_login"`
 	Attributes         map[string]string `json:"attributes"`
 	// Add other fields from the "LocalUserResult" model here
+}
+
+// LocalUserList defines the payload returned for a list of local users.
+type LocalUserList struct {
+	Embedded LocalUserItems         `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
+// LocalUserItems contains the list of LocalUserResult items.
+type LocalUserItems struct {
+	Items []LocalUserResult `json:"items"`
 }
 
 // --- Role Models (from Swagger 1.2) ---
@@ -96,6 +110,18 @@ type RoleResult struct {
 	ID          int    `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
+}
+
+// RoleItems contains the list of RoleResult items.
+type RoleItems struct {
+	Items []RoleResult `json:"items"`
+}
+
+// RoleList defines the payload returned for a list of roles.
+type RoleList struct {
+	Embedded RoleItems              `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
 }
 
 // RoleMappingCreate defines the payload for creating a new role mapping.
@@ -172,6 +198,16 @@ type RulesConditionSettingsResult struct {
 	ValueDispName string `json:"value_disp_name"`
 }
 
+type RoleMappingItems struct {
+	Items []RoleMappingResult `json:"items"`
+}
+
+type RoleMappingList struct {
+	Embedded RoleMappingItems       `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
 type EnforcementProfileCreate struct {
 	Name                   string              `json:"name"`
 	Description            string              `json:"description,omitempty"`
@@ -214,6 +250,16 @@ type EnforcementProfileResult struct {
 	Attributes             []*ProfileAttribute `json:"attributes"`
 	TacacsServiceParams    interface{}         `json:"tacacs_service_params"`
 	DurConfig              interface{}         `json:"dur_config"`
+}
+
+type EnforcementProfileItems struct {
+	Items []EnforcementProfileResult `json:"items"`
+}
+
+type EnforcementProfileList struct {
+	Embedded EnforcementProfileItems `json:"_embedded"`
+	Links    map[string]interface{}  `json:"_links"`
+	Count    *int                    `json:"count,omitempty"`
 }
 
 // ProfileAttribute is the generic key-value pair used for RADIUS, etc.
@@ -280,6 +326,16 @@ type EnforcementPolicyResult struct {
 type EnforcementPolicyRuleResult struct {
 	EnforcementProfileNames []string                            `json:"enforcement_profile_names"`
 	Condition               []*EnforcementPolicyConditionResult `json:"condition"`
+}
+
+type EnforcementPolicyItems struct {
+	Items []EnforcementPolicyResult `json:"items"`
+}
+
+type EnforcementPolicyList struct {
+	Embedded EnforcementPolicyItems `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
 }
 
 type EnforcementPolicyConditionResult struct {
@@ -408,6 +464,16 @@ type ServiceResult struct {
 	RadiusProxyEnableForAcct       bool           `json:"radius_proxy_enable_for_acct"`
 }
 
+type ServiceItems struct {
+	Items []ServiceResult `json:"items"`
+}
+
+type ServiceList struct {
+	Embedded ServiceItems           `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
 type ServiceRule struct {
 	Type     string `json:"type"`     // "Radius:IETF"
 	Name     string `json:"name"`     // "NAS-Port-Type"
@@ -435,6 +501,16 @@ type ServiceCertResult struct {
 	CertFile           string      `json:"cert_file"`
 }
 
+type ServiceCertItems struct {
+	Items []ServiceCertResult `json:"items"`
+}
+
+type ServiceCertList struct {
+	Embedded ServiceCertItems       `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
+
 // --- CertTrustList Models ---
 
 type CertTrustList struct {
@@ -454,6 +530,16 @@ type CertTrustListUpdate struct {
 	CertFile  string   `json:"cert_file,omitempty"`
 	Enabled   bool     `json:"enabled,omitempty"`
 	CertUsage []string `json:"cert_usage,omitempty"`
+}
+
+type CertTrustListItems struct {
+	Items []CertTrustList `json:"items"`
+}
+
+type CertTrustListList struct {
+	Embedded CertTrustListItems     `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
 }
 
 // --- AuthMethod Models ---
@@ -562,4 +648,14 @@ type AuthMethodResult struct {
 	MethodType   string             `json:"method_type"`
 	Details      *AuthMethodDetails `json:"details"`
 	InnerMethods []string           `json:"inner_methods"`
+}
+
+type AuthMethodItems struct {
+	Items []AuthMethodResult `json:"items"`
+}
+
+type AuthMethodList struct {
+	Embedded AuthMethodItems        `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
 }
