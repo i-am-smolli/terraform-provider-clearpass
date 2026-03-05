@@ -13,13 +13,33 @@ func TestAccServiceDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccProviderConfig() + `
-// Pre-requisite
+// Pre-requisite: profile
+resource "clearpass_enforcement_profile" "test_prof_ds" {
+  name        = "tf-acc-test-svc-ds-prof"
+  description = "Profile for Service DS Test"
+  type        = "RADIUS"
+  action      = "Accept"
+  attributes  = [{ type = "Radius:IETF", name = "Filter-Id", value = "Test-Allow" }]
+}
+
+// Pre-requisite: policy (must include rules)
 resource "clearpass_enforcement_policy" "test_ep_ds" {
   name             = "tf-acc-test-service-ep-ds"
   description      = "Used for acceptance testing"
   enforcement_type = "RADIUS"
   default_enforcement_profile = "[Allow Access Profile]"
   rule_eval_algo   = "first-applicable"
+  rules = [
+    {
+      enforcement_profile_names = [clearpass_enforcement_profile.test_prof_ds.name]
+      condition = [{
+        type  = "Connection"
+        name  = "SSID"
+        oper  = "EQUALS"
+        value = "Test-SSID"
+      }]
+    }
+  ]
 }
 
 // Service to retrieve
@@ -29,6 +49,9 @@ resource "clearpass_service" "test_svc_ds" {
   template           = "RADIUS Enforcement ( Generic )"
   enabled            = true
   enforcement_policy = clearpass_enforcement_policy.test_ep_ds.name
+
+  auth_methods = ["[EAP PEAP]"]
+  auth_sources = ["[Local User Repository]"]
 
   match_type = "MATCHES_ANY"
   service_rule = [

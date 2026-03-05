@@ -22,7 +22,7 @@ func TestAccCertTrustListsDataSource_basic(t *testing.T) {
 }
 
 func testAccCertTrustListsDataSourceConfig() string {
-	return `
+	return testAccProviderConfig() + `
 data "clearpass_cert_trust_lists" "test" {}
 `
 }

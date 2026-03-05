@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file. All dates a
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [next-release] - xx-xx-2026
+## [next-release] - 05-03-2026
 
 ### Added
 - Added data sources for Authentication Methods.
@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added data sources for Roles.
 - Added data sources for Role Mappings.
 - Added data sources for Services.
+
+### Fixed
+- Fixed Acceptance Tests for the entire provider.
 
 ## [v0.0.7] - 26-02-2026
 

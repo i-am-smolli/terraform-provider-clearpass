@@ -12,7 +12,7 @@ func TestAccRoleDataSource(t *testing.T) {
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: `
+				Config: testAccProviderConfig() + `
 resource "clearpass_role" "test_role_ds" {
   name        = "tf-acc-test-role-ds"
   description = "Terraform Acceptance Test Role DS"

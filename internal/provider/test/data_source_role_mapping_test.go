@@ -24,11 +24,10 @@ resource "clearpass_role_mapping" "test_rm_ds" {
       role_name  = "[Employee]"
       condition = [
         {
-          type            = "Radius:IETF"
-          name            = "NAS-Port-Type"
-          oper            = "EQUALS"
-          value           = "15"
-          value_disp_name = "15"
+          type  = "Connection"
+          name  = "Client-Mac-Address"
+          oper  = "EXISTS"
+          value = ""
         }
       ]
     }

@@ -12,7 +12,7 @@ func TestAccAuthMethodDataSource(t *testing.T) {
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: `
+				Config: testAccProviderConfig() + `
 resource "clearpass_auth_method" "test_auth_method_ds" {
   name        = "tf-acc-test-auth-method-ds"
   description = "Terraform Acceptance Test Auth Method DS"
