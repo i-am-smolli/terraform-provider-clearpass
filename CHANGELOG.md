@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added data sources for Role Mappings.
 - Added data sources for Services.
 
+### Changed
+- Updated Go module dependencies.
+
 ### Fixed
 - Fixed Acceptance Tests for the entire provider.
 
