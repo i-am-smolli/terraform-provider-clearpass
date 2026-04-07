@@ -1,7 +1,7 @@
 {
   "apiVersion": "1",
   "swaggerVersion": "1.2",
-  "basePath": "https://10.1.9.123/api",
+  "basePath": "https://10.123.123.123/api",
   "resourcePath": "/role",
   "apis": [
     {
