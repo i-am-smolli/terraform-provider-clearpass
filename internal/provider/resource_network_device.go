@@ -247,11 +247,13 @@ func (r *networkDeviceResource) Schema(ctx context.Context, req resource.SchemaR
 			"nad_groups": schema.ListAttribute{
 				Description: "List of NAD group names this device belongs to.",
 				Optional:    true,
+				Computed:    true,
 				ElementType: types.StringType,
 			},
 			"attributes": schema.MapAttribute{
 				Description: "Additional attributes (key/value pairs) stored with the network device.",
 				Optional:    true,
+				Computed:    true,
 				ElementType: types.StringType,
 			},
 
@@ -490,41 +492,41 @@ func (r *networkDeviceResource) Create(ctx context.Context, req resource.CreateR
 		Name:      plan.Name.ValueString(),
 		IPAddress: plan.IPAddress.ValueString(),
 	}
-	if !plan.Description.IsNull() {
+	if !plan.Description.IsNull() && !plan.Description.IsUnknown() {
 		apiPayload.Description = plan.Description.ValueString()
 	}
 	// Read secrets from config (WriteOnly)
-	if !config.RadiusSecret.IsNull() {
+	if !config.RadiusSecret.IsNull() && !config.RadiusSecret.IsUnknown() {
 		apiPayload.RadiusSecret = config.RadiusSecret.ValueString()
 	}
-	if !config.TacacsSecret.IsNull() {
+	if !config.TacacsSecret.IsNull() && !config.TacacsSecret.IsUnknown() {
 		apiPayload.TacacsSecret = config.TacacsSecret.ValueString()
 	}
-	if !plan.VendorName.IsNull() {
+	if !plan.VendorName.IsNull() && !plan.VendorName.IsUnknown() {
 		apiPayload.VendorName = plan.VendorName.ValueString()
 	}
-	if !plan.VendorID.IsNull() {
+	if !plan.VendorID.IsNull() && !plan.VendorID.IsUnknown() {
 		v := plan.VendorID.ValueInt64()
 		apiPayload.VendorID = &v
 	}
-	if !plan.CoACapable.IsNull() {
+	if !plan.CoACapable.IsNull() && !plan.CoACapable.IsUnknown() {
 		v := plan.CoACapable.ValueBool()
 		apiPayload.CoACapable = &v
 	}
-	if !plan.CoAPort.IsNull() {
+	if !plan.CoAPort.IsNull() && !plan.CoAPort.IsUnknown() {
 		v := plan.CoAPort.ValueInt64()
 		apiPayload.CoAPort = &v
 	}
-	if !plan.RadSecEnabled.IsNull() {
+	if !plan.RadSecEnabled.IsNull() && !plan.RadSecEnabled.IsUnknown() {
 		v := plan.RadSecEnabled.ValueBool()
 		apiPayload.RadSecEnabled = &v
 	}
-	if !plan.NADGroups.IsNull() {
+	if !plan.NADGroups.IsNull() && !plan.NADGroups.IsUnknown() {
 		var groups []string
 		resp.Diagnostics.Append(plan.NADGroups.ElementsAs(ctx, &groups, false)...)
 		apiPayload.NADGroups = groups
 	}
-	if !plan.Attributes.IsNull() {
+	if !plan.Attributes.IsNull() && !plan.Attributes.IsUnknown() {
 		var attrs map[string]string
 		resp.Diagnostics.Append(plan.Attributes.ElementsAs(ctx, &attrs, false)...)
 		apiPayload.Attributes = attrs

@@ -87,6 +87,13 @@ type ClientInterface interface {
 	UpdateNetworkDevice(ctx context.Context, id int, device *NetworkDeviceUpdate) (*NetworkDeviceResult, error)
 	DeleteNetworkDevice(ctx context.Context, id int) error
 
+	// NetworkDeviceGroup
+	CreateNetworkDeviceGroup(ctx context.Context, group *NetworkDeviceGroupCreate) (*NetworkDeviceGroupResult, error)
+	GetNetworkDeviceGroup(ctx context.Context, id int) (*NetworkDeviceGroupResult, error)
+	GetNetworkDeviceGroupByName(ctx context.Context, name string) (*NetworkDeviceGroupResult, error)
+	UpdateNetworkDeviceGroup(ctx context.Context, id int, group *NetworkDeviceGroupUpdate) (*NetworkDeviceGroupResult, error)
+	DeleteNetworkDeviceGroup(ctx context.Context, id int) error
+
 	// Helper
 	GetHost() string
 	GetServerVersion(ctx context.Context) (*ServerVersionResult, error)
@@ -1198,6 +1205,88 @@ func (c *apiClient) UpdateNetworkDevice(ctx context.Context, id int, device *Net
 
 func (c *apiClient) DeleteNetworkDevice(ctx context.Context, id int) error {
 	path := fmt.Sprintf("/api/network-device/%d", id)
+	req, err := c.newRequest(ctx, "DELETE", path, nil)
+	if err != nil {
+		return err
+	}
+	return c.do(req, nil)
+}
+
+// --- Network Device Group API Methods ---
+
+func (c *apiClient) CreateNetworkDeviceGroup(ctx context.Context, group *NetworkDeviceGroupCreate) (*NetworkDeviceGroupResult, error) {
+	payloadBytes, err := json.Marshal(group)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal CreateNetworkDeviceGroup: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "POST", "/api/network-device-group", bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result NetworkDeviceGroupResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetNetworkDeviceGroup(ctx context.Context, id int) (*NetworkDeviceGroupResult, error) {
+	path := fmt.Sprintf("/api/network-device-group/%d", id)
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result NetworkDeviceGroupResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetNetworkDeviceGroupByName(ctx context.Context, name string) (*NetworkDeviceGroupResult, error) {
+	path := fmt.Sprintf("/api/network-device-group/name/%s", name)
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result NetworkDeviceGroupResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) UpdateNetworkDeviceGroup(ctx context.Context, id int, group *NetworkDeviceGroupUpdate) (*NetworkDeviceGroupResult, error) {
+	path := fmt.Sprintf("/api/network-device-group/%d", id)
+	payloadBytes, err := json.Marshal(group)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal UpdateNetworkDeviceGroup: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "PATCH", path, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result NetworkDeviceGroupResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) DeleteNetworkDeviceGroup(ctx context.Context, id int) error {
+	path := fmt.Sprintf("/api/network-device-group/%d", id)
 	req, err := c.newRequest(ctx, "DELETE", path, nil)
 	if err != nil {
 		return err
