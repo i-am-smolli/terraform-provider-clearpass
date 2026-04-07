@@ -163,9 +163,10 @@ func (r *serviceResource) Schema(ctx context.Context, req resource.SchemaRequest
 				PlanModifiers: []planmodifier.Bool{boolplanmodifier.UseStateForUnknown()},
 			},
 			"match_type": schema.StringAttribute{
-				Description: "Specifies whether to match ALL or ANY of the service rules.",
-				Optional:    true,
-				Computed:    true,
+				Description:   "Specifies whether to match ALL or ANY of the service rules.",
+				Optional:      true,
+				Computed:      true,
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"service_rule": schema.ListNestedAttribute{
 				Description: "A list of rules used to classify requests into this service.",
