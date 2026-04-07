@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added validation for the `template` attribute in the `clearpass_service` resource to restrict choices to a predefined list of valid templates, and improved markdown documentation.
 
+### Notes
+- Updated provider internal dependencies.
+
 ## [v0.0.8] - 05-03-2026
 
 ### Added
@@ -32,11 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added data sources for Role Mappings.
 - Added data sources for Services.
 
-### Changed
-- Updated Go module dependencies.
-
 ### Fixed
 - Fixed Acceptance Tests for the entire provider.
+
+### Notes
+- Updated Go module dependencies.
 
 ## [v0.0.7] - 26-02-2026
 
@@ -57,4 +60,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed race condition in `clearpass_service_cert` file fetching logic during certificate import.
+
+### Notes
 - Updated provider internal dependencies.
