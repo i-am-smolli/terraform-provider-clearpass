@@ -18,6 +18,9 @@ func TestAccEnforcementProfileResource(t *testing.T) {
 	// Configuration 2: Update (VLAN ID 150 and description changed)
 	config2 := testAccProviderConfig() + testAccEnforcementProfileConfig(uniqueName, "Updated Profile", "150")
 
+	// Configuration 3: TACACS Creation
+	config3 := testAccProviderConfig() + testAccEnforcementProfileTacacsConfig(uniqueName)
+
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -51,6 +54,17 @@ func TestAccEnforcementProfileResource(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
+			// 4. Create TACACS profile with service params
+			{
+				Config: config3,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("clearpass_enforcement_profile.test_tacacs_profile", "name", uniqueName+"-tacacs"),
+					resource.TestCheckResourceAttr("clearpass_enforcement_profile.test_tacacs_profile", "type", "TACACS"),
+					resource.TestCheckResourceAttr("clearpass_enforcement_profile.test_tacacs_profile", "tacacs_service_param.privilege_level", "15"),
+					resource.TestCheckResourceAttr("clearpass_enforcement_profile.test_tacacs_profile", "tacacs_service_param.authorize_attribute_status", "ADD"),
+					resource.TestCheckResourceAttr("clearpass_enforcement_profile.test_tacacs_profile", "tacacs_service_param.tacacs_command_config.service_type", "Shell"),
+				),
+			},
 		},
 	})
 }
@@ -76,6 +90,37 @@ resource "clearpass_enforcement_profile" "test_profile" {
       value = "` + vlanID + `" // This value will change during the update step
     }
   ]
+}
+`
+}
+
+func testAccEnforcementProfileTacacsConfig(name string) string {
+	return `
+resource "clearpass_enforcement_profile" "test_tacacs_profile" {
+  name        = "` + name + `-tacacs"
+  description = "TACACS Profile"
+  type        = "TACACS"
+
+  tacacs_service_param = {
+    privilege_level            = 15
+    authorize_attribute_status = "ADD"
+    tacacs_command_config = {
+      service_type          = "Shell"
+      permit_unmatched_cmds = true
+      commands = [
+        {
+          command               = "show"
+          permit_unmatched_args = true
+          command_args = [
+            {
+              argument      = "version"
+              permit_action = true
+            }
+          ]
+        }
+      ]
+    }
+  }
 }
 `
 }

@@ -219,8 +219,8 @@ type EnforcementProfileCreate struct {
 	RadiusDynAuthzTemplate string              `json:"radius_dyn_authz_template,omitempty"`
 	Attributes             []*ProfileAttribute `json:"attributes,omitempty"`
 	// Complex nested structures - storing as JSON for now
-	TacacsServiceParams interface{} `json:"tacacs_service_params,omitempty"`
-	DurConfig           interface{} `json:"dur_config,omitempty"`
+	TacacsServiceParams *TacacsServiceParam `json:"tacacs_service_params,omitempty"`
+	DurConfig           interface{}         `json:"dur_config,omitempty"`
 }
 
 type EnforcementProfileUpdate struct {
@@ -233,7 +233,7 @@ type EnforcementProfileUpdate struct {
 	PostAuthTemplate       string              `json:"post_auth_template,omitempty"`
 	RadiusDynAuthzTemplate string              `json:"radius_dyn_authz_template,omitempty"`
 	Attributes             []*ProfileAttribute `json:"attributes,omitempty"`
-	TacacsServiceParams    interface{}         `json:"tacacs_service_params,omitempty"`
+	TacacsServiceParams    *TacacsServiceParam `json:"tacacs_service_params,omitempty"`
 	DurConfig              interface{}         `json:"dur_config,omitempty"`
 }
 
@@ -248,7 +248,7 @@ type EnforcementProfileResult struct {
 	PostAuthTemplate       string              `json:"post_auth_template"`
 	RadiusDynAuthzTemplate string              `json:"radius_dyn_authz_template"`
 	Attributes             []*ProfileAttribute `json:"attributes"`
-	TacacsServiceParams    interface{}         `json:"tacacs_service_params"`
+	TacacsServiceParams    *TacacsServiceParam `json:"tacacs_service_params"`
 	DurConfig              interface{}         `json:"dur_config"`
 }
 
@@ -267,6 +267,32 @@ type ProfileAttribute struct {
 	Type  string `json:"type"`  // e.g., "Radius:IETF"
 	Name  string `json:"name"`  // e.g., "Filter-Id"
 	Value string `json:"value"` // e.g., "Employee-Allow-All"
+}
+
+// --- TACACS Service Param Models ---
+
+type TacacsServiceParam struct {
+	PrivilegeLevel           *int                 `json:"privilege_level,omitempty"`
+	Services                 []string             `json:"services,omitempty"`
+	AuthorizeAttributeStatus string               `json:"authorize_attribute_status,omitempty"`
+	TacacsCommandConfig      *TacacsCommandConfig `json:"tacacs_command_config,omitempty"`
+}
+
+type TacacsCommandConfig struct {
+	ServiceType         string           `json:"service_type,omitempty"`
+	PermitUnmatchedCmds *bool            `json:"permit_unmatched_cmds,omitempty"`
+	Commands            []*TacacsCommand `json:"commands,omitempty"`
+}
+
+type TacacsCommand struct {
+	Command             string               `json:"command,omitempty"`
+	PermitUnmatchedArgs *bool                `json:"permit_unmatched_args,omitempty"`
+	CommandArgs         []*TacacsCommandArgs `json:"command_args,omitempty"`
+}
+
+type TacacsCommandArgs struct {
+	Argument     string `json:"argument,omitempty"`
+	PermitAction *bool  `json:"permit_action,omitempty"`
 }
 
 // --- Enforcement Policy Models ---

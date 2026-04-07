@@ -16,6 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
 var _ resource.Resource = &enforcementProfileResource{}
@@ -34,7 +35,32 @@ type enforcementProfileModel struct {
 	AgentTemplate          types.String `tfsdk:"agent_template"`
 	PostAuthTemplate       types.String `tfsdk:"post_auth_template"`
 	RadiusDynAuthzTemplate types.String `tfsdk:"radius_dyn_authz_template"`
-	Attributes             types.List   `tfsdk:"attributes"` // List of profileAttributeModel
+	Attributes             types.List   `tfsdk:"attributes"`           // List of profileAttributeModel
+	TacacsServiceParams    types.Object `tfsdk:"tacacs_service_param"` // type tacacsServiceParamModel
+}
+
+type tacacsServiceParamModel struct {
+	PrivilegeLevel           types.Int64  `tfsdk:"privilege_level"`
+	Services                 types.List   `tfsdk:"services"`
+	AuthorizeAttributeStatus types.String `tfsdk:"authorize_attribute_status"`
+	TacacsCommandConfig      types.Object `tfsdk:"tacacs_command_config"` // type tacacsCommandConfigModel
+}
+
+type tacacsCommandConfigModel struct {
+	ServiceType         types.String `tfsdk:"service_type"`
+	PermitUnmatchedCmds types.Bool   `tfsdk:"permit_unmatched_cmds"`
+	Commands            types.List   `tfsdk:"commands"` // List of tacacsCommandModel
+}
+
+type tacacsCommandModel struct {
+	Command             types.String `tfsdk:"command"`
+	PermitUnmatchedArgs types.Bool   `tfsdk:"permit_unmatched_args"`
+	CommandArgs         types.List   `tfsdk:"command_args"` // List of tacacsCommandArgsModel
+}
+
+type tacacsCommandArgsModel struct {
+	Argument     types.String `tfsdk:"argument"`
+	PermitAction types.Bool   `tfsdk:"permit_action"`
 }
 
 type profileAttributeModel struct {
@@ -116,6 +142,71 @@ func (r *enforcementProfileResource) Schema(ctx context.Context, req resource.Sc
 					},
 				},
 			},
+			"tacacs_service_param": schema.SingleNestedAttribute{
+				Description: "TACACS+ Service Parameters.",
+				Optional:    true,
+				Attributes: map[string]schema.Attribute{
+					"privilege_level": schema.Int64Attribute{
+						Description: "Privilege Level <0-15>.",
+						Optional:    true,
+					},
+					"services": schema.ListAttribute{
+						Description: "Selected Services.",
+						Optional:    true,
+						ElementType: types.StringType,
+					},
+					"authorize_attribute_status": schema.StringAttribute{
+						Description: "Authorize Attribute Status (ADD, REPLACE, FAIL).",
+						Optional:    true,
+					},
+					"tacacs_command_config": schema.SingleNestedAttribute{
+						Description: "Commands Configuration.",
+						Optional:    true,
+						Attributes: map[string]schema.Attribute{
+							"service_type": schema.StringAttribute{
+								Description: "Service Type (Shell, PIX Shell).",
+								Optional:    true,
+							},
+							"permit_unmatched_cmds": schema.BoolAttribute{
+								Description: "Enable to permit unmatched commands.",
+								Optional:    true,
+							},
+							"commands": schema.ListNestedAttribute{
+								Description: "Specify which commands with arguments are permitted/denied.",
+								Optional:    true,
+								NestedObject: schema.NestedAttributeObject{
+									Attributes: map[string]schema.Attribute{
+										"command": schema.StringAttribute{
+											Description: "Shell Command.",
+											Optional:    true,
+										},
+										"permit_unmatched_args": schema.BoolAttribute{
+											Description: "Enable to permit unmatched arguments.",
+											Optional:    true,
+										},
+										"command_args": schema.ListNestedAttribute{
+											Description: "List of Command Arguments.",
+											Optional:    true,
+											NestedObject: schema.NestedAttributeObject{
+												Attributes: map[string]schema.Attribute{
+													"argument": schema.StringAttribute{
+														Description: "Command Argument.",
+														Optional:    true,
+													},
+													"permit_action": schema.BoolAttribute{
+														Description: "Enable to permit unmatched action.",
+														Optional:    true,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -140,9 +231,10 @@ func (r *enforcementProfileResource) Create(ctx context.Context, req resource.Cr
 	}
 
 	apiPayload := &client.EnforcementProfileCreate{
-		Name:       plan.Name.ValueString(),
-		Type:       plan.Type.ValueString(),
-		Attributes: expandProfileAttributes(ctx, plan.Attributes, &resp.Diagnostics),
+		Name:                plan.Name.ValueString(),
+		Type:                plan.Type.ValueString(),
+		Attributes:          expandProfileAttributes(ctx, plan.Attributes, &resp.Diagnostics),
+		TacacsServiceParams: expandTacacsServiceParams(ctx, plan.TacacsServiceParams, &resp.Diagnostics),
 	}
 	if !plan.Description.IsNull() {
 		apiPayload.Description = plan.Description.ValueString()
@@ -208,6 +300,9 @@ func (r *enforcementProfileResource) Create(ctx context.Context, req resource.Cr
 	plan.Attributes, diags = flattenProfileAttributes(ctx, created.Attributes)
 	resp.Diagnostics.Append(diags...)
 
+	plan.TacacsServiceParams, diags = flattenTacacsServiceParams(ctx, created.TacacsServiceParams)
+	resp.Diagnostics.Append(diags...)
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -260,6 +355,9 @@ func (r *enforcementProfileResource) Read(ctx context.Context, req resource.Read
 	state.Attributes, diags = flattenProfileAttributes(ctx, profile.Attributes)
 	resp.Diagnostics.Append(diags...)
 
+	state.TacacsServiceParams, diags = flattenTacacsServiceParams(ctx, profile.TacacsServiceParams)
+	resp.Diagnostics.Append(diags...)
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
@@ -271,7 +369,8 @@ func (r *enforcementProfileResource) Update(ctx context.Context, req resource.Up
 	}
 
 	apiPayload := &client.EnforcementProfileUpdate{
-		Attributes: expandProfileAttributes(ctx, plan.Attributes, &resp.Diagnostics),
+		Attributes:          expandProfileAttributes(ctx, plan.Attributes, &resp.Diagnostics),
+		TacacsServiceParams: expandTacacsServiceParams(ctx, plan.TacacsServiceParams, &resp.Diagnostics),
 	}
 	if !plan.Name.IsUnknown() {
 		apiPayload.Name = plan.Name.ValueString()
@@ -317,6 +416,9 @@ func (r *enforcementProfileResource) Update(ctx context.Context, req resource.Up
 
 	var diags diag.Diagnostics
 	plan.Attributes, diags = flattenProfileAttributes(ctx, updated.Attributes)
+	resp.Diagnostics.Append(diags...)
+
+	plan.TacacsServiceParams, diags = flattenTacacsServiceParams(ctx, updated.TacacsServiceParams)
 	resp.Diagnostics.Append(diags...)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
@@ -377,6 +479,216 @@ func (m profileAttributeModel) attrTypes() map[string]attr.Type {
 		"name":  types.StringType,
 		"value": types.StringType,
 	}
+}
+
+func (m tacacsServiceParamModel) attrTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"privilege_level":            types.Int64Type,
+		"services":                   types.ListType{ElemType: types.StringType},
+		"authorize_attribute_status": types.StringType,
+		"tacacs_command_config":      types.ObjectType{AttrTypes: tacacsCommandConfigModel{}.attrTypes()},
+	}
+}
+
+func (m tacacsCommandConfigModel) attrTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"service_type":          types.StringType,
+		"permit_unmatched_cmds": types.BoolType,
+		"commands":              types.ListType{ElemType: types.ObjectType{AttrTypes: tacacsCommandModel{}.attrTypes()}},
+	}
+}
+
+func (m tacacsCommandModel) attrTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"command":               types.StringType,
+		"permit_unmatched_args": types.BoolType,
+		"command_args":          types.ListType{ElemType: types.ObjectType{AttrTypes: tacacsCommandArgsModel{}.attrTypes()}},
+	}
+}
+
+func (m tacacsCommandArgsModel) attrTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"argument":      types.StringType,
+		"permit_action": types.BoolType,
+	}
+}
+
+func expandTacacsServiceParams(ctx context.Context, obj types.Object, diags *diag.Diagnostics) *client.TacacsServiceParam {
+	if obj.IsNull() || obj.IsUnknown() {
+		return nil
+	}
+	var model tacacsServiceParamModel
+	diags.Append(obj.As(ctx, &model, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return nil
+	}
+
+	apiParam := &client.TacacsServiceParam{}
+	if !model.PrivilegeLevel.IsNull() {
+		level := int(model.PrivilegeLevel.ValueInt64())
+		apiParam.PrivilegeLevel = &level
+	}
+	if !model.Services.IsNull() {
+		var services []string
+		diags.Append(model.Services.ElementsAs(ctx, &services, false)...)
+		apiParam.Services = services
+	}
+	if !model.AuthorizeAttributeStatus.IsNull() {
+		apiParam.AuthorizeAttributeStatus = model.AuthorizeAttributeStatus.ValueString()
+	}
+	if !model.TacacsCommandConfig.IsNull() && !model.TacacsCommandConfig.IsUnknown() {
+		apiParam.TacacsCommandConfig = expandTacacsCommandConfig(ctx, model.TacacsCommandConfig, diags)
+	}
+	return apiParam
+}
+
+func expandTacacsCommandConfig(ctx context.Context, obj types.Object, diags *diag.Diagnostics) *client.TacacsCommandConfig {
+	if obj.IsNull() || obj.IsUnknown() {
+		return nil
+	}
+	var model tacacsCommandConfigModel
+	diags.Append(obj.As(ctx, &model, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return nil
+	}
+
+	apiConfig := &client.TacacsCommandConfig{}
+	if !model.ServiceType.IsNull() {
+		apiConfig.ServiceType = model.ServiceType.ValueString()
+	}
+	if !model.PermitUnmatchedCmds.IsNull() {
+		val := model.PermitUnmatchedCmds.ValueBool()
+		apiConfig.PermitUnmatchedCmds = &val
+	}
+	if !model.Commands.IsNull() {
+		var tfCommands []tacacsCommandModel
+		diags.Append(model.Commands.ElementsAs(ctx, &tfCommands, false)...)
+		var apiCommands []*client.TacacsCommand
+		for _, tfCmd := range tfCommands {
+			apiCmd := &client.TacacsCommand{}
+			if !tfCmd.Command.IsNull() {
+				apiCmd.Command = tfCmd.Command.ValueString()
+			}
+			if !tfCmd.PermitUnmatchedArgs.IsNull() {
+				val := tfCmd.PermitUnmatchedArgs.ValueBool()
+				apiCmd.PermitUnmatchedArgs = &val
+			}
+			if !tfCmd.CommandArgs.IsNull() {
+				var tfArgs []tacacsCommandArgsModel
+				diags.Append(tfCmd.CommandArgs.ElementsAs(ctx, &tfArgs, false)...)
+				var apiArgs []*client.TacacsCommandArgs
+				for _, tfArg := range tfArgs {
+					apiArg := &client.TacacsCommandArgs{}
+					if !tfArg.Argument.IsNull() {
+						apiArg.Argument = tfArg.Argument.ValueString()
+					}
+					if !tfArg.PermitAction.IsNull() {
+						val := tfArg.PermitAction.ValueBool()
+						apiArg.PermitAction = &val
+					}
+					apiArgs = append(apiArgs, apiArg)
+				}
+				apiCmd.CommandArgs = apiArgs
+			}
+			apiCommands = append(apiCommands, apiCmd)
+		}
+		apiConfig.Commands = apiCommands
+	}
+	return apiConfig
+}
+
+func flattenTacacsServiceParams(ctx context.Context, apiParam *client.TacacsServiceParam) (types.Object, diag.Diagnostics) {
+	if apiParam == nil {
+		return types.ObjectNull(tacacsServiceParamModel{}.attrTypes()), nil
+	}
+	var diags diag.Diagnostics
+
+	model := tacacsServiceParamModel{
+		PrivilegeLevel:           types.Int64Null(),
+		Services:                 types.ListNull(types.StringType),
+		AuthorizeAttributeStatus: types.StringNull(),
+		TacacsCommandConfig:      types.ObjectNull(tacacsCommandConfigModel{}.attrTypes()),
+	}
+
+	if apiParam.PrivilegeLevel != nil {
+		model.PrivilegeLevel = types.Int64Value(int64(*apiParam.PrivilegeLevel))
+	}
+	if len(apiParam.Services) > 0 {
+		servicesList, d := types.ListValueFrom(ctx, types.StringType, apiParam.Services)
+		diags.Append(d...)
+		model.Services = servicesList
+	}
+	if apiParam.AuthorizeAttributeStatus != "" {
+		model.AuthorizeAttributeStatus = types.StringValue(apiParam.AuthorizeAttributeStatus)
+	}
+	if apiParam.TacacsCommandConfig != nil {
+		configObj, d := flattenTacacsCommandConfig(ctx, apiParam.TacacsCommandConfig)
+		diags.Append(d...)
+		model.TacacsCommandConfig = configObj
+	}
+
+	return types.ObjectValueFrom(ctx, tacacsServiceParamModel{}.attrTypes(), model)
+}
+
+func flattenTacacsCommandConfig(ctx context.Context, apiConfig *client.TacacsCommandConfig) (types.Object, diag.Diagnostics) {
+	if apiConfig == nil {
+		return types.ObjectNull(tacacsCommandConfigModel{}.attrTypes()), nil
+	}
+	var diags diag.Diagnostics
+
+	model := tacacsCommandConfigModel{
+		ServiceType:         types.StringNull(),
+		PermitUnmatchedCmds: types.BoolNull(),
+		Commands:            types.ListNull(types.ObjectType{AttrTypes: tacacsCommandModel{}.attrTypes()}),
+	}
+
+	if apiConfig.ServiceType != "" {
+		model.ServiceType = types.StringValue(apiConfig.ServiceType)
+	}
+	if apiConfig.PermitUnmatchedCmds != nil {
+		model.PermitUnmatchedCmds = types.BoolValue(*apiConfig.PermitUnmatchedCmds)
+	}
+	if len(apiConfig.Commands) > 0 {
+		var tfCommands []tacacsCommandModel
+		for _, apiCmd := range apiConfig.Commands {
+			tfCmd := tacacsCommandModel{
+				Command:             types.StringNull(),
+				PermitUnmatchedArgs: types.BoolNull(),
+				CommandArgs:         types.ListNull(types.ObjectType{AttrTypes: tacacsCommandArgsModel{}.attrTypes()}),
+			}
+			if apiCmd.Command != "" {
+				tfCmd.Command = types.StringValue(apiCmd.Command)
+			}
+			if apiCmd.PermitUnmatchedArgs != nil {
+				tfCmd.PermitUnmatchedArgs = types.BoolValue(*apiCmd.PermitUnmatchedArgs)
+			}
+			if len(apiCmd.CommandArgs) > 0 {
+				var tfArgs []tacacsCommandArgsModel
+				for _, apiArg := range apiCmd.CommandArgs {
+					tfArg := tacacsCommandArgsModel{
+						Argument:     types.StringNull(),
+						PermitAction: types.BoolNull(),
+					}
+					if apiArg.Argument != "" {
+						tfArg.Argument = types.StringValue(apiArg.Argument)
+					}
+					if apiArg.PermitAction != nil {
+						tfArg.PermitAction = types.BoolValue(*apiArg.PermitAction)
+					}
+					tfArgs = append(tfArgs, tfArg)
+				}
+				argsList, d := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: tacacsCommandArgsModel{}.attrTypes()}, tfArgs)
+				diags.Append(d...)
+				tfCmd.CommandArgs = argsList
+			}
+			tfCommands = append(tfCommands, tfCmd)
+		}
+		cmdList, d := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: tacacsCommandModel{}.attrTypes()}, tfCommands)
+		diags.Append(d...)
+		model.Commands = cmdList
+	}
+
+	return types.ObjectValueFrom(ctx, tacacsCommandConfigModel{}.attrTypes(), model)
 }
 
 // ImportState is used to retrieve data from the API and populate the state.

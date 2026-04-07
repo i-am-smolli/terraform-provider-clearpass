@@ -97,6 +97,71 @@ func (d *EnforcementProfileDataSource) Schema(ctx context.Context, req datasourc
 					},
 				},
 			},
+			"tacacs_service_param": schema.SingleNestedAttribute{
+				MarkdownDescription: "TACACS+ Service Parameters.",
+				Computed:            true,
+				Attributes: map[string]schema.Attribute{
+					"privilege_level": schema.Int64Attribute{
+						MarkdownDescription: "Privilege Level <0-15>.",
+						Computed:            true,
+					},
+					"services": schema.ListAttribute{
+						MarkdownDescription: "Selected Services.",
+						Computed:            true,
+						ElementType:         types.StringType,
+					},
+					"authorize_attribute_status": schema.StringAttribute{
+						MarkdownDescription: "Authorize Attribute Status (ADD, REPLACE, FAIL).",
+						Computed:            true,
+					},
+					"tacacs_command_config": schema.SingleNestedAttribute{
+						MarkdownDescription: "Commands Configuration.",
+						Computed:            true,
+						Attributes: map[string]schema.Attribute{
+							"service_type": schema.StringAttribute{
+								MarkdownDescription: "Service Type (Shell, PIX Shell).",
+								Computed:            true,
+							},
+							"permit_unmatched_cmds": schema.BoolAttribute{
+								MarkdownDescription: "Enable to permit unmatched commands.",
+								Computed:            true,
+							},
+							"commands": schema.ListNestedAttribute{
+								MarkdownDescription: "Specify which commands with arguments are permitted/denied.",
+								Computed:            true,
+								NestedObject: schema.NestedAttributeObject{
+									Attributes: map[string]schema.Attribute{
+										"command": schema.StringAttribute{
+											MarkdownDescription: "Shell Command.",
+											Computed:            true,
+										},
+										"permit_unmatched_args": schema.BoolAttribute{
+											MarkdownDescription: "Enable to permit unmatched arguments.",
+											Computed:            true,
+										},
+										"command_args": schema.ListNestedAttribute{
+											MarkdownDescription: "List of Command Arguments.",
+											Computed:            true,
+											NestedObject: schema.NestedAttributeObject{
+												Attributes: map[string]schema.Attribute{
+													"argument": schema.StringAttribute{
+														MarkdownDescription: "Command Argument.",
+														Computed:            true,
+													},
+													"permit_action": schema.BoolAttribute{
+														MarkdownDescription: "Enable to permit unmatched action.",
+														Computed:            true,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -178,6 +243,7 @@ func (d *EnforcementProfileDataSource) Read(ctx context.Context, req datasource.
 	}
 
 	data.Attributes, _ = flattenProfileAttributes(ctx, result.Attributes)
+	data.TacacsServiceParams, _ = flattenTacacsServiceParams(ctx, result.TacacsServiceParams)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
