@@ -80,6 +80,13 @@ type ClientInterface interface {
 	UpdateAuthMethod(ctx context.Context, id int, authMethod *AuthMethodUpdate) (*AuthMethodResult, error)
 	DeleteAuthMethod(ctx context.Context, id int) error
 
+	// NetworkDevice
+	CreateNetworkDevice(ctx context.Context, device *NetworkDeviceCreate) (*NetworkDeviceResult, error)
+	GetNetworkDevice(ctx context.Context, id int) (*NetworkDeviceResult, error)
+	GetNetworkDeviceByName(ctx context.Context, name string) (*NetworkDeviceResult, error)
+	UpdateNetworkDevice(ctx context.Context, id int, device *NetworkDeviceUpdate) (*NetworkDeviceResult, error)
+	DeleteNetworkDevice(ctx context.Context, id int) error
+
 	// Helper
 	GetHost() string
 	GetServerVersion(ctx context.Context) (*ServerVersionResult, error)
@@ -1109,6 +1116,88 @@ func (c *apiClient) UpdateAuthMethod(ctx context.Context, id int, authMethod *Au
 
 func (c *apiClient) DeleteAuthMethod(ctx context.Context, id int) error {
 	path := fmt.Sprintf("/api/auth-method/%d", id)
+	req, err := c.newRequest(ctx, "DELETE", path, nil)
+	if err != nil {
+		return err
+	}
+	return c.do(req, nil)
+}
+
+// --- Network Device API Methods ---
+
+func (c *apiClient) CreateNetworkDevice(ctx context.Context, device *NetworkDeviceCreate) (*NetworkDeviceResult, error) {
+	payloadBytes, err := json.Marshal(device)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal CreateNetworkDevice: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "POST", "/api/network-device", bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result NetworkDeviceResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetNetworkDevice(ctx context.Context, id int) (*NetworkDeviceResult, error) {
+	path := fmt.Sprintf("/api/network-device/%d", id)
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result NetworkDeviceResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) GetNetworkDeviceByName(ctx context.Context, name string) (*NetworkDeviceResult, error) {
+	path := fmt.Sprintf("/api/network-device/name/%s", name)
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result NetworkDeviceResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) UpdateNetworkDevice(ctx context.Context, id int, device *NetworkDeviceUpdate) (*NetworkDeviceResult, error) {
+	path := fmt.Sprintf("/api/network-device/%d", id)
+	payloadBytes, err := json.Marshal(device)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal UpdateNetworkDevice: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "PATCH", path, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result NetworkDeviceResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) DeleteNetworkDevice(ctx context.Context, id int) error {
+	path := fmt.Sprintf("/api/network-device/%d", id)
 	req, err := c.newRequest(ctx, "DELETE", path, nil)
 	if err != nil {
 		return err

@@ -162,6 +162,7 @@ func (p *clearpassProvider) Resources(ctx context.Context) []func() resource.Res
 		NewServiceCertResource,
 		NewCertTrustListResource,
 		NewAuthMethodResource,
+		NewNetworkDeviceResource,
 	}
 }
 
@@ -186,5 +187,6 @@ func (p *clearpassProvider) DataSources(ctx context.Context) []func() datasource
 		NewRoleMappingsDataSource,
 		NewServiceCertDataSource,
 		NewServiceCertsDataSource,
+		NewNetworkDeviceDataSource,
 	}
 }

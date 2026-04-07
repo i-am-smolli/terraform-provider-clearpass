@@ -685,3 +685,139 @@ type AuthMethodList struct {
 	Links    map[string]interface{} `json:"_links"`
 	Count    *int                   `json:"count,omitempty"`
 }
+
+// --- Network Device Models ---
+
+// SNMPReadSettings defines SNMP read configuration for a network device.
+type SNMPReadSettings struct {
+	ForceRead       *bool  `json:"force_read,omitempty"`
+	ReadArpInfo     *bool  `json:"read_arp_info,omitempty"`
+	ZoneName        string `json:"zone_name,omitempty"`
+	SNMPVersion     string `json:"snmp_version,omitempty"`
+	CommunityString string `json:"community_string,omitempty"`
+	SecurityLevel   string `json:"security_level,omitempty"`
+	User            string `json:"user,omitempty"`
+	AuthProtocol    string `json:"auth_protocol,omitempty"`
+	AuthKey         string `json:"auth_key,omitempty"`
+	PrivacyProtocol string `json:"privacy_protocol,omitempty"`
+	PrivacyKey      string `json:"privacy_key,omitempty"`
+}
+
+// SNMPWriteSettings defines SNMP write configuration for a network device.
+type SNMPWriteSettings struct {
+	DefaultVLAN     *int64 `json:"default_vlan,omitempty"`
+	SNMPVersion     string `json:"snmp_version,omitempty"`
+	CommunityString string `json:"community_string,omitempty"`
+	SecurityLevel   string `json:"security_level,omitempty"`
+	User            string `json:"user,omitempty"`
+	AuthProtocol    string `json:"auth_protocol,omitempty"`
+	AuthKey         string `json:"auth_key,omitempty"`
+	PrivacyProtocol string `json:"privacy_protocol,omitempty"`
+	PrivacyKey      string `json:"privacy_key,omitempty"`
+}
+
+// RadSecSettings defines RadSec configuration for a network device.
+type RadSecSettings struct {
+	SerialNumber  string `json:"serial_number,omitempty"`
+	ValidateCert  string `json:"validate_cert,omitempty"`
+	SubjectDN     string `json:"subject_dn,omitempty"`
+	ExpiryDate    string `json:"expiry_date,omitempty"`
+	CNRegex       string `json:"cn_regex,omitempty"`
+	SANRegex      string `json:"san_regex,omitempty"`
+	SrcOverrideIP string `json:"src_override_ip,omitempty"`
+}
+
+// CLISettings defines CLI access configuration for a network device.
+type CLISettings struct {
+	Type                string `json:"type,omitempty"`
+	Port                *int64 `json:"port,omitempty"`
+	Username            string `json:"username,omitempty"`
+	Password            string `json:"password,omitempty"`
+	UsernamePromptRegex string `json:"username_prompt_regex,omitempty"`
+	PasswordPromptRegex string `json:"password_prompt_regex,omitempty"`
+	CommandPromptRegex  string `json:"command_prompt_regex,omitempty"`
+	EnablePromptRegex   string `json:"enable_prompt_regex,omitempty"`
+	EnablePassword      string `json:"enable_password,omitempty"`
+}
+
+// OnConnectEnforcementSettings defines OnConnect enforcement for a network device.
+type OnConnectEnforcementSettings struct {
+	Enabled *bool  `json:"enabled,omitempty"`
+	Ports   string `json:"ports,omitempty"`
+}
+
+// NetworkDeviceCreate defines the payload for creating a new network device.
+type NetworkDeviceCreate struct {
+	Name                  string                        `json:"name"`
+	IPAddress             string                        `json:"ip_address"`
+	Description           string                        `json:"description,omitempty"`
+	NADGroups             []string                      `json:"nad_groups,omitempty"`
+	RadiusSecret          string                        `json:"radius_secret,omitempty"`
+	TacacsSecret          string                        `json:"tacacs_secret,omitempty"`
+	VendorName            string                        `json:"vendor_name,omitempty"`
+	VendorID              *int64                        `json:"vendor_id,omitempty"`
+	CoACapable            *bool                         `json:"coa_capable,omitempty"`
+	CoAPort               *int64                        `json:"coa_port,omitempty"`
+	RadSecEnabled         *bool                         `json:"radsec_enabled,omitempty"`
+	SNMPRead              *SNMPReadSettings             `json:"snmp_read,omitempty"`
+	SNMPWrite             *SNMPWriteSettings            `json:"snmp_write,omitempty"`
+	RadSecConfig          *RadSecSettings               `json:"radsec_config,omitempty"`
+	CLIConfig             *CLISettings                  `json:"cli_config,omitempty"`
+	OnConnectEnforcement  *OnConnectEnforcementSettings `json:"onConnect_enforcement,omitempty"`
+	Attributes            map[string]string             `json:"attributes,omitempty"`
+}
+
+// NetworkDeviceUpdate defines the payload for updating a network device.
+type NetworkDeviceUpdate struct {
+	Name                  string                        `json:"name,omitempty"`
+	IPAddress             string                        `json:"ip_address,omitempty"`
+	Description           string                        `json:"description,omitempty"`
+	NADGroups             []string                      `json:"nad_groups,omitempty"`
+	RadiusSecret          string                        `json:"radius_secret,omitempty"`
+	TacacsSecret          string                        `json:"tacacs_secret,omitempty"`
+	VendorName            string                        `json:"vendor_name,omitempty"`
+	VendorID              *int64                        `json:"vendor_id,omitempty"`
+	CoACapable            *bool                         `json:"coa_capable,omitempty"`
+	CoAPort               *int64                        `json:"coa_port,omitempty"`
+	RadSecEnabled         *bool                         `json:"radsec_enabled,omitempty"`
+	SNMPRead              *SNMPReadSettings             `json:"snmp_read,omitempty"`
+	SNMPWrite             *SNMPWriteSettings            `json:"snmp_write,omitempty"`
+	RadSecConfig          *RadSecSettings               `json:"radsec_config,omitempty"`
+	CLIConfig             *CLISettings                  `json:"cli_config,omitempty"`
+	OnConnectEnforcement  *OnConnectEnforcementSettings `json:"onConnect_enforcement,omitempty"`
+	Attributes            map[string]string             `json:"attributes,omitempty"`
+}
+
+// NetworkDeviceResult defines the payload returned for a network device.
+type NetworkDeviceResult struct {
+	ID                    int                           `json:"id"`
+	Name                  string                        `json:"name"`
+	IPAddress             string                        `json:"ip_address"`
+	Description           string                        `json:"description"`
+	NADGroups             []string                      `json:"nad_groups"`
+	RadiusSecret          string                        `json:"radius_secret"`
+	TacacsSecret          string                        `json:"tacacs_secret"`
+	VendorName            string                        `json:"vendor_name"`
+	VendorID              int64                         `json:"vendor_id"`
+	CoACapable            bool                          `json:"coa_capable"`
+	CoAPort               int64                         `json:"coa_port"`
+	RadSecEnabled         bool                          `json:"radsec_enabled"`
+	SNMPRead              *SNMPReadSettings             `json:"snmp_read"`
+	SNMPWrite             *SNMPWriteSettings            `json:"snmp_write"`
+	RadSecConfig          *RadSecSettings               `json:"radsec_config"`
+	CLIConfig             *CLISettings                  `json:"cli_config"`
+	OnConnectEnforcement  *OnConnectEnforcementSettings `json:"onConnect_enforcement"`
+	Attributes            map[string]string             `json:"attributes"`
+}
+
+// NetworkDeviceItems contains the list of NetworkDeviceResult items.
+type NetworkDeviceItems struct {
+	Items []NetworkDeviceResult `json:"items"`
+}
+
+// NetworkDeviceList defines the payload returned for a list of network devices.
+type NetworkDeviceList struct {
+	Embedded NetworkDeviceItems     `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
