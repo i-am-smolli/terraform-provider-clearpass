@@ -51,6 +51,7 @@ output "guest_profile_type" {
 - `device_group_list` (List of String) A list of device groups associated with this profile.
 - `post_auth_template` (String) Template for Post-Authentication enforcement profiles (e.g., 'EntityUpdate', 'SessionRestriction', 'SessionNotify').
 - `radius_dyn_authz_template` (String) Template for RADIUS Dynamic Authorization.
+- `tacacs_service_param` (Attributes) TACACS+ Service Parameters. (see [below for nested schema](#nestedatt--tacacs_service_param))
 - `type` (String) The type of enforcement profile (e.g., 'RADIUS', 'TACACS', 'Agent', 'Aruba_DUR').
 
 <a id="nestedatt--attributes"></a>
@@ -61,3 +62,40 @@ Read-Only:
 - `name` (String) The specific name of the attribute (e.g., 'Filter-Id', 'Tunnel-Type').
 - `type` (String) The type or category of the attribute (e.g., 'Radius:IETF', 'Radius:Cisco').
 - `value` (String) The value assigned to the attribute.
+
+
+<a id="nestedatt--tacacs_service_param"></a>
+### Nested Schema for `tacacs_service_param`
+
+Read-Only:
+
+- `authorize_attribute_status` (String) Authorize Attribute Status (ADD, REPLACE, FAIL).
+- `privilege_level` (Number) Privilege Level <0-15>.
+- `services` (List of String) Selected Services.
+- `tacacs_command_config` (Attributes) Commands Configuration. (see [below for nested schema](#nestedatt--tacacs_service_param--tacacs_command_config))
+
+<a id="nestedatt--tacacs_service_param--tacacs_command_config"></a>
+### Nested Schema for `tacacs_service_param.tacacs_command_config`
+
+Read-Only:
+
+- `commands` (Attributes List) Specify which commands with arguments are permitted/denied. (see [below for nested schema](#nestedatt--tacacs_service_param--tacacs_command_config--commands))
+- `permit_unmatched_cmds` (Boolean) Enable to permit unmatched commands.
+- `service_type` (String) Service Type (Shell, PIX Shell).
+
+<a id="nestedatt--tacacs_service_param--tacacs_command_config--commands"></a>
+### Nested Schema for `tacacs_service_param.tacacs_command_config.commands`
+
+Read-Only:
+
+- `command` (String) Shell Command.
+- `command_args` (Attributes List) List of Command Arguments. (see [below for nested schema](#nestedatt--tacacs_service_param--tacacs_command_config--commands--command_args))
+- `permit_unmatched_args` (Boolean) Enable to permit unmatched arguments.
+
+<a id="nestedatt--tacacs_service_param--tacacs_command_config--commands--command_args"></a>
+### Nested Schema for `tacacs_service_param.tacacs_command_config.commands.command_args`
+
+Read-Only:
+
+- `argument` (String) Command Argument.
+- `permit_action` (Boolean) Enable to permit unmatched action.

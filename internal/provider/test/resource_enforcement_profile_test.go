@@ -103,6 +103,7 @@ resource "clearpass_enforcement_profile" "test_tacacs_profile" {
 
   tacacs_service_param = {
     privilege_level            = 15
+    services                   = ["Shell"]
     authorize_attribute_status = "ADD"
     tacacs_command_config = {
       service_type          = "Shell"
