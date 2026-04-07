@@ -17,7 +17,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	stringdefault "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -167,7 +166,6 @@ func (r *serviceResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Description: "Specifies whether to match ALL or ANY of the service rules.",
 				Optional:    true,
 				Computed:    true,
-				Default:     stringdefault.StaticString("MATCHES_ALL"),
 			},
 			"service_rule": schema.ListNestedAttribute{
 				Description: "A list of rules used to classify requests into this service.",
