@@ -33,7 +33,25 @@ resource "clearpass_service" "dot1x" {
 
 - `enforcement_policy` (String) The name of the enforcement policy associated with this service.
 - `name` (String) The name of the service.
-- `template` (String) The template used to create the service (e.g., '802.1X Wireless', 'Guest Access').
+- `template` (String) The template used to create the service. Valid options are:
+  - `Aruba 802.1X Wireless`
+  - `802.1X Wireless`
+  - `802.1X Wired`
+  - `MAC Authentication`
+  - `Web-based Authentication`
+  - `Web-based Health Check Only`
+  - `Web-based Open Network Access`
+  - `802.1X Wireless - Identity Only`
+  - `802.1X Wired - Identity Only`
+  - `RADIUS Enforcement ( Generic )`
+  - `RADIUS Proxy`
+  - `RADIUS Authorization`
+  - `TACACS+ Enforcement`
+  - `Aruba Application Authentication`
+  - `Aruba Application Authorization`
+  - `Cisco Web Authentication Proxy`
+  - `Event-based Enforcement`
+  - `ClearPass OnConnect Enforcement`
 
 ### Optional
 

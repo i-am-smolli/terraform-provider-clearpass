@@ -7,6 +7,7 @@ import (
 
 	"terraform-provider-clearpass/internal/client"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -18,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	stringdefault "github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -96,10 +98,50 @@ func (r *serviceResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Required:    true,
 			},
 			"template": schema.StringAttribute{
-				Description: "The template used to create the service (e.g., '802.1X Wireless', 'Guest Access').",
-				Required:    true,
+				MarkdownDescription: `The template used to create the service. Valid options are:
+  - ` + "`Aruba 802.1X Wireless`" + `
+  - ` + "`802.1X Wireless`" + `
+  - ` + "`802.1X Wired`" + `
+  - ` + "`MAC Authentication`" + `
+  - ` + "`Web-based Authentication`" + `
+  - ` + "`Web-based Health Check Only`" + `
+  - ` + "`Web-based Open Network Access`" + `
+  - ` + "`802.1X Wireless - Identity Only`" + `
+  - ` + "`802.1X Wired - Identity Only`" + `
+  - ` + "`RADIUS Enforcement ( Generic )`" + `
+  - ` + "`RADIUS Proxy`" + `
+  - ` + "`RADIUS Authorization`" + `
+  - ` + "`TACACS+ Enforcement`" + `
+  - ` + "`Aruba Application Authentication`" + `
+  - ` + "`Aruba Application Authorization`" + `
+  - ` + "`Cisco Web Authentication Proxy`" + `
+  - ` + "`Event-based Enforcement`" + `
+  - ` + "`ClearPass OnConnect Enforcement`",
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
+				},
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"Aruba 802.1X Wireless",
+						"802.1X Wireless",
+						"802.1X Wired",
+						"MAC Authentication",
+						"Web-based Authentication",
+						"Web-based Health Check Only",
+						"Web-based Open Network Access",
+						"802.1X Wireless - Identity Only",
+						"802.1X Wired - Identity Only",
+						"RADIUS Enforcement ( Generic )",
+						"RADIUS Proxy",
+						"RADIUS Authorization",
+						"TACACS+ Enforcement",
+						"Aruba Application Authentication",
+						"Aruba Application Authorization",
+						"Cisco Web Authentication Proxy",
+						"Event-based Enforcement",
+						"ClearPass OnConnect Enforcement",
+					),
 				},
 			},
 			"type": schema.StringAttribute{
