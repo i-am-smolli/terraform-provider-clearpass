@@ -380,7 +380,7 @@ type ServiceCreate struct {
 	Description                    string         `json:"description,omitempty"`
 	Enabled                        *bool          `json:"enabled,omitempty"`
 	AuthMethods                    []string       `json:"auth_methods,omitempty"`
-	AuthSources                    []string       `json:"auth_sources,omitempty"`
+	AuthSources                    []string       `json:"auth_sources"`
 	RoleMappingPolicy              string         `json:"role_mapping_policy,omitempty"`
 	EnfPolicy                      string         `json:"enf_policy,omitempty"` // This is "Enforcement Policy"
 	StripUsername                  *bool          `json:"strip_username,omitempty"`
@@ -418,7 +418,7 @@ type ServiceUpdate struct {
 	Description                    string         `json:"description,omitempty"`
 	Enabled                        *bool          `json:"enabled,omitempty"`
 	AuthMethods                    []string       `json:"auth_methods,omitempty"`
-	AuthSources                    []string       `json:"auth_sources,omitempty"`
+	AuthSources                    []string       `json:"auth_sources"`
 	RoleMappingPolicy              string         `json:"role_mapping_policy,omitempty"`
 	EnfPolicy                      string         `json:"enf_policy,omitempty"`
 	StripUsername                  *bool          `json:"strip_username,omitempty"`

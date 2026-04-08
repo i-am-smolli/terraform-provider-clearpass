@@ -360,12 +360,17 @@ func (r *serviceResource) Create(ctx context.Context, req resource.CreateRequest
 	// Convert TF lists to Go slices
 	var authMethods, authSources, posturePolicies, authzSources, profilerEndpointClassification, acctProxyTargets, radiusProxyTargets []string
 	resp.Diagnostics.Append(plan.AuthMethods.ElementsAs(ctx, &authMethods, false)...) // Convert Terraform list to Go slice
-	resp.Diagnostics.Append(plan.AuthSources.ElementsAs(ctx, &authSources, false)...) // Convert Terraform list to Go slice
+	desiredAuthSources, authSourceDiags := authSourcesFromPlan(ctx, plan.AuthSources)
+	resp.Diagnostics.Append(authSourceDiags...)
+	authSources = desiredAuthSources
 	resp.Diagnostics.Append(plan.PosturePolicies.ElementsAs(ctx, &posturePolicies, false)...)
 	resp.Diagnostics.Append(plan.AuthzSources.ElementsAs(ctx, &authzSources, false)...)
 	resp.Diagnostics.Append(plan.ProfilerEndpointClassification.ElementsAs(ctx, &profilerEndpointClassification, false)...)
 	resp.Diagnostics.Append(plan.AcctProxyTargets.ElementsAs(ctx, &acctProxyTargets, false)...)
 	resp.Diagnostics.Append(plan.RadiusProxyTargets.ElementsAs(ctx, &radiusProxyTargets, false)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	enabled := plan.Enabled.ValueBool()
 	strip := plan.StripUsername.ValueBool()
@@ -421,6 +426,15 @@ func (r *serviceResource) Create(ctx context.Context, req resource.CreateRequest
 	if err != nil {
 		resp.Diagnostics.AddError("API Error", err.Error())
 		return
+	}
+
+	if !equalStringSlices(created.AuthSources, desiredAuthSources) {
+		reconciled, reconcileErr := r.client.UpdateService(ctx, created.ID, &client.ServiceUpdate{AuthSources: desiredAuthSources})
+		if reconcileErr != nil {
+			resp.Diagnostics.AddError("API Error", fmt.Sprintf("failed to reconcile auth_sources after create: %s", reconcileErr.Error()))
+			return
+		}
+		created = reconciled
 	}
 
 	// Map back
@@ -691,11 +705,12 @@ func (r *serviceResource) Update(ctx context.Context, req resource.UpdateRequest
 		plan.AuthMethods.ElementsAs(ctx, &am, false)
 		apiPayload.AuthMethods = am
 	}
-	if !plan.AuthSources.IsUnknown() {
-		var as []string
-		plan.AuthSources.ElementsAs(ctx, &as, false)
-		apiPayload.AuthSources = as
+	desiredAuthSources, authSourceDiags := authSourcesFromPlan(ctx, plan.AuthSources)
+	resp.Diagnostics.Append(authSourceDiags...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
+	apiPayload.AuthSources = desiredAuthSources
 	if !plan.AuthzSources.IsUnknown() {
 		var azs []string
 		plan.AuthzSources.ElementsAs(ctx, &azs, false)
@@ -797,6 +812,15 @@ func (r *serviceResource) Update(ctx context.Context, req resource.UpdateRequest
 		return
 	}
 
+	if !equalStringSlices(updated.AuthSources, desiredAuthSources) {
+		reconciled, reconcileErr := r.client.UpdateService(ctx, int(plan.ID.ValueInt64()), &client.ServiceUpdate{AuthSources: desiredAuthSources})
+		if reconcileErr != nil {
+			resp.Diagnostics.AddError("API Error", fmt.Sprintf("failed to reconcile auth_sources after update: %s", reconcileErr.Error()))
+			return
+		}
+		updated = reconciled
+	}
+
 	// Update state
 	plan.Name = types.StringValue(updated.Name)
 	plan.Enabled = types.BoolValue(updated.Enabled)
@@ -827,6 +851,7 @@ func (r *serviceResource) Update(ctx context.Context, req resource.UpdateRequest
 	resp.Diagnostics.Append(diags...)
 
 	plan.PosturePolicies, _ = types.ListValueFrom(ctx, types.StringType, updated.PosturePolicies)
+	plan.AuthSources, _ = types.ListValueFrom(ctx, types.StringType, updated.AuthSources)
 	plan.AuthzSources, _ = types.ListValueFrom(ctx, types.StringType, updated.AuthzSources)
 	plan.ProfilerEndpointClassification, _ = types.ListValueFrom(ctx, types.StringType, updated.ProfilerEndpointClassification)
 	plan.AcctProxyTargets, _ = types.ListValueFrom(ctx, types.StringType, updated.AcctProxyTargets)
@@ -966,4 +991,32 @@ func (m serviceRuleModel) attrTypes() map[string]attr.Type {
 		"operator": types.StringType,
 		"value":    types.StringType,
 	}
+}
+
+func authSourcesFromPlan(ctx context.Context, list types.List) ([]string, diag.Diagnostics) {
+	if list.IsUnknown() {
+		return nil, diag.Diagnostics{diag.NewErrorDiagnostic("Invalid auth_sources", "auth_sources is unknown during apply")}
+	}
+	if list.IsNull() {
+		return []string{}, nil
+	}
+
+	var values []string
+	diags := list.ElementsAs(ctx, &values, false)
+	if len(values) == 0 {
+		return []string{}, diags
+	}
+	return values, diags
+}
+
+func equalStringSlices(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }
