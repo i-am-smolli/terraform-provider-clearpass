@@ -32,7 +32,6 @@ resource "clearpass_network_device_group" "list_group" {
   group_format = "list"
   value        = "Router-01, Router-02"
 }
-```
 resource "clearpass_network_device_group" "list_group_with_devices" {
   name         = "Core-Routers-2"
   description  = "Explicit list of network device names (using devices field)"
@@ -48,11 +47,11 @@ resource "clearpass_network_device_group" "list_group_with_devices" {
 
 * `group_format` (String) Format of the network devices in this group. Must be one of: `subnet`, `regex`, `list`.
 * `name` (String) Unique name of the network device group.
-* `value` (String) Configuration value for the chosen group format. For `subnet`, it must be a single CIDR string (e.g., `10.0.0.0/8`). For `regex`, it must be a valid regular expression targeting network device IP addresses. For `list`, it must be a comma-separated list of existing network device names.
 
 ### Optional
 
 * `description` (String) Description of the network device group.
+* `value` (String) Configuration value for the chosen group format. For `subnet`, it must be a single CIDR string (e.g., `10.0.0.0/8`). For `regex`, it must be a valid regular expression targeting network device IP addresses. For `list`, it may be a comma-separated list of existing network device names. For `subnet` and `regex`, this is required in practice.
 * `devices` (List of String) List of network devices to include in the group. Only applicable when `group_format` is `list`. When specified, this takes precedence over the `value` field.
 
 ### Read-Only

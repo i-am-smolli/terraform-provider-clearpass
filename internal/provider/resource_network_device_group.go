@@ -85,8 +85,9 @@ func (r *networkDeviceGroupResource) Schema(ctx context.Context, req resource.Sc
 			},
 			"value": schema.StringAttribute{
 				Description: "Network devices in the specified format. For `subnet`, use CIDR notation (e.g., `10.0.0.0/8`). " +
-					"For `regex`, use a regular expression pattern. For `list`, use a comma-separated list of IP addresses.",
-				Required: true,
+					"For `regex`, use a regular expression pattern. For `list`, use a comma-separated list of IP addresses or set `devices`.",
+				Optional: true,
+				Computed: true,
 			},
 			"devices": schema.ListAttribute{
 				ElementType: types.StringType,
@@ -124,13 +125,35 @@ func (r *networkDeviceGroupResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 
-	value := plan.Value.ValueString()
+	value := ""
+	if !plan.Value.IsNull() && !plan.Value.IsUnknown() {
+		value = strings.TrimSpace(plan.Value.ValueString())
+	}
 
 	// If devices list is provided and group_format is "list", convert to comma-separated value
-	if plan.GroupFormat.ValueString() == "list" && !plan.Devices.IsNull() && len(plan.Devices.Elements()) > 0 {
+	if plan.GroupFormat.ValueString() == "list" && !plan.Devices.IsNull() && !plan.Devices.IsUnknown() && len(plan.Devices.Elements()) > 0 {
 		devices := make([]string, 0, len(plan.Devices.Elements()))
-		plan.Devices.ElementsAs(context.Background(), &devices, false)
+		resp.Diagnostics.Append(plan.Devices.ElementsAs(ctx, &devices, false)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
 		value = strings.Join(devices, ", ")
+	}
+
+	if plan.GroupFormat.ValueString() == "list" && value == "" {
+		resp.Diagnostics.AddError(
+			"Missing Configuration",
+			"For group_format 'list', configure either 'devices' or 'value'.",
+		)
+		return
+	}
+
+	if plan.GroupFormat.ValueString() != "list" && value == "" {
+		resp.Diagnostics.AddError(
+			"Missing Configuration",
+			"Attribute 'value' is required when group_format is 'subnet' or 'regex'.",
+		)
+		return
 	}
 
 	apiPayload := &client.NetworkDeviceGroupCreate{
@@ -157,10 +180,14 @@ func (r *networkDeviceGroupResource) Create(ctx context.Context, req resource.Cr
 
 	// Parse value into devices if format is list
 	if created.GroupFormat == "list" {
-		deviceList := strings.Split(created.Value, ", ")
-		devices := make([]attr.Value, len(deviceList))
-		for i, d := range deviceList {
-			devices[i] = types.StringValue(strings.TrimSpace(d))
+		deviceList := strings.Split(created.Value, ",")
+		devices := make([]attr.Value, 0, len(deviceList))
+		for _, d := range deviceList {
+			trimmed := strings.TrimSpace(d)
+			if trimmed == "" {
+				continue
+			}
+			devices = append(devices, types.StringValue(trimmed))
 		}
 		plan.Devices = types.ListValueMust(types.StringType, devices)
 	} else {
@@ -200,10 +227,14 @@ func (r *networkDeviceGroupResource) Read(ctx context.Context, req resource.Read
 
 	// Parse value into devices if format is list
 	if group.GroupFormat == "list" {
-		deviceList := strings.Split(group.Value, ", ")
-		devices := make([]attr.Value, len(deviceList))
-		for i, d := range deviceList {
-			devices[i] = types.StringValue(strings.TrimSpace(d))
+		deviceList := strings.Split(group.Value, ",")
+		devices := make([]attr.Value, 0, len(deviceList))
+		for _, d := range deviceList {
+			trimmed := strings.TrimSpace(d)
+			if trimmed == "" {
+				continue
+			}
+			devices = append(devices, types.StringValue(trimmed))
 		}
 		state.Devices = types.ListValueMust(types.StringType, devices)
 	} else {
@@ -231,16 +262,38 @@ func (r *networkDeviceGroupResource) Update(ctx context.Context, req resource.Up
 	if !plan.GroupFormat.IsUnknown() {
 		apiPayload.GroupFormat = plan.GroupFormat.ValueString()
 	}
-	if !plan.Value.IsUnknown() {
-		apiPayload.Value = plan.Value.ValueString()
+	value := ""
+	if !plan.Value.IsNull() && !plan.Value.IsUnknown() {
+		value = strings.TrimSpace(plan.Value.ValueString())
 	}
 
 	// Handle value/devices: if devices list is provided and group_format is "list", use that
-	if plan.GroupFormat.ValueString() == "list" && !plan.Devices.IsNull() && len(plan.Devices.Elements()) > 0 {
+	if plan.GroupFormat.ValueString() == "list" && !plan.Devices.IsNull() && !plan.Devices.IsUnknown() && len(plan.Devices.Elements()) > 0 {
 		devices := make([]string, 0, len(plan.Devices.Elements()))
-		plan.Devices.ElementsAs(context.Background(), &devices, false)
-		apiPayload.Value = strings.Join(devices, ", ")
+		resp.Diagnostics.Append(plan.Devices.ElementsAs(ctx, &devices, false)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		value = strings.Join(devices, ", ")
 	}
+
+	if plan.GroupFormat.ValueString() == "list" && value == "" {
+		resp.Diagnostics.AddError(
+			"Missing Configuration",
+			"For group_format 'list', configure either 'devices' or 'value'.",
+		)
+		return
+	}
+
+	if plan.GroupFormat.ValueString() != "list" && value == "" {
+		resp.Diagnostics.AddError(
+			"Missing Configuration",
+			"Attribute 'value' is required when group_format is 'subnet' or 'regex'.",
+		)
+		return
+	}
+
+	apiPayload.Value = value
 
 	numericID := plan.ID.ValueInt64()
 	updated, err := r.client.UpdateNetworkDeviceGroup(ctx, int(numericID), apiPayload)
@@ -258,10 +311,14 @@ func (r *networkDeviceGroupResource) Update(ctx context.Context, req resource.Up
 
 	// Parse value into devices if format is list
 	if updated.GroupFormat == "list" {
-		deviceList := strings.Split(updated.Value, ", ")
-		devices := make([]attr.Value, len(deviceList))
-		for i, d := range deviceList {
-			devices[i] = types.StringValue(strings.TrimSpace(d))
+		deviceList := strings.Split(updated.Value, ",")
+		devices := make([]attr.Value, 0, len(deviceList))
+		for _, d := range deviceList {
+			trimmed := strings.TrimSpace(d)
+			if trimmed == "" {
+				continue
+			}
+			devices = append(devices, types.StringValue(trimmed))
 		}
 		plan.Devices = types.ListValueMust(types.StringType, devices)
 	} else {
