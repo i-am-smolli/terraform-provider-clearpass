@@ -704,7 +704,7 @@ func mapNetworkDeviceResultToState(ctx context.Context, device *client.NetworkDe
 	}
 
 	// Attributes
-	if device.Attributes != nil && len(device.Attributes) > 0 {
+	if len(device.Attributes) > 0 {
 		attrsMap, d := types.MapValueFrom(ctx, types.StringType, device.Attributes)
 		diags.Append(d...)
 		state.Attributes = attrsMap
