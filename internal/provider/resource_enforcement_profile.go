@@ -229,6 +229,7 @@ func (r *enforcementProfileResource) Create(ctx context.Context, req resource.Cr
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	desiredTacacsServiceParams := plan.TacacsServiceParams
 
 	apiPayload := &client.EnforcementProfileCreate{
 		Name:                plan.Name.ValueString(),
@@ -302,6 +303,7 @@ func (r *enforcementProfileResource) Create(ctx context.Context, req resource.Cr
 
 	plan.TacacsServiceParams, diags = flattenTacacsServiceParams(ctx, created.TacacsServiceParams)
 	resp.Diagnostics.Append(diags...)
+	preserveNullTacacsCommands(ctx, desiredTacacsServiceParams, &plan.TacacsServiceParams, &resp.Diagnostics)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
@@ -367,6 +369,12 @@ func (r *enforcementProfileResource) Update(ctx context.Context, req resource.Up
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	var prior enforcementProfileModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &prior)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	desiredTacacsServiceParams := plan.TacacsServiceParams
 
 	apiPayload := &client.EnforcementProfileUpdate{
 		Attributes:          expandProfileAttributes(ctx, plan.Attributes, &resp.Diagnostics),
@@ -420,8 +428,41 @@ func (r *enforcementProfileResource) Update(ctx context.Context, req resource.Up
 
 	plan.TacacsServiceParams, diags = flattenTacacsServiceParams(ctx, updated.TacacsServiceParams)
 	resp.Diagnostics.Append(diags...)
+	if shouldPreserveNullTacacsCommands(ctx, prior.TacacsServiceParams, desiredTacacsServiceParams, &resp.Diagnostics) {
+		preserveNullTacacsCommands(ctx, desiredTacacsServiceParams, &plan.TacacsServiceParams, &resp.Diagnostics)
+	}
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+func shouldPreserveNullTacacsCommands(ctx context.Context, prior types.Object, desired types.Object, diags *diag.Diagnostics) bool {
+	if prior.IsNull() || prior.IsUnknown() || desired.IsNull() || desired.IsUnknown() {
+		return false
+	}
+
+	var priorModel tacacsServiceParamModel
+	var desiredModel tacacsServiceParamModel
+	diags.Append(prior.As(ctx, &priorModel, basetypes.ObjectAsOptions{})...)
+	diags.Append(desired.As(ctx, &desiredModel, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return false
+	}
+
+	if priorModel.TacacsCommandConfig.IsNull() || priorModel.TacacsCommandConfig.IsUnknown() || desiredModel.TacacsCommandConfig.IsNull() || desiredModel.TacacsCommandConfig.IsUnknown() {
+		return false
+	}
+
+	var priorCfg tacacsCommandConfigModel
+	var desiredCfg tacacsCommandConfigModel
+	diags.Append(priorModel.TacacsCommandConfig.As(ctx, &priorCfg, basetypes.ObjectAsOptions{})...)
+	diags.Append(desiredModel.TacacsCommandConfig.As(ctx, &desiredCfg, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return false
+	}
+
+	// Preserve only for stable null->null behavior. If prior had commands and desired removes
+	// them, do not preserve; we must surface that drift/failure.
+	return priorCfg.Commands.IsNull() && desiredCfg.Commands.IsNull()
 }
 
 func (r *enforcementProfileResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
@@ -710,4 +751,74 @@ func (r *enforcementProfileResource) ImportState(ctx context.Context, req resour
 		path.Root("id"),
 		numericID,
 	)...)
+}
+
+// preserveNullTacacsCommands re-applies the user's original null intent onto the
+// API-flattened result so that omitted (null) ``commands`` or
+// ``tacacs_command_config`` blocks do not cause spurious plan differences.
+//
+// After flattenTacacsServiceParams returns the API-read value we need to patch
+// any field that the user deliberately left as null: the API may echo back an
+// empty list or a partially-populated object, which Terraform would otherwise
+// treat as a diff against the user's null.
+func preserveNullTacacsCommands(ctx context.Context, desired types.Object, result *types.Object, diags *diag.Diagnostics) {
+	if desired.IsNull() || desired.IsUnknown() {
+		return
+	}
+	if result == nil || result.IsNull() || result.IsUnknown() {
+		return
+	}
+
+	// ── decode desired model ──────────────────────────────────────────────────
+	var desiredModel tacacsServiceParamModel
+	diags.Append(desired.As(ctx, &desiredModel, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return
+	}
+
+	// If the user omitted tacacs_command_config entirely, preserve null.
+	if desiredModel.TacacsCommandConfig.IsNull() {
+		var resultModel tacacsServiceParamModel
+		diags.Append(result.As(ctx, &resultModel, basetypes.ObjectAsOptions{})...)
+		if diags.HasError() {
+			return
+		}
+		resultModel.TacacsCommandConfig = types.ObjectNull(tacacsCommandConfigModel{}.attrTypes())
+		newResult, d := types.ObjectValueFrom(ctx, tacacsServiceParamModel{}.attrTypes(), resultModel)
+		diags.Append(d...)
+		*result = newResult
+		return
+	}
+
+	// ── decode desired command-config ─────────────────────────────────────────
+	var desiredConfig tacacsCommandConfigModel
+	diags.Append(desiredModel.TacacsCommandConfig.As(ctx, &desiredConfig, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return
+	}
+
+	// If the user omitted commands entirely (null), preserve null in the result.
+	// Also treat empty lists as a desire to clear commands.
+	if desiredConfig.Commands.IsNull() || len(desiredConfig.Commands.Elements()) == 0 {
+		var resultModel tacacsServiceParamModel
+		diags.Append(result.As(ctx, &resultModel, basetypes.ObjectAsOptions{})...)
+		if diags.HasError() {
+			return
+		}
+		if resultModel.TacacsCommandConfig.IsNull() || resultModel.TacacsCommandConfig.IsUnknown() {
+			return
+		}
+		var resultConfig tacacsCommandConfigModel
+		diags.Append(resultModel.TacacsCommandConfig.As(ctx, &resultConfig, basetypes.ObjectAsOptions{})...)
+		if diags.HasError() {
+			return
+		}
+		resultConfig.Commands = types.ListNull(types.ObjectType{AttrTypes: tacacsCommandModel{}.attrTypes()})
+		newConfig, d := types.ObjectValueFrom(ctx, tacacsCommandConfigModel{}.attrTypes(), resultConfig)
+		diags.Append(d...)
+		resultModel.TacacsCommandConfig = newConfig
+		newResult, d := types.ObjectValueFrom(ctx, tacacsServiceParamModel{}.attrTypes(), resultModel)
+		diags.Append(d...)
+		*result = newResult
+	}
 }
