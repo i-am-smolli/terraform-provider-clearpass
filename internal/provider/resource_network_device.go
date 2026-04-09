@@ -221,10 +221,9 @@ func (r *networkDeviceResource) Schema(ctx context.Context, req resource.SchemaR
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"vendor_id": schema.Int64Attribute{
-				Description:   "Vendor ID (IANA enterprise number) of the network device.",
-				Optional:      true,
-				Computed:      true,
-				PlanModifiers: []planmodifier.Int64{int64planmodifier.UseStateForUnknown()},
+				Description: "Vendor ID (IANA enterprise number) of the network device.",
+				Optional:    true,
+				Computed:    true,
 			},
 			"coa_capable": schema.BoolAttribute{
 				Description:   "Flag indicating if the network device is capable of RADIUS Change of Authorization (CoA).",
