@@ -29,7 +29,7 @@ terraform {
   required_providers {
     clearpass = {
       source  = "i-am-smolli/clearpass"
-      version = ">= 0.0.8"
+      version = ">= 0.0.9"
     }
   }
 }
