@@ -1,3 +1,15 @@
+---
+page_title: "ClearPass TACACS+ Junos Example"
+subcategory: "Configuration Guides"
+description: |-
+  Terraform guide for the TACACS+ Junos Example scenario.
+---
+
+# ClearPass TACACS+ Junos Example
+
+This guide is generated from `examples/guides/tacacs_junos_example.tf` and shows a full Terraform example.
+
+```terraform
 # =============================================================================
 # ClearPass TACACS+ for Juniper Devices – Minimum Viable Product
 # =============================================================================
@@ -32,6 +44,7 @@
 #     set system login user remote full-name "TACACS Remote User"
 #     set system login user remote class read-only        ← fallback class
 #
+#   See also: examples/junos/junos.tf (Terraform configuration for Junos devices)
 #
 # USAGE:
 #   Search for "CHANGE ME" in this file and replace the placeholders.
@@ -409,3 +422,4 @@ resource "clearpass_service" "tacacs_junos_service" {
     clearpass_role_mapping.tacacs_junos_role_mapping,
   ]
 }
+```
