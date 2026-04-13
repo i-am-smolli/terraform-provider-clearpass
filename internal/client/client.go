@@ -43,6 +43,7 @@ type ClientInterface interface {
 	GetEnforcementProfileByName(ctx context.Context, name string) (*EnforcementProfileResult, error)
 	GetEnforcementProfiles(ctx context.Context) (*EnforcementProfileList, error)
 	UpdateEnforcementProfile(ctx context.Context, id int, profile *EnforcementProfileUpdate) (*EnforcementProfileResult, error)
+	ReplaceEnforcementProfile(ctx context.Context, id int, profile *EnforcementProfileUpdate) (*EnforcementProfileResult, error)
 	DeleteEnforcementProfile(ctx context.Context, id int) error
 
 	// EnforcementPolicy
@@ -681,6 +682,25 @@ func (c *apiClient) UpdateEnforcementProfile(ctx context.Context, id int, profil
 	}
 
 	req, err := c.newRequest(ctx, "PATCH", path, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result EnforcementProfileResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *apiClient) ReplaceEnforcementProfile(ctx context.Context, id int, profile *EnforcementProfileUpdate) (*EnforcementProfileResult, error) {
+	path := fmt.Sprintf("/api/enforcement-profile/%d", id)
+	payloadBytes, err := json.Marshal(profile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal ReplaceEnforcementProfile: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "PUT", path, bytes.NewBuffer(payloadBytes))
 	if err != nil {
 		return nil, err
 	}

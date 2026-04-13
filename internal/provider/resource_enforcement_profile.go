@@ -304,6 +304,7 @@ func (r *enforcementProfileResource) Create(ctx context.Context, req resource.Cr
 	plan.TacacsServiceParams, diags = flattenTacacsServiceParams(ctx, created.TacacsServiceParams)
 	resp.Diagnostics.Append(diags...)
 	preserveNullTacacsCommands(ctx, desiredTacacsServiceParams, &plan.TacacsServiceParams, &resp.Diagnostics)
+	normalizeServicesInTacacsParams(ctx, desiredTacacsServiceParams, &plan.TacacsServiceParams, &resp.Diagnostics)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
@@ -314,6 +315,7 @@ func (r *enforcementProfileResource) Read(ctx context.Context, req resource.Read
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	priorTacacsServiceParams := state.TacacsServiceParams
 
 	profile, err := r.client.GetEnforcementProfile(ctx, int(state.ID.ValueInt64()))
 	if err != nil {
@@ -359,6 +361,7 @@ func (r *enforcementProfileResource) Read(ctx context.Context, req resource.Read
 
 	state.TacacsServiceParams, diags = flattenTacacsServiceParams(ctx, profile.TacacsServiceParams)
 	resp.Diagnostics.Append(diags...)
+	normalizeServicesInTacacsParams(ctx, priorTacacsServiceParams, &state.TacacsServiceParams, &resp.Diagnostics)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
@@ -411,9 +414,32 @@ func (r *enforcementProfileResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 
-	updated, err := r.client.UpdateEnforcementProfile(ctx, int(plan.ID.ValueInt64()), apiPayload)
+	// Detect if user is removing tacacs_command_config entirely.
+	// Use PUT (full replace) instead of PATCH (partial update) to ensure
+	// proper deletion of nested fields, since PATCH with omitempty tags
+	// cannot distinguish between "omit field" and "delete field".
+	usePut := shouldDeleteTacacsCommandConfig(ctx, prior.TacacsServiceParams, plan.TacacsServiceParams, &resp.Diagnostics)
+
+	var err error
+	if usePut {
+		_, err = r.client.ReplaceEnforcementProfile(ctx, int(plan.ID.ValueInt64()), apiPayload)
+	} else {
+		_, err = r.client.UpdateEnforcementProfile(ctx, int(plan.ID.ValueInt64()), apiPayload)
+	}
 	if err != nil {
 		resp.Diagnostics.AddError("API Error", err.Error())
+		return
+	}
+
+	// Re-read the resource to get canonical state. Both PATCH and PUT responses may
+	// omit nested TACACS fields, so we retrieve the authoritative copy from the server.
+	updated, err := r.client.GetEnforcementProfile(ctx, int(plan.ID.ValueInt64()))
+	if err != nil {
+		resp.Diagnostics.AddError("API Error", err.Error())
+		return
+	}
+	if updated == nil {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 
@@ -431,6 +457,7 @@ func (r *enforcementProfileResource) Update(ctx context.Context, req resource.Up
 	if shouldPreserveNullTacacsCommands(ctx, prior.TacacsServiceParams, desiredTacacsServiceParams, &resp.Diagnostics) {
 		preserveNullTacacsCommands(ctx, desiredTacacsServiceParams, &plan.TacacsServiceParams, &resp.Diagnostics)
 	}
+	normalizeServicesInTacacsParams(ctx, desiredTacacsServiceParams, &plan.TacacsServiceParams, &resp.Diagnostics)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
@@ -580,6 +607,24 @@ func expandTacacsServiceParams(ctx context.Context, obj types.Object, diags *dia
 	if !model.TacacsCommandConfig.IsNull() && !model.TacacsCommandConfig.IsUnknown() {
 		apiParam.TacacsCommandConfig = expandTacacsCommandConfig(ctx, model.TacacsCommandConfig, diags)
 	}
+
+	// ClearPass requires "Shell" in services when tacacs_command_config is
+	// configured. If the user omitted it, ClearPass silently adds it — but a
+	// later PATCH that removes "Shell" causes ClearPass to strip the command
+	// config entirely. Always include "Shell" in the API payload to prevent this.
+	if apiParam.TacacsCommandConfig != nil {
+		hasShell := false
+		for _, s := range apiParam.Services {
+			if s == "Shell" {
+				hasShell = true
+				break
+			}
+		}
+		if !hasShell {
+			apiParam.Services = append(apiParam.Services, "Shell")
+		}
+	}
+
 	return apiParam
 }
 
@@ -754,8 +799,8 @@ func (r *enforcementProfileResource) ImportState(ctx context.Context, req resour
 }
 
 // preserveNullTacacsCommands re-applies the user's original null intent onto the
-// API-flattened result so that omitted (null) ``commands`` or
-// ``tacacs_command_config`` blocks do not cause spurious plan differences.
+// API-flattened result so that omitted (null) “commands“ or
+// “tacacs_command_config“ blocks do not cause spurious plan differences.
 //
 // After flattenTacacsServiceParams returns the API-read value we need to patch
 // any field that the user deliberately left as null: the API may echo back an
@@ -821,4 +866,90 @@ func preserveNullTacacsCommands(ctx context.Context, desired types.Object, resul
 		diags.Append(d...)
 		*result = newResult
 	}
+}
+
+// normalizeServicesInTacacsParams prevents spurious diffs when ClearPass
+// automatically adds entries (e.g. "Shell") to the services list inside
+// tacacs_service_param. If the API-returned services list is a strict superset
+// of the desired (plan or prior-state) list, we keep the desired list in state
+// so that Terraform does not plan unnecessary removals.
+func normalizeServicesInTacacsParams(ctx context.Context, desired types.Object, result *types.Object, diags *diag.Diagnostics) {
+	if desired.IsNull() || desired.IsUnknown() || result == nil || result.IsNull() || result.IsUnknown() {
+		return
+	}
+
+	var desiredModel tacacsServiceParamModel
+	diags.Append(desired.As(ctx, &desiredModel, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return
+	}
+	if desiredModel.Services.IsNull() || desiredModel.Services.IsUnknown() {
+		return
+	}
+
+	var resultModel tacacsServiceParamModel
+	diags.Append(result.As(ctx, &resultModel, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return
+	}
+	if resultModel.Services.IsNull() || resultModel.Services.IsUnknown() {
+		return
+	}
+
+	var desiredServices []string
+	var resultServices []string
+	diags.Append(desiredModel.Services.ElementsAs(ctx, &desiredServices, false)...)
+	diags.Append(resultModel.Services.ElementsAs(ctx, &resultServices, false)...)
+	if diags.HasError() {
+		return
+	}
+
+	// Only normalize when the API returned strictly more entries than the user
+	// configured and every user-configured entry is present in the API result.
+	if len(resultServices) <= len(desiredServices) {
+		return
+	}
+	resultSet := make(map[string]bool, len(resultServices))
+	for _, s := range resultServices {
+		resultSet[s] = true
+	}
+	for _, s := range desiredServices {
+		if !resultSet[s] {
+			return // desired has an entry not in result — not a superset
+		}
+	}
+
+	// API returned a superset — use the desired services to prevent drift.
+	resultModel.Services = desiredModel.Services
+	newResult, d := types.ObjectValueFrom(ctx, tacacsServiceParamModel{}.attrTypes(), resultModel)
+	diags.Append(d...)
+	*result = newResult
+}
+
+// shouldDeleteTacacsCommandConfig detects when the user has removed the entire
+// tacacs_command_config block from their configuration. This is necessary because
+// ClearPass treats an omitted field in PATCH payloads as "no change". When the user
+// explicitly removes the block (prior != null, plan == null), we need to signal
+// deletion by including an empty tacacs_command_config struct in the payload.
+func shouldDeleteTacacsCommandConfig(ctx context.Context, prior types.Object, plan types.Object, diags *diag.Diagnostics) bool {
+	if prior.IsNull() || prior.IsUnknown() {
+		return false // no prior config to delete
+	}
+	if plan.IsNull() || plan.IsUnknown() {
+		return false // user removed entire tacacs_service_param, not just the command config
+	}
+
+	var priorModel tacacsServiceParamModel
+	var planModel tacacsServiceParamModel
+	diags.Append(prior.As(ctx, &priorModel, basetypes.ObjectAsOptions{})...)
+	diags.Append(plan.As(ctx, &planModel, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return false
+	}
+
+	// Prior had tacacs_command_config AND plan doesn't = user wants to delete it
+	priorHasConfig := !priorModel.TacacsCommandConfig.IsNull() && !priorModel.TacacsCommandConfig.IsUnknown()
+	planHasConfig := !planModel.TacacsCommandConfig.IsNull() && !planModel.TacacsCommandConfig.IsUnknown()
+
+	return priorHasConfig && !planHasConfig
 }

@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added tacacs resource for Enforcement Profiles.
 
+### Fixed
+- tacacs_service_param was not deleted properly.
+
 ### Changed
 - Added validation for the `template` attribute in the `clearpass_service` resource to restrict choices to a predefined list of valid templates, and improved markdown documentation.
 
