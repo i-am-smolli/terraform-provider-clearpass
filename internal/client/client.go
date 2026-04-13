@@ -95,6 +95,13 @@ type ClientInterface interface {
 	UpdateNetworkDeviceGroup(ctx context.Context, id int, group *NetworkDeviceGroupUpdate) (*NetworkDeviceGroupResult, error)
 	DeleteNetworkDeviceGroup(ctx context.Context, id int) error
 
+	// ExtensionInstance
+	CreateExtensionInstance(ctx context.Context, ext *ExtensionInstanceCreate) (*ExtensionInstanceResult, error)
+	GetExtensionInstance(ctx context.Context, id string) (*ExtensionInstanceResult, error)
+	GetExtensionInstances(ctx context.Context) (*ExtensionInstanceList, error)
+	UpdateExtensionInstance(ctx context.Context, id string, ext *ExtensionInstanceModify) (*ExtensionInstanceResult, error)
+	DeleteExtensionInstance(ctx context.Context, id string) error
+
 	// Helper
 	GetHost() string
 	GetServerVersion(ctx context.Context) (*ServerVersionResult, error)
@@ -1311,5 +1318,98 @@ func (c *apiClient) DeleteNetworkDeviceGroup(ctx context.Context, id int) error 
 	if err != nil {
 		return err
 	}
+	return c.do(req, nil)
+}
+
+// --- Extension Instance Methods ---
+
+// CreateExtensionInstance installs a new extension.
+func (c *apiClient) CreateExtensionInstance(ctx context.Context, ext *ExtensionInstanceCreate) (*ExtensionInstanceResult, error) {
+	payloadBytes, err := json.Marshal(ext)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal CreateExtensionInstance payload: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "POST", "/api/extension/instance", bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result ExtensionInstanceResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// GetExtensionInstance retrieves an extension instance by its ID.
+func (c *apiClient) GetExtensionInstance(ctx context.Context, id string) (*ExtensionInstanceResult, error) {
+	path := fmt.Sprintf("/api/extension/instance/%s", id)
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result ExtensionInstanceResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil // Not found
+		}
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// GetExtensionInstances retrieves a list of all extension instances.
+func (c *apiClient) GetExtensionInstances(ctx context.Context) (*ExtensionInstanceList, error) {
+	path := "/api/extension/instance"
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result ExtensionInstanceList
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// UpdateExtensionInstance updates an extension instance state.
+func (c *apiClient) UpdateExtensionInstance(ctx context.Context, id string, ext *ExtensionInstanceModify) (*ExtensionInstanceResult, error) {
+	path := fmt.Sprintf("/api/extension/instance/%s", id)
+
+	payloadBytes, err := json.Marshal(ext)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal UpdateExtensionInstance payload: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "PATCH", path, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result ExtensionInstanceResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// DeleteExtensionInstance uninstalls an extension instance.
+func (c *apiClient) DeleteExtensionInstance(ctx context.Context, id string) error {
+	path := fmt.Sprintf("/api/extension/instance/%s", id)
+
+	req, err := c.newRequest(ctx, "DELETE", path, nil)
+	if err != nil {
+		return err
+	}
+
 	return c.do(req, nil)
 }

@@ -48,17 +48,17 @@ terraform {
 
 provider "clearpass" {
   # CHANGE ME: IP address or FQDN of your ClearPass server
-  host          = "10.20.30.40"
+  host = "10.20.30.40"
 
   # CHANGE ME: OAuth2 Client ID
   # Create this in ClearPass under: Administration » API Access » API Clients
-  client_id     = "my_terraform_user"
+  client_id = "my_terraform_user"
 
   # CHANGE ME: OAuth2 Client Secret (shown once when you create the API client)
   client_secret = "JWDCdj2k3h4[...]v5w6x7y8z9"
 
   # Set to true if ClearPass uses a self-signed certificate (common in labs)
-  insecure      = true
+  insecure = true
 
   # Suppress the version mismatch warning if your ClearPass version
   # differs from the tested version
@@ -102,8 +102,8 @@ resource "clearpass_network_device" "tacacs_switch" {
 # ClearPass GUI: Configuration » Network » Device Groups
 # =============================================================================
 resource "clearpass_network_device_group" "tacacs_devices" {
-  name         = "TACACS-Devices"
-  description  = "All switches and routers managed via TACACS+"
+  name        = "TACACS-Devices"
+  description = "All switches and routers managed via TACACS+"
 
   # "subnet" means every device in this IP range is part of the group.
   group_format = "subnet"
@@ -192,12 +192,12 @@ resource "clearpass_enforcement_profile" "tacacs_readonly" {
       commands = [
         {
           # Allow "show" with any arguments
-          command              = "show"
+          command               = "show"
           permit_unmatched_args = true
         },
         {
           # Allow "exit" to close the session gracefully
-          command              = "exit"
+          command               = "exit"
           permit_unmatched_args = true
         },
       ]
@@ -275,7 +275,7 @@ resource "clearpass_role_mapping" "tacacs_role_mapping" {
   name              = "TACACS-Role-Mapping"
   description       = "Maps usernames to TACACS roles for lab testing"
   default_role_name = clearpass_role.helpdesk.name # safe fallback: read-only
-  rule_combine_algo = "first-applicable"            # stop at the first matching rule
+  rule_combine_algo = "first-applicable"           # stop at the first matching rule
 
   rules = [
     {
@@ -339,7 +339,7 @@ resource "clearpass_enforcement_policy" "tacacs_policy" {
       enforcement_profile_names = [clearpass_enforcement_profile.tacacs_admin.name]
       condition = [
         {
-          type  = "Tips"  # "Tips" = ClearPass internal attributes (Roles, etc.)
+          type  = "Tips" # "Tips" = ClearPass internal attributes (Roles, etc.)
           name  = "Role"
           oper  = "EQUALS"
           value = clearpass_role.network_admin.name

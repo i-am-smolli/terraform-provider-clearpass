@@ -860,3 +860,71 @@ type NetworkDeviceGroupList struct {
 	Links    map[string]interface{}  `json:"_links"`
 	Count    *int                    `json:"count,omitempty"`
 }
+
+// --- Extension Instance Models ---
+
+// ExtensionInstanceNetworkPort defines a network port provided by an extension.
+type ExtensionInstanceNetworkPort struct {
+	Description   string `json:"description,omitempty"`
+	Protocol      string `json:"protocol"` // "tcp" or "udp"
+	HostPort      int64  `json:"host_port"`
+	ExtensionPort int64  `json:"extension_port"`
+}
+
+// ExtensionInstanceHref defines a URL provided by an extension.
+type ExtensionInstanceHref struct {
+	Description string `json:"description,omitempty"`
+	Href        string `json:"href"`
+}
+
+// ExtensionInstanceCreate defines the payload for installing a new extension.
+type ExtensionInstanceCreate struct {
+	State   string      `json:"state,omitempty"` // "stopped" or "running"
+	StoreID string      `json:"store_id"`
+	Files   interface{} `json:"files,omitempty"`
+	IPAddr  string      `json:"ip_address,omitempty"`
+	Note    string      `json:"note,omitempty"`
+}
+
+// ExtensionInstanceModify defines the payload for updating an extension state.
+type ExtensionInstanceModify struct {
+	State string `json:"state,omitempty"` // "stopped" or "running"
+	Note  string `json:"note,omitempty"`
+}
+
+// ExtensionInstanceResult defines the payload returned for an extension instance.
+type ExtensionInstanceResult struct {
+	ID               string                          `json:"id"`
+	State            string                          `json:"state"`
+	StateDetails     string                          `json:"state_details,omitempty"`
+	StoreID          string                          `json:"store_id"`
+	Name             string                          `json:"name"`
+	Version          string                          `json:"version"`
+	Description      string                          `json:"description,omitempty"`
+	IconHref         string                          `json:"icon_href,omitempty"`
+	AboutHref        string                          `json:"about_href,omitempty"`
+	Hostname         string                          `json:"hostname,omitempty"`
+	NetworkPorts     []*ExtensionInstanceNetworkPort `json:"network_ports,omitempty"`
+	ExtensionHrefs   []*ExtensionInstanceHref        `json:"extension_hrefs,omitempty"`
+	Files            interface{}                     `json:"files,omitempty"`
+	FileDescriptions interface{}                     `json:"file_descriptions,omitempty"`
+	InternalIPAddr   string                          `json:"internal_ip_address,omitempty"`
+	NeedsReinstall   bool                            `json:"needs_reinstall,omitempty"`
+	ReinstallDetails string                          `json:"reinstall_details,omitempty"`
+	HasConfig        bool                            `json:"has_config,omitempty"`
+	InstallTime      string                          `json:"install_time,omitempty"`
+	Note             string                          `json:"note,omitempty"`
+	Upgrade          string                          `json:"upgrade,omitempty"`
+}
+
+// ExtensionInstanceItems contains the list of ExtensionInstanceResult items.
+type ExtensionInstanceItems struct {
+	Items []ExtensionInstanceResult `json:"items"`
+}
+
+// ExtensionInstanceList defines the payload returned for a list of extension instances.
+type ExtensionInstanceList struct {
+	Embedded ExtensionInstanceItems `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}
