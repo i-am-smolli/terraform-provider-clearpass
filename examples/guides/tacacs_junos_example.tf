@@ -51,17 +51,17 @@ terraform {
 
 provider "clearpass" {
   # CHANGE ME: IP address or FQDN of your ClearPass server
-  host          = "10.20.30.40"
+  host = "10.20.30.40"
 
   # CHANGE ME: OAuth2 Client ID
   # Create this in ClearPass under: Administration » API Access » API Clients
-  client_id     = "my_terraform_user"
+  client_id = "my_terraform_user"
 
   # CHANGE ME: OAuth2 Client Secret (shown once when you create the API client)
   client_secret = "JWDCdj2k3h4[...]v5w6x7y8z9"
 
   # Set to true if ClearPass uses a self-signed certificate (common in labs)
-  insecure      = true
+  insecure = true
 
   # Suppress the version mismatch warning if your ClearPass version
   # differs from the tested version
