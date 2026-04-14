@@ -3,6 +3,8 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
+	"time"
 
 	"terraform-provider-clearpass/internal/client"
 
@@ -75,9 +77,9 @@ func (r *extensionInstanceResource) Schema(ctx context.Context, req resource.Sch
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString("stopped"),
-				MarkdownDescription: "Desired state of the extension. Valid values are 'stopped' or 'running'.",
+				MarkdownDescription: "Desired state of the extension. Allowed values: `stopped` or `running`. During install, ClearPass may temporarily report `preparing`.",
 				Validators: []validator.String{
-					stringvalidator.OneOf("stopped", "running"),
+					stringvalidator.OneOf("stopped", "running", "Stopped", "Running"),
 				},
 			},
 			"name": schema.StringAttribute{
@@ -127,7 +129,7 @@ func (r *extensionInstanceResource) Schema(ctx context.Context, req resource.Sch
 			"note": schema.StringAttribute{
 				Optional:            true,
 				Computed:            true,
-				MarkdownDescription: "A user note about the extension displayed in the UI",
+				MarkdownDescription: "A user note about the extension displayed in the UI.",
 			},
 			"state_details": schema.StringAttribute{
 				Computed:            true,
@@ -167,11 +169,10 @@ func (r *extensionInstanceResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	// Create the API request payload
+	// Create the API request payload - only send store_id
+	// The ClearPass API does not honor state and note during POST create
 	extCreate := &client.ExtensionInstanceCreate{
 		StoreID: data.StoreID.ValueString(),
-		State:   data.State.ValueString(),
-		Note:    data.Note.ValueString(),
 	}
 
 	// Call the API
@@ -181,10 +182,47 @@ func (r *extensionInstanceResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	// Map the API response to the model
-	r.apiResultToModel(extResult, &data)
+	// Wait until installation phase is complete (e.g. state is no longer preparing/downloading)
+	current, err := r.waitForExtensionReady(ctx, extResult.ID)
+	if err != nil {
+		resp.Diagnostics.AddError("Failed waiting for extension installation", err.Error())
+		return
+	}
 
-	tflog.Trace(ctx, fmt.Sprintf("Created extension instance with ID: %s", data.ID.ValueString()))
+	// Apply desired state/note after install phase is complete.
+	desiredState := normalizeDesiredState(data.State.ValueString())
+	desiredNote := ""
+	if !data.Note.IsNull() && !data.Note.IsUnknown() {
+		desiredNote = data.Note.ValueString()
+	}
+
+	needsUpdate := (desiredState != "" && desiredState != strings.ToLower(current.State)) || desiredNote != current.Note
+	if needsUpdate {
+		modify := &client.ExtensionInstanceModify{}
+		if desiredState != "" {
+			modify.State = desiredState
+		}
+		modify.Note = desiredNote
+
+		if _, err := r.client.UpdateExtensionInstance(ctx, extResult.ID, modify); err != nil {
+			resp.Diagnostics.AddError("Failed to apply desired extension state", err.Error())
+			return
+		}
+	}
+
+	final, err := r.client.GetExtensionInstance(ctx, extResult.ID)
+	if err != nil {
+		resp.Diagnostics.AddError("Failed to read extension after create", err.Error())
+		return
+	}
+	if final == nil {
+		resp.Diagnostics.AddError("Extension disappeared after create", "Extension instance was created but could not be read afterwards.")
+		return
+	}
+
+	r.apiResultToModel(final, &data)
+
+	tflog.Trace(ctx, fmt.Sprintf("Created extension instance with ID: %s", extResult.ID))
 
 	// Save data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -228,9 +266,16 @@ func (r *extensionInstanceResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 
+	// When extension is currently in install phase, wait until it's ready for PATCH.
+	_, err := r.waitForExtensionReady(ctx, data.ID.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Failed waiting for extension before update", err.Error())
+		return
+	}
+
 	// Create the API request payload
 	extModify := &client.ExtensionInstanceModify{
-		State: data.State.ValueString(),
+		State: normalizeDesiredState(data.State.ValueString()),
 		Note:  data.Note.ValueString(),
 	}
 
@@ -293,4 +338,48 @@ func (r *extensionInstanceResource) apiResultToModel(apiResult *client.Extension
 	model.InstallTime = types.StringValue(apiResult.InstallTime)
 	model.Note = types.StringValue(apiResult.Note)
 	model.Upgrade = types.StringValue(apiResult.Upgrade)
+}
+
+func normalizeDesiredState(in string) string {
+	s := strings.ToLower(strings.TrimSpace(in))
+	if s == "running" || s == "stopped" {
+		return s
+	}
+	return ""
+}
+
+func (r *extensionInstanceResource) waitForExtensionReady(ctx context.Context, id string) (*client.ExtensionInstanceResult, error) {
+	const maxWait = 5 * time.Minute
+	ticker := time.NewTicker(2 * time.Second)
+	defer ticker.Stop()
+	timeout := time.NewTimer(maxWait)
+	defer timeout.Stop()
+
+	for {
+		ext, err := r.client.GetExtensionInstance(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		if ext == nil {
+			return nil, fmt.Errorf("extension instance %s not found", id)
+		}
+
+		s := strings.ToLower(ext.State)
+		switch s {
+		case "preparing", "downloading":
+			// Keep waiting until install phase ends.
+		case "failed":
+			return nil, fmt.Errorf("extension install failed: %s", ext.StateDetails)
+		default:
+			return ext, nil
+		}
+
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		case <-timeout.C:
+			return nil, fmt.Errorf("timed out waiting for extension %s to leave preparing/downloading state", id)
+		case <-ticker.C:
+		}
+	}
 }

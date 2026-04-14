@@ -21,8 +21,8 @@ Manages a ClearPass Extension Instance. Extensions provide additional functional
 
 ### Optional
 
-- `note` (String) A user note about the extension displayed in the UI
-- `state` (String) Desired state of the extension. Valid values are 'stopped' or 'running'.
+- `note` (String) A user note about the extension displayed in the UI.
+- `state` (String) Desired state of the extension. Allowed values: `stopped` or `running`. During install, ClearPass may temporarily report `preparing`.
 
 ### Read-Only
 

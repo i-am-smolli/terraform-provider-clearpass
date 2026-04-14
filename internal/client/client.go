@@ -98,7 +98,7 @@ type ClientInterface interface {
 	// ExtensionInstance
 	CreateExtensionInstance(ctx context.Context, ext *ExtensionInstanceCreate) (*ExtensionInstanceResult, error)
 	GetExtensionInstance(ctx context.Context, id string) (*ExtensionInstanceResult, error)
-	GetExtensionInstances(ctx context.Context) (*ExtensionInstanceList, error)
+	GetExtensionInstances(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*ExtensionInstanceList, error)
 	UpdateExtensionInstance(ctx context.Context, id string, ext *ExtensionInstanceModify) (*ExtensionInstanceResult, error)
 	DeleteExtensionInstance(ctx context.Context, id string) error
 
@@ -1363,14 +1363,32 @@ func (c *apiClient) GetExtensionInstance(ctx context.Context, id string) (*Exten
 	return &result, nil
 }
 
-// GetExtensionInstances retrieves a list of all extension instances.
-func (c *apiClient) GetExtensionInstances(ctx context.Context) (*ExtensionInstanceList, error) {
+// GetExtensionInstances retrieves a list of extension instances.
+func (c *apiClient) GetExtensionInstances(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*ExtensionInstanceList, error) {
 	path := "/api/extension/instance"
 
 	req, err := c.newRequest(ctx, "GET", path, nil)
 	if err != nil {
 		return nil, err
 	}
+
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calculateCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calculateCount))
+	}
+	req.URL.RawQuery = q.Encode()
 
 	var result ExtensionInstanceList
 	if err := c.do(req, &result); err != nil {

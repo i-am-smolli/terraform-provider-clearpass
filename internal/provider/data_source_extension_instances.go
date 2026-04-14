@@ -18,7 +18,13 @@ type extensionInstancesDataSource struct {
 }
 
 type extensionInstancesDataSourceModel struct {
-	Instances []extensionInstanceDataItem `tfsdk:"instances"`
+	Filter         types.String                `tfsdk:"filter"`
+	Sort           types.String                `tfsdk:"sort"`
+	Offset         types.Int64                 `tfsdk:"offset"`
+	Limit          types.Int64                 `tfsdk:"limit"`
+	CalculateCount types.Bool                  `tfsdk:"calculate_count"`
+	TotalCount     types.Int64                 `tfsdk:"total_count"`
+	Instances      []extensionInstanceDataItem `tfsdk:"instances"`
 }
 
 type extensionInstanceDataItem struct {
@@ -51,8 +57,32 @@ func (d *extensionInstancesDataSource) Metadata(ctx context.Context, req datasou
 
 func (d *extensionInstancesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Reads a list of all ClearPass Extension Instances.",
+		MarkdownDescription: "Reads a list of ClearPass Extension Instances.",
 		Attributes: map[string]schema.Attribute{
+			"filter": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "JSON filter expression specifying the items to return.",
+			},
+			"sort": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "Sort ordering for returned items (default +name).",
+			},
+			"offset": schema.Int64Attribute{
+				Optional:            true,
+				MarkdownDescription: "Zero based offset to start from.",
+			},
+			"limit": schema.Int64Attribute{
+				Optional:            true,
+				MarkdownDescription: "Maximum number of items to return (1-1000).",
+			},
+			"calculate_count": schema.BoolAttribute{
+				Optional:            true,
+				MarkdownDescription: "Whether to calculate the total item count.",
+			},
+			"total_count": schema.Int64Attribute{
+				Computed:            true,
+				MarkdownDescription: "Total number of items matching the filter. Returned when calculate_count is true.",
+			},
 			"instances": schema.ListNestedAttribute{
 				Computed:            true,
 				MarkdownDescription: "List of extension instances",
@@ -158,10 +188,46 @@ func (d *extensionInstancesDataSource) Read(ctx context.Context, req datasource.
 		return
 	}
 
-	extList, err := d.client.GetExtensionInstances(ctx)
+	var filter *string
+	if !data.Filter.IsNull() && !data.Filter.IsUnknown() {
+		f := data.Filter.ValueString()
+		filter = &f
+	}
+
+	var sort *string
+	if !data.Sort.IsNull() && !data.Sort.IsUnknown() {
+		s := data.Sort.ValueString()
+		sort = &s
+	}
+
+	var offset *int
+	if !data.Offset.IsNull() && !data.Offset.IsUnknown() {
+		o := int(data.Offset.ValueInt64())
+		offset = &o
+	}
+
+	var limit *int
+	if !data.Limit.IsNull() && !data.Limit.IsUnknown() {
+		l := int(data.Limit.ValueInt64())
+		limit = &l
+	}
+
+	var calculateCount *bool
+	if !data.CalculateCount.IsNull() && !data.CalculateCount.IsUnknown() {
+		c := data.CalculateCount.ValueBool()
+		calculateCount = &c
+	}
+
+	extList, err := d.client.GetExtensionInstances(ctx, filter, sort, offset, limit, calculateCount)
 	if err != nil {
 		resp.Diagnostics.AddError("Failed to read extension instances", err.Error())
 		return
+	}
+
+	if extList != nil && extList.Count != nil {
+		data.TotalCount = types.Int64Value(int64(*extList.Count))
+	} else {
+		data.TotalCount = types.Int64Null()
 	}
 
 	if extList == nil || len(extList.Embedded.Items) == 0 {
