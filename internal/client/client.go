@@ -102,6 +102,10 @@ type ClientInterface interface {
 	UpdateExtensionInstance(ctx context.Context, id string, ext *ExtensionInstanceModify) (*ExtensionInstanceResult, error)
 	DeleteExtensionInstance(ctx context.Context, id string) error
 
+	// ExtensionInstanceConfig
+	GetExtensionInstanceConfig(ctx context.Context, id string) (json.RawMessage, error)
+	SetExtensionInstanceConfig(ctx context.Context, id string, config json.RawMessage) (json.RawMessage, error)
+
 	// Helper
 	GetHost() string
 	GetServerVersion(ctx context.Context) (*ServerVersionResult, error)
@@ -1430,4 +1434,43 @@ func (c *apiClient) DeleteExtensionInstance(ctx context.Context, id string) erro
 	}
 
 	return c.do(req, nil)
+}
+
+// GetExtensionInstanceConfig retrieves the configuration of an installed extension.
+func (c *apiClient) GetExtensionInstanceConfig(ctx context.Context, id string) (json.RawMessage, error) {
+	path := fmt.Sprintf("/api/extension/instance/%s/config", id)
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result json.RawMessage
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return result, nil
+}
+
+// SetExtensionInstanceConfig sets the configuration of an installed extension.
+func (c *apiClient) SetExtensionInstanceConfig(ctx context.Context, id string, config json.RawMessage) (json.RawMessage, error) {
+	path := fmt.Sprintf("/api/extension/instance/%s/config", id)
+
+	req, err := c.newRequest(ctx, "PUT", path, bytes.NewBuffer(config))
+	if err != nil {
+		return nil, err
+	}
+
+	// The API may respond with 200 (config body) or 204 (empty body).
+	// Pass nil so do() does not attempt to decode an empty response.
+	if err := c.do(req, nil); err != nil {
+		return nil, err
+	}
+
+	// Return nil; callers fall back to the sent config value.
+	return nil, nil
 }

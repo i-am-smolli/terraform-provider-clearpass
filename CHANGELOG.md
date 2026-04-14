@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added tacacs resource for Enforcement Profiles.
 - Added Extension Instance 
+- Added Extension Instance Config
 
 ### Fixed
 - tacacs_service_param was not deleted properly.

@@ -165,6 +165,7 @@ func (p *clearpassProvider) Resources(ctx context.Context) []func() resource.Res
 		NewNetworkDeviceResource,
 		NewNetworkDeviceGroupResource,
 		NewExtensionInstanceResource,
+		NewExtensionInstanceConfigResource,
 	}
 }
 
