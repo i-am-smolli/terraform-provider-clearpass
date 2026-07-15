@@ -16,7 +16,7 @@ func TestAccExtensionInstanceDataSource(t *testing.T) {
 			{
 				Config: testAccProviderConfig() + `
 resource "clearpass_extension_instance" "test_ext_ds" {
-  store_id = "com.example.test-extension"
+  store_id = "a5cb26bd-ea5f-450b-8338-cf750df74ae5"
   state    = "stopped"
   note     = "Data Source Test"
 }

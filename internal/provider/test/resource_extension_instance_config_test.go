@@ -17,7 +17,7 @@ func TestAccExtensionInstanceConfigResource(t *testing.T) {
 			{
 				Config: testAccProviderConfig() + `
 resource "clearpass_extension_instance" "cfg_parent" {
-  store_id = "com.example.test-extension"
+  store_id = "a5cb26bd-ea5f-450b-8338-cf750df74ae5"
   state    = "stopped"
 }
 
@@ -45,7 +45,7 @@ resource "clearpass_extension_instance_config" "test_cfg" {
 			{
 				Config: testAccProviderConfig() + `
 resource "clearpass_extension_instance" "cfg_parent" {
-  store_id = "com.example.test-extension"
+  store_id = "a5cb26bd-ea5f-450b-8338-cf750df74ae5"
   state    = "stopped"
 }
 

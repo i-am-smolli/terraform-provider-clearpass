@@ -19,7 +19,7 @@ data "clearpass_extension_instances" "all_exts" {
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.clearpass_extension_instances.all_exts", "instances"),
+					resource.TestCheckResourceAttrSet("data.clearpass_extension_instances.all_exts", "instances.#"),
 				),
 			},
 		},

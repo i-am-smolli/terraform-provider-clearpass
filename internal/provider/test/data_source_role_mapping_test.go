@@ -3,10 +3,13 @@ package provider_test
 import (
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccRoleMappingDataSource(t *testing.T) {
+	uniqueName := acctest.RandomWithPrefix("tf-acc-test-rm-ds")
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -14,7 +17,7 @@ func TestAccRoleMappingDataSource(t *testing.T) {
 			{
 				Config: testAccProviderConfig() + `
 resource "clearpass_role_mapping" "test_rm_ds" {
-  name              = "tf-acc-test-rm-ds"
+  name              = "` + uniqueName + `"
   description       = "Terraform Acceptance Test Role Mapping DS"
   default_role_name = "[Guest]"
   rule_combine_algo = "first-applicable"

@@ -17,14 +17,14 @@ func TestAccExtensionInstanceResource(t *testing.T) {
 			{
 				Config: testAccProviderConfig() + `
 resource "clearpass_extension_instance" "test_ext" {
-  store_id = "com.example.test-extension"
+  store_id = "a5cb26bd-ea5f-450b-8338-cf750df74ae5"
   state    = "stopped"
   note     = "Terraform Acceptance Test"
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("clearpass_extension_instance.test_ext", "id"),
-					resource.TestCheckResourceAttr("clearpass_extension_instance.test_ext", "store_id", "com.example.test-extension"),
+					resource.TestCheckResourceAttr("clearpass_extension_instance.test_ext", "store_id", "a5cb26bd-ea5f-450b-8338-cf750df74ae5"),
 					resource.TestCheckResourceAttr("clearpass_extension_instance.test_ext", "state", "stopped"),
 					resource.TestCheckResourceAttr("clearpass_extension_instance.test_ext", "note", "Terraform Acceptance Test"),
 				),
@@ -39,7 +39,7 @@ resource "clearpass_extension_instance" "test_ext" {
 			{
 				Config: testAccProviderConfig() + `
 resource "clearpass_extension_instance" "test_ext" {
-  store_id = "com.example.test-extension"
+  store_id = "a5cb26bd-ea5f-450b-8338-cf750df74ae5"
   state    = "running"
   note     = "Terraform Acceptance Test Updated"
 }

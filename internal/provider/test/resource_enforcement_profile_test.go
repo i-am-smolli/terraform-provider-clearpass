@@ -100,6 +100,7 @@ resource "clearpass_enforcement_profile" "test_tacacs_profile" {
   name        = "` + name + `-tacacs"
   description = "TACACS Profile"
   type        = "TACACS"
+  action      = "Accept"
 
   tacacs_service_param = {
     privilege_level            = 15

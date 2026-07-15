@@ -74,6 +74,7 @@ resource "clearpass_network_device" "test" {
   ip_address    = "` + ip + `"
   description   = "` + description + `"
   radius_secret = "testing123"
+  vendor_name   = "Aruba"
 }
 `
 }
@@ -90,14 +91,14 @@ resource "clearpass_network_device" "test_full" {
   coa_capable   = true
   coa_port      = 3799
 
-  cli_config {
+  cli_config = {
     type     = "SSH"
     port     = 22
     username = "admin"
     password = "admin-password"
   }
 
-  onconnect_enforcement {
+  onconnect_enforcement = {
     enabled = false
     ports   = ""
   }
