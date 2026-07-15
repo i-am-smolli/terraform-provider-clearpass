@@ -166,6 +166,7 @@ func (p *clearpassProvider) Resources(ctx context.Context) []func() resource.Res
 		NewNetworkDeviceGroupResource,
 		NewExtensionInstanceResource,
 		NewExtensionInstanceConfigResource,
+		NewAdminPrivilegeResource,
 	}
 }
 
@@ -196,5 +197,7 @@ func (p *clearpassProvider) DataSources(ctx context.Context) []func() datasource
 		NewNetworkDeviceGroupsDataSource,
 		NewExtensionInstanceDataSource,
 		NewExtensionInstancesDataSource,
+		NewAdminPrivilegeDataSource,
+		NewAdminPrivilegesDataSource,
 	}
 }

@@ -928,3 +928,49 @@ type ExtensionInstanceList struct {
 	Links    map[string]interface{} `json:"_links"`
 	Count    *int                   `json:"count,omitempty"`
 }
+
+// AdminPrivilegeCreate defines the payload for creating a new admin privilege.
+type AdminPrivilegeCreate struct {
+	Name                 string            `json:"name"`
+	Description          string            `json:"description,omitempty"`
+	AccessType           string            `json:"access_type,omitempty"`
+	CppmPrivileges       map[string]string `json:"cppm_privileges"`
+	InsightPrivileges    map[string]string `json:"insight_privileges,omitempty"`
+	AllowPasswords       *bool             `json:"allow_passwords,omitempty"`
+	AllowSecurityConfigs *bool             `json:"allow_security_configs,omitempty"`
+}
+
+// AdminPrivilegeUpdate defines the payload for updating an admin privilege.
+type AdminPrivilegeUpdate struct {
+	Name                 string            `json:"name,omitempty"`
+	Description          string            `json:"description,omitempty"`
+	AccessType           string            `json:"access_type,omitempty"`
+	CppmPrivileges       map[string]string `json:"cppm_privileges,omitempty"`
+	InsightPrivileges    map[string]string `json:"insight_privileges,omitempty"`
+	AllowPasswords       *bool             `json:"allow_passwords,omitempty"`
+	AllowSecurityConfigs *bool             `json:"allow_security_configs,omitempty"`
+}
+
+// AdminPrivilegeResult defines the payload returned for an admin privilege.
+type AdminPrivilegeResult struct {
+	ID                   int               `json:"id"`
+	Name                 string            `json:"name"`
+	Description          string            `json:"description,omitempty"`
+	AccessType           string            `json:"access_type"`
+	CppmPrivileges       map[string]string `json:"cppm_privileges"`
+	InsightPrivileges    map[string]string `json:"insight_privileges,omitempty"`
+	AllowPasswords       bool              `json:"allow_passwords"`
+	AllowSecurityConfigs bool              `json:"allow_security_configs"`
+}
+
+// AdminPrivilegeItems contains the list of AdminPrivilegeResult items.
+type AdminPrivilegeItems struct {
+	Items []AdminPrivilegeResult `json:"items"`
+}
+
+// AdminPrivilegeList defines the payload returned for a list of admin privileges.
+type AdminPrivilegeList struct {
+	Embedded AdminPrivilegeItems    `json:"_embedded"`
+	Links    map[string]interface{} `json:"_links"`
+	Count    *int                   `json:"count,omitempty"`
+}

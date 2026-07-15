@@ -15,13 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v0.0.10] - UNRELEASED
 
 ### Added
-- 
+- Added resource for Admin Privilege (`clearpass_admin_privilege`).
+- Added data sources for Admin Privilege (`clearpass_admin_privilege`, `clearpass_admin_privileges`).
+- Added data sources for Network Devices (`clearpass_network_devices`).
+- Added data sources for Network Device Groups (`clearpass_network_device_groups`).
 
 ### Fixed
-- 
+- Fixed an issue where `clearpass_network_device` would return an inconsistent result error when `onconnect_enforcement` was configured as disabled.
 
 ### Changed
-- 
+- Updated acceptance tests to address parameter validation and syntax issues.
 
 ### Notes
 - Updated provider internal dependencies.

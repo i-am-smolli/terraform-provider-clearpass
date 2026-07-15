@@ -29,6 +29,14 @@ type ClientInterface interface {
 	UpdateRole(ctx context.Context, id int, role *RoleUpdate) (*RoleResult, error)
 	DeleteRole(ctx context.Context, id int) error
 
+	// AdminPrivilege
+	CreateAdminPrivilege(ctx context.Context, privilege *AdminPrivilegeCreate) (*AdminPrivilegeResult, error)
+	GetAdminPrivilege(ctx context.Context, id int) (*AdminPrivilegeResult, error)
+	GetAdminPrivilegeByName(ctx context.Context, name string) (*AdminPrivilegeResult, error)
+	GetAdminPrivileges(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*AdminPrivilegeList, error)
+	UpdateAdminPrivilege(ctx context.Context, id int, privilege *AdminPrivilegeUpdate) (*AdminPrivilegeResult, error)
+	DeleteAdminPrivilege(ctx context.Context, id int) error
+
 	// RoleMapping
 	GetRoleMappings(ctx context.Context, filter *string, sort *string, offset *int, limit *int, calcCount *bool) (*RoleMappingList, error)
 	CreateRoleMapping(ctx context.Context, roleMap *RoleMappingCreate) (*RoleMappingResult, error)
@@ -1545,4 +1553,136 @@ func (c *apiClient) SetExtensionInstanceConfig(ctx context.Context, id string, c
 
 	// Return nil; callers fall back to the sent config value.
 	return nil, nil
+}
+
+// --- Admin Privilege API Methods ---
+
+// CreateAdminPrivilege creates a new admin privilege.
+func (c *apiClient) CreateAdminPrivilege(ctx context.Context, privilege *AdminPrivilegeCreate) (*AdminPrivilegeResult, error) {
+	payloadBytes, err := json.Marshal(privilege)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal CreateAdminPrivilege payload: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "POST", "/api/admin-privilege", bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result AdminPrivilegeResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// GetAdminPrivilege retrieves an admin privilege by its numeric ID.
+func (c *apiClient) GetAdminPrivilege(ctx context.Context, id int) (*AdminPrivilegeResult, error) {
+	path := fmt.Sprintf("/api/admin-privilege/%d", id)
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result AdminPrivilegeResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil // Not found
+		}
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// GetAdminPrivilegeByName retrieves an admin privilege by its unique name.
+func (c *apiClient) GetAdminPrivilegeByName(ctx context.Context, name string) (*AdminPrivilegeResult, error) {
+	path := fmt.Sprintf("/api/admin-privilege/name/%s", name)
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var result AdminPrivilegeResult
+	if err := c.do(req, &result); err != nil {
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode == http.StatusNotFound {
+			return nil, nil // Not found
+		}
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// GetAdminPrivileges retrieves a list of admin privileges based on filter query.
+func (c *apiClient) GetAdminPrivileges(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*AdminPrivilegeList, error) {
+	path := "/api/admin-privilege"
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Add query parameters
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calculateCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calculateCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result AdminPrivilegeList
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// UpdateAdminPrivilege updates an existing admin privilege using PATCH.
+func (c *apiClient) UpdateAdminPrivilege(ctx context.Context, id int, privilege *AdminPrivilegeUpdate) (*AdminPrivilegeResult, error) {
+	path := fmt.Sprintf("/api/admin-privilege/%d", id)
+
+	payloadBytes, err := json.Marshal(privilege)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal UpdateAdminPrivilege payload: %w", err)
+	}
+
+	req, err := c.newRequest(ctx, "PATCH", path, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	var result AdminPrivilegeResult
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+// DeleteAdminPrivilege deletes an existing admin privilege by its numeric ID.
+func (c *apiClient) DeleteAdminPrivilege(ctx context.Context, id int) error {
+	path := fmt.Sprintf("/api/admin-privilege/%d", id)
+
+	req, err := c.newRequest(ctx, "DELETE", path, nil)
+	if err != nil {
+		return err
+	}
+
+	return c.do(req, nil)
 }

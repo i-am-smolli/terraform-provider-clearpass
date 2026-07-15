@@ -1,0 +1,873 @@
+{
+    "apiVersion": "1",
+    "swaggerVersion": "1.2",
+    "basePath": "https:\/\/10.123.123.123\/api",
+    "resourcePath": "\/admin-privilege",
+    "apis": [
+        {
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get a list of admin privileges",
+                    "notes": "Get a list of admin privileges. \u003Cdiv\u003E\n  \u003Ca id=\u0022A6a572a9ab0735\u0022 href=\u0022#\u0022 onclick=\u0022$(\u0027#P6a572a9ab0735\u0027).slideDown();$(\u0027#A6a572a9ab0735\u0027).slideUp();return false;\u0022\u003EMore about JSON filter expressions\u003C\/a\u003E\n  \u003Cdiv id=\u0022P6a572a9ab0735\u0022 style=\u0022display: none;\u0022\u003E\n\u003Cp\u003E\n  A filter is specified as a JSON object, where the properties of the object\n  specify the type of query to be performed.\n\u003C\/p\u003E\n\u003Ctable\u003E\n  \u003Cthead\u003E\n    \u003Ctr\u003E\n      \u003Cth\u003EDescription\u003C\/th\u003E\n      \u003Cth\u003EJSON Filter Syntax\u003C\/th\u003E\n    \u003C\/tr\u003E\n  \u003C\/thead\u003E\n  \u003Ctbody\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ENo filter, matches everything\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$eq\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$in\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not one of a list of values\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$nin\u0022:[\u0022\u003Ci\u003Evalue1\u003C\/i\u003E\u0022, \u0022\u003Ci\u003Evalue2\u003C\/i\u003E\u0022]}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField contains a substring \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$contains\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is not equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$ne\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is greater than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is less than or equal to \u0022value\u0022\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lte\u0022:\u0022\u003Ci\u003Evalue\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-sensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField matches a regular expression (case-insensitive)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$regex\u0022:\u0022\u003Ci\u003Eregex\u003C\/i\u003E\u0022, \u0022$options\u0022:\u0022i\u0022}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField exists (does not contain a null value)\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:true}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EField is NULL\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$exists\u0022:false}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with AND\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003ECombining filter expressions with OR\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$or\u0022:[ \u003Ci\u003Efilter1\u003C\/i\u003E, \u003Ci\u003Efilter2\u003C\/i\u003E, ... ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd\u003EInverting a filter expression\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$not\u0022:{ \u003Ci\u003Efilter\u003C\/i\u003E }}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd rowspan=\u00222\u0022\u003EField is greater than or equal to 2 and less than 5\u003C\/td\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2, \u0022$lt\u0022:5}}\u003C\/td\u003E\n    \u003C\/tr\u003E\n    \u003Ctr\u003E\n      \u003Ctd class=\u0022code\u0022\u003E{\u0022$and\u0022:[ {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$gte\u0022:2}}, {\u0022\u003Ci\u003EfieldName\u003C\/i\u003E\u0022:{\u0022$lt\u0022:5}} ]}\u003C\/td\u003E\n    \u003C\/tr\u003E\n  \u003C\/tbody\u003E\n\u003C\/table\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E",
+                    "nickname": "GET_for_AdminPrivilege",
+                    "type": "AdminPrivilegeResult",
+                    "parameters": [
+                        {
+                            "name": "filter",
+                            "paramType": "query",
+                            "type": "string",
+                            "description": "JSON filter expression specifying the items to return",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "{}"
+                        },
+                        {
+                            "name": "sort",
+                            "paramType": "query",
+                            "type": "string",
+                            "description": "Sort ordering for returned items (default +id)",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "+id"
+                        },
+                        {
+                            "name": "offset",
+                            "paramType": "query",
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Zero based offset to start from",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "0",
+                            "minimum": "0"
+                        },
+                        {
+                            "name": "limit",
+                            "paramType": "query",
+                            "type": "integer",
+                            "format": "int64",
+                            "description": "Maximum number of items to return (1 \u2013 1000)",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "25",
+                            "minimum": "1",
+                            "maximum": "1000"
+                        },
+                        {
+                            "name": "calculate_count",
+                            "paramType": "query",
+                            "type": "boolean",
+                            "description": "Whether to calculate the total item count",
+                            "required": false,
+                            "allowMultiple": false,
+                            "defaultValue": "false"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "POST",
+                    "summary": "Create a new admin privilege",
+                    "notes": "Create a new admin privilege",
+                    "nickname": "POST_for_AdminPrivilege",
+                    "type": "AdminPrivilegeResult",
+                    "parameters": [
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "AdminPrivilegeCreate"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "201",
+                            "message": "Created"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/admin-privilege"
+        },
+        {
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get an admin privilege",
+                    "notes": "Get an admin privilege",
+                    "nickname": "GET_for_AdminPrivilege",
+                    "type": "AdminPrivilegeResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "admin_privilege_id",
+                            "description": "Numeric ID of the admin privilege",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                },
+                {
+                    "method": "PATCH",
+                    "summary": "Update some fields of an admin privilege",
+                    "notes": "Update some fields of an admin privilege",
+                    "nickname": "PATCH_for_AdminPrivilege",
+                    "type": "AdminPrivilegeResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "admin_privilege_id",
+                            "description": "Numeric ID of the admin privilege",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "AdminPrivilegeUpdate"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "PUT",
+                    "summary": "Replace an admin privilege",
+                    "notes": "Replace an admin privilege",
+                    "nickname": "PUT_for_AdminPrivilege",
+                    "type": "AdminPrivilegeResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "admin_privilege_id",
+                            "description": "Numeric ID of the admin privilege",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "AdminPrivilegeReplace"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "DELETE",
+                    "summary": "Delete an admin privilege",
+                    "notes": "Delete an admin privilege",
+                    "nickname": "DELETE_for_AdminPrivilege",
+                    "type": "void",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "admin_privilege_id",
+                            "description": "Numeric ID of the admin privilege",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "integer"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/admin-privilege\/{admin_privilege_id}"
+        },
+        {
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get an admin privilege by name",
+                    "notes": "Get an admin privilege by name",
+                    "nickname": "GET_for_AdminPrivilege_by_name",
+                    "type": "AdminPrivilegeResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "name",
+                            "description": "Unique name of the admin privilege",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                },
+                {
+                    "method": "PATCH",
+                    "summary": "Update some fields of an admin privilege by name",
+                    "notes": "Update some fields of an admin privilege by name",
+                    "nickname": "PATCH_for_AdminPrivilege_by_name",
+                    "type": "AdminPrivilegeResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "name",
+                            "description": "Unique name of the admin privilege",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "AdminPrivilegeUpdate"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "PUT",
+                    "summary": "Replace an admin privilege by name",
+                    "notes": "Replace an admin privilege by name",
+                    "nickname": "PUT_for_AdminPrivilege_by_name",
+                    "type": "AdminPrivilegeResult",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "name",
+                            "description": "Unique name of the admin privilege",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        },
+                        {
+                            "name": "body",
+                            "paramType": "body",
+                            "required": true,
+                            "type": "AdminPrivilegeReplace"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "200",
+                            "message": "OK"
+                        },
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "304",
+                            "message": "Not Modified"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        },
+                        {
+                            "code": 422,
+                            "message": "Unprocessable Entity"
+                        }
+                    ]
+                },
+                {
+                    "method": "DELETE",
+                    "summary": "Delete an admin privilege by name",
+                    "notes": "Delete an admin privilege by name",
+                    "nickname": "DELETE_for_AdminPrivilege_by_name",
+                    "type": "void",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "name",
+                            "description": "Unique name of the admin privilege",
+                            "dataType": "string",
+                            "required": false,
+                            "minimum": 0,
+                            "maximum": 1,
+                            "type": "string"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": "204",
+                            "message": "No Content"
+                        },
+                        {
+                            "code": "401",
+                            "message": "Unauthorized"
+                        },
+                        {
+                            "code": "403",
+                            "message": "Forbidden"
+                        },
+                        {
+                            "code": "404",
+                            "message": "Not Found"
+                        },
+                        {
+                            "code": "406",
+                            "message": "Not Acceptable"
+                        },
+                        {
+                            "code": "415",
+                            "message": "Unsupported Media Type"
+                        }
+                    ]
+                }
+            ],
+            "path": "\/admin-privilege\/name\/{name}"
+        }
+    ],
+    "produces": [
+        "application\/vnd.users-and-privileges.v1+json",
+        "application\/hal+json",
+        "application\/json"
+    ],
+    "models": {
+        "AdminPrivilege": {
+            "id": "AdminPrivilege",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Numeric ID of the admin privilege"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the admin privilege"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the admin privilege"
+                },
+                "access_type": {
+                    "type": "string",
+                    "description": "Property to decide the access type of the user.",
+                    "enum": [
+                        "UI",
+                        "API",
+                        "FULL"
+                    ]
+                },
+                "cppm_privileges": {
+                    "type": "object",
+                    "description": "Privilege list in JSON object format(e.g., {\u0022con:RWD\u0022, \u0022mon\u0022:\u0022RW\u0022})."
+                },
+                "insight_privileges": {
+                    "type": "object",
+                    "description": "Privilege list in JSON object format(e.g., {\u0022report\u0022: \u0022RWD\u0022, \u0022dashboard\u0022:\u0022RW\u0022})."
+                },
+                "allow_passwords": {
+                    "type": "boolean",
+                    "description": "If selected, all passwords may be displayed in the response"
+                },
+                "allow_security_configs": {
+                    "type": "boolean",
+                    "description": "If selected, Admin user will have access for security configuration"
+                }
+            },
+            "required": []
+        },
+        "AdminPrivilegeList": {
+            "id": "AdminPrivilegeList",
+            "properties": {
+                "_embedded": {
+                    "$ref": "AdminPrivilegeItems",
+                    "description": "Object containing result"
+                },
+                "_links": {
+                    "$ref": "HalLinks",
+                    "description": "Object containing metadata"
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Total number of items matching the filter; returned if calculate_count is true"
+                }
+            },
+            "required": [
+                "_embedded",
+                "_links"
+            ]
+        },
+        "AdminPrivilegeItems": {
+            "id": "AdminPrivilegeItems",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "AdminPrivilegeResult"
+                    },
+                    "description": "List of items matching the filter"
+                }
+            },
+            "required": [
+                "items"
+            ]
+        },
+        "HalLinks": {
+            "id": "HalLinks",
+            "properties": {
+                "self": {
+                    "type": "string",
+                    "description": "URL of result"
+                },
+                "first": {
+                    "type": "string",
+                    "description": "URL of first page of results"
+                },
+                "last": {
+                    "type": "string",
+                    "description": "URL of last page of results"
+                },
+                "prev": {
+                    "type": "string",
+                    "description": "URL of previous page of results"
+                },
+                "next": {
+                    "type": "string",
+                    "description": "URL of next page of results"
+                }
+            },
+            "required": [
+                "self",
+                "first"
+            ]
+        },
+        "AdminPrivilegeResult": {
+            "id": "AdminPrivilegeResult",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Numeric ID of the admin privilege"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the admin privilege"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the admin privilege"
+                },
+                "access_type": {
+                    "type": "string",
+                    "description": "Property to decide the access type of the user.",
+                    "enum": [
+                        "UI",
+                        "API",
+                        "FULL"
+                    ]
+                },
+                "cppm_privileges": {
+                    "type": "object",
+                    "description": "Privilege list in JSON object format(e.g., {\u0022con:RWD\u0022, \u0022mon\u0022:\u0022RW\u0022})."
+                },
+                "insight_privileges": {
+                    "type": "object",
+                    "description": "Privilege list in JSON object format(e.g., {\u0022report\u0022: \u0022RWD\u0022, \u0022dashboard\u0022:\u0022RW\u0022})."
+                },
+                "allow_passwords": {
+                    "type": "boolean",
+                    "description": "If selected, all passwords may be displayed in the response"
+                },
+                "allow_security_configs": {
+                    "type": "boolean",
+                    "description": "If selected, Admin user will have access for security configuration"
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "access_type",
+                "cppm_privileges",
+                "insight_privileges",
+                "allow_passwords",
+                "allow_security_configs"
+            ]
+        },
+        "AdminPrivilegeUpdate": {
+            "id": "AdminPrivilegeUpdate",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the admin privilege"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the admin privilege"
+                },
+                "access_type": {
+                    "type": "string",
+                    "description": "Property to decide the access type of the user.",
+                    "enum": [
+                        "UI",
+                        "API",
+                        "FULL"
+                    ]
+                },
+                "cppm_privileges": {
+                    "type": "object",
+                    "description": "Privilege list in JSON object format(e.g., {\u0022con:RWD\u0022, \u0022mon\u0022:\u0022RW\u0022})."
+                },
+                "insight_privileges": {
+                    "type": "object",
+                    "description": "Privilege list in JSON object format(e.g., {\u0022report\u0022: \u0022RWD\u0022, \u0022dashboard\u0022:\u0022RW\u0022})."
+                },
+                "allow_passwords": {
+                    "type": "boolean",
+                    "description": "If selected, all passwords may be displayed in the response"
+                },
+                "allow_security_configs": {
+                    "type": "boolean",
+                    "description": "If selected, Admin user will have access for security configuration"
+                }
+            },
+            "required": []
+        },
+        "AdminPrivilegeCreate": {
+            "id": "AdminPrivilegeCreate",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the admin privilege"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the admin privilege"
+                },
+                "access_type": {
+                    "type": "string",
+                    "description": "Property to decide the access type of the user.",
+                    "enum": [
+                        "UI",
+                        "API",
+                        "FULL"
+                    ]
+                },
+                "cppm_privileges": {
+                    "type": "object",
+                    "description": "Privilege list in JSON object format(e.g., {\u0022con:RWD\u0022, \u0022mon\u0022:\u0022RW\u0022})."
+                },
+                "insight_privileges": {
+                    "type": "object",
+                    "description": "Privilege list in JSON object format(e.g., {\u0022report\u0022: \u0022RWD\u0022, \u0022dashboard\u0022:\u0022RW\u0022})."
+                },
+                "allow_passwords": {
+                    "type": "boolean",
+                    "description": "If selected, all passwords may be displayed in the response"
+                },
+                "allow_security_configs": {
+                    "type": "boolean",
+                    "description": "If selected, Admin user will have access for security configuration"
+                }
+            },
+            "required": [
+                "name",
+                "cppm_privileges"
+            ]
+        },
+        "AdminPrivilegeReplace": {
+            "id": "AdminPrivilegeReplace",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the admin privilege"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the admin privilege"
+                },
+                "access_type": {
+                    "type": "string",
+                    "description": "Property to decide the access type of the user.",
+                    "enum": [
+                        "UI",
+                        "API",
+                        "FULL"
+                    ]
+                },
+                "cppm_privileges": {
+                    "type": "object",
+                    "description": "Privilege list in JSON object format(e.g., {\u0022con:RWD\u0022, \u0022mon\u0022:\u0022RW\u0022})."
+                },
+                "insight_privileges": {
+                    "type": "object",
+                    "description": "Privilege list in JSON object format(e.g., {\u0022report\u0022: \u0022RWD\u0022, \u0022dashboard\u0022:\u0022RW\u0022})."
+                },
+                "allow_passwords": {
+                    "type": "boolean",
+                    "description": "If selected, all passwords may be displayed in the response"
+                },
+                "allow_security_configs": {
+                    "type": "boolean",
+                    "description": "If selected, Admin user will have access for security configuration"
+                }
+            },
+            "required": [
+                "name",
+                "cppm_privileges"
+            ]
+        }
+    }
+}
