@@ -191,7 +191,9 @@ func (p *clearpassProvider) DataSources(ctx context.Context) []func() datasource
 		NewServiceCertDataSource,
 		NewServiceCertsDataSource,
 		NewNetworkDeviceDataSource,
+		NewNetworkDevicesDataSource,
 		NewNetworkDeviceGroupDataSource,
+		NewNetworkDeviceGroupsDataSource,
 		NewExtensionInstanceDataSource,
 		NewExtensionInstancesDataSource,
 	}

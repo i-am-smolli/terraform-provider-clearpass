@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v0.0.10] - UNRELEASED
 
 ### Added
-- 
+- Added data sources for Network Devices (`clearpass_network_devices`).
+- Added data sources for Network Device Groups (`clearpass_network_device_groups`).
 
 ### Fixed
 - 

@@ -85,6 +85,7 @@ type ClientInterface interface {
 	CreateNetworkDevice(ctx context.Context, device *NetworkDeviceCreate) (*NetworkDeviceResult, error)
 	GetNetworkDevice(ctx context.Context, id int) (*NetworkDeviceResult, error)
 	GetNetworkDeviceByName(ctx context.Context, name string) (*NetworkDeviceResult, error)
+	GetNetworkDevices(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*NetworkDeviceList, error)
 	UpdateNetworkDevice(ctx context.Context, id int, device *NetworkDeviceUpdate) (*NetworkDeviceResult, error)
 	DeleteNetworkDevice(ctx context.Context, id int) error
 
@@ -92,6 +93,7 @@ type ClientInterface interface {
 	CreateNetworkDeviceGroup(ctx context.Context, group *NetworkDeviceGroupCreate) (*NetworkDeviceGroupResult, error)
 	GetNetworkDeviceGroup(ctx context.Context, id int) (*NetworkDeviceGroupResult, error)
 	GetNetworkDeviceGroupByName(ctx context.Context, name string) (*NetworkDeviceGroupResult, error)
+	GetNetworkDeviceGroups(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*NetworkDeviceGroupList, error)
 	UpdateNetworkDeviceGroup(ctx context.Context, id int, group *NetworkDeviceGroupUpdate) (*NetworkDeviceGroupResult, error)
 	DeleteNetworkDeviceGroup(ctx context.Context, id int) error
 
@@ -1243,6 +1245,41 @@ func (c *apiClient) DeleteNetworkDevice(ctx context.Context, id int) error {
 	return c.do(req, nil)
 }
 
+// GetNetworkDevices retrieves a list of network devices.
+func (c *apiClient) GetNetworkDevices(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*NetworkDeviceList, error) {
+	path := "/api/network-device"
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calculateCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calculateCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result NetworkDeviceList
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
 // --- Network Device Group API Methods ---
 
 func (c *apiClient) CreateNetworkDeviceGroup(ctx context.Context, group *NetworkDeviceGroupCreate) (*NetworkDeviceGroupResult, error) {
@@ -1323,6 +1360,41 @@ func (c *apiClient) DeleteNetworkDeviceGroup(ctx context.Context, id int) error 
 		return err
 	}
 	return c.do(req, nil)
+}
+
+// GetNetworkDeviceGroups retrieves a list of network device groups.
+func (c *apiClient) GetNetworkDeviceGroups(ctx context.Context, filter, sort *string, offset, limit *int, calculateCount *bool) (*NetworkDeviceGroupList, error) {
+	path := "/api/network-device-group"
+
+	req, err := c.newRequest(ctx, "GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	q := req.URL.Query()
+	if filter != nil {
+		q.Add("filter", *filter)
+	}
+	if sort != nil {
+		q.Add("sort", *sort)
+	}
+	if offset != nil {
+		q.Add("offset", fmt.Sprintf("%d", *offset))
+	}
+	if limit != nil {
+		q.Add("limit", fmt.Sprintf("%d", *limit))
+	}
+	if calculateCount != nil {
+		q.Add("calculate_count", fmt.Sprintf("%t", *calculateCount))
+	}
+	req.URL.RawQuery = q.Encode()
+
+	var result NetworkDeviceGroupList
+	if err := c.do(req, &result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
 
 // --- Extension Instance Methods ---
