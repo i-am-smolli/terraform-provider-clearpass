@@ -721,7 +721,7 @@ func mapNetworkDeviceResultToState(ctx context.Context, device *client.NetworkDe
 	diags.Append(d...)
 	state.CLIConfig, d = flattenCLIConfig(ctx, device.CLIConfig)
 	diags.Append(d...)
-	state.OnConnectEnforcement, d = flattenOnConnectEnforcement(ctx, device.OnConnectEnforcement)
+	state.OnConnectEnforcement, d = flattenOnConnectEnforcement(ctx, device.OnConnectEnforcement, state.OnConnectEnforcement)
 	diags.Append(d...)
 }
 
@@ -1069,8 +1069,15 @@ func flattenCLIConfig(ctx context.Context, api *client.CLISettings) (types.Objec
 	return types.ObjectValueFrom(ctx, cliConfigModel{}.attrTypes(), model)
 }
 
-func flattenOnConnectEnforcement(ctx context.Context, api *client.OnConnectEnforcementSettings) (types.Object, diag.Diagnostics) {
+func flattenOnConnectEnforcement(ctx context.Context, api *client.OnConnectEnforcementSettings, prior types.Object) (types.Object, diag.Diagnostics) {
 	if api == nil {
+		if !prior.IsNull() && !prior.IsUnknown() {
+			model := onConnectEnforcementModel{
+				Enabled: types.BoolValue(false),
+				Ports:   types.StringValue(""),
+			}
+			return types.ObjectValueFrom(ctx, onConnectEnforcementModel{}.attrTypes(), model)
+		}
 		return types.ObjectNull(onConnectEnforcementModel{}.attrTypes()), nil
 	}
 	model := onConnectEnforcementModel{
@@ -1079,9 +1086,13 @@ func flattenOnConnectEnforcement(ctx context.Context, api *client.OnConnectEnfor
 	}
 	if api.Enabled != nil {
 		model.Enabled = types.BoolValue(*api.Enabled)
+	} else if !prior.IsNull() && !prior.IsUnknown() {
+		model.Enabled = types.BoolValue(false)
 	}
 	if api.Ports != "" {
 		model.Ports = types.StringValue(api.Ports)
+	} else if !prior.IsNull() && !prior.IsUnknown() {
+		model.Ports = types.StringValue("")
 	}
 	return types.ObjectValueFrom(ctx, onConnectEnforcementModel{}.attrTypes(), model)
 }

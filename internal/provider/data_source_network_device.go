@@ -391,7 +391,7 @@ func (d *networkDeviceDataSource) Read(ctx context.Context, req datasource.ReadR
 	resp.Diagnostics.Append(diags...)
 	state.CLIConfig, diags = flattenCLIConfig(ctx, device.CLIConfig)
 	resp.Diagnostics.Append(diags...)
-	state.OnConnectEnforcement, diags = flattenOnConnectEnforcement(ctx, device.OnConnectEnforcement)
+	state.OnConnectEnforcement, diags = flattenOnConnectEnforcement(ctx, device.OnConnectEnforcement, types.ObjectNull(onConnectEnforcementModel{}.attrTypes()))
 	resp.Diagnostics.Append(diags...)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
